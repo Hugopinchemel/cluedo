@@ -1,0 +1,284 @@
+<template>
+  <Transition name="win">
+    <div
+      v-if="!win.minimized"
+      class="win-window"
+      :class="{ maximized: win.maximized, focused: isFocused }"
+      :style="windowStyle"
+      @mousedown="onFocus"
+    >
+      <!-- Title bar -->
+      <div
+        class="titlebar"
+        @mousedown.stop="onDragStart"
+        @dblclick="onToggleMax"
+      >
+        <div class="titlebar-left">
+          <img v-if="appIcon.startsWith('/')" :src="appIcon" width="16" height="16" class="app-icon-img" alt="" />
+          <Icon v-else :name="appIcon" class="app-icon" />
+          <span class="app-title">{{ win.title }}</span>
+        </div>
+        <div class="titlebar-controls">
+          <button class="ctrl-btn btn-min" @mousedown.stop @click.stop="onMin" title="Réduire">
+            <svg viewBox="0 0 10 1" width="10" height="1"><rect width="10" height="1" fill="currentColor"/></svg>
+          </button>
+          <button class="ctrl-btn btn-max" @mousedown.stop @click.stop="onToggleMax" title="Agrandir">
+            <svg v-if="!win.maximized" viewBox="0 0 10 10" width="10" height="10"><rect x="0" y="0" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1"/></svg>
+            <svg v-else viewBox="0 0 10 10" width="10" height="10"><rect x="2" y="0" width="8" height="8" fill="none" stroke="currentColor" stroke-width="1"/><path d="M0 2v8h8" fill="none" stroke="currentColor" stroke-width="1"/></svg>
+          </button>
+          <button class="ctrl-btn btn-close" @mousedown.stop @click.stop="onClose" title="Fermer">
+            <svg viewBox="0 0 10 10" width="10" height="10"><line x1="0" y1="0" x2="10" y2="10" stroke="currentColor" stroke-width="1.2"/><line x1="10" y1="0" x2="0" y2="10" stroke="currentColor" stroke-width="1.2"/></svg>
+          </button>
+        </div>
+      </div>
+      <!-- Content -->
+      <div class="win-content">
+        <slot />
+      </div>
+
+      <!-- Resize handles -->
+      <template v-if="!win.maximized">
+        <div class="resizer n" @mousedown.stop="onResizeStart($event, 'n')" />
+        <div class="resizer s" @mousedown.stop="onResizeStart($event, 's')" />
+        <div class="resizer e" @mousedown.stop="onResizeStart($event, 'e')" />
+        <div class="resizer w" @mousedown.stop="onResizeStart($event, 'w')" />
+        <div class="resizer ne" @mousedown.stop="onResizeStart($event, 'ne')" />
+        <div class="resizer nw" @mousedown.stop="onResizeStart($event, 'nw')" />
+        <div class="resizer se" @mousedown.stop="onResizeStart($event, 'se')" />
+        <div class="resizer sw" @mousedown.stop="onResizeStart($event, 'sw')" />
+      </template>
+    </div>
+  </Transition>
+</template>
+
+<script setup lang="ts">
+import type { WinInstance } from '~/composables/useWindows'
+import { APPS } from '~/composables/useWindows'
+
+const props = defineProps<{ win: WinInstance; focusedId?: string }>()
+const { closeWindow, minimizeWindow, toggleMaximize, focusWindow, moveWindow, resizeWindow } = useWindows()
+
+const isFocused = computed(() => !props.focusedId || props.focusedId === props.win.id)
+
+const appIcon = computed(() =>
+  APPS.find(a => a.id === props.win.appId)?.icon ?? 'fluent-color:document-24'
+)
+
+const windowStyle = computed(() => {
+  if (props.win.maximized) {
+    return {
+      position: 'fixed',
+      left: '0px',
+      top: '0px',
+      width: '100vw',
+      height: `calc(100vh - var(--taskbar-height))`,
+      zIndex: props.win.zIndex,
+      borderRadius: '0',
+    }
+  }
+  return {
+    position: 'fixed',
+    left: `${props.win.x}px`,
+    top: `${props.win.y}px`,
+    width: `${props.win.width}px`,
+    height: `${props.win.height}px`,
+    zIndex: props.win.zIndex,
+  }
+})
+
+function onFocus() { focusWindow(props.win.id) }
+function onMin() { minimizeWindow(props.win.id) }
+function onToggleMax() { toggleMaximize(props.win.id) }
+function onClose() { closeWindow(props.win.id) }
+
+function onDragStart(e: MouseEvent) {
+  if (props.win.maximized) return
+  focusWindow(props.win.id)
+  const startX = e.clientX - props.win.x
+  const startY = e.clientY - props.win.y
+
+  function onMove(e: MouseEvent) {
+    moveWindow(props.win.id, e.clientX - startX, Math.max(0, e.clientY - startY))
+  }
+  function onUp() {
+    document.removeEventListener('mousemove', onMove)
+    document.removeEventListener('mouseup', onUp)
+  }
+  document.addEventListener('mousemove', onMove)
+  document.addEventListener('mouseup', onUp)
+  e.preventDefault()
+}
+
+function onResizeStart(e: MouseEvent, dir: string) {
+  focusWindow(props.win.id)
+  const startX = e.clientX
+  const startY = e.clientY
+  const startW = props.win.width
+  const startH = props.win.height
+  const startXPos = props.win.x
+  const startYPos = props.win.y
+
+  function onMove(e: MouseEvent) {
+    let newW = startW
+    let newH = startH
+    let newX = startXPos
+    let newY = startYPos
+
+    const dx = e.clientX - startX
+    const dy = e.clientY - startY
+
+    if (dir.includes('e')) newW = startW + dx
+    if (dir.includes('w')) {
+      newW = startW - dx
+      newX = startXPos + dx
+    }
+    if (dir.includes('s')) newH = startH + dy
+    if (dir.includes('n')) {
+      newH = startH - dy
+      newY = startYPos + dy
+    }
+
+    if (newW >= 200) {
+      props.win.width = newW
+      props.win.x = newX
+    }
+    if (newH >= 120) {
+      props.win.height = newH
+      props.win.y = newY
+    }
+  }
+
+  function onUp() {
+    document.removeEventListener('mousemove', onMove)
+    document.removeEventListener('mouseup', onUp)
+  }
+
+  document.addEventListener('mousemove', onMove)
+  document.addEventListener('mouseup', onUp)
+  e.preventDefault()
+}
+</script>
+
+<style scoped>
+.win-window {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  background: var(--window-bg);
+  border: 1px solid rgba(0,0,0,0.18);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35), 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 6px;
+  overflow: visible;
+  min-width: 200px;
+  min-height: 120px;
+
+  &.maximized {
+    border-radius: 0;
+    border: none;
+  }
+}
+
+.titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--titlebar-height);
+  background: #202020;
+  flex-shrink: 0;
+  cursor: default;
+  -webkit-user-select: none;
+  user-select: none;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.win-window:not(.focused) .titlebar {
+  background: #2d2d2d;
+}
+
+.titlebar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  overflow: hidden;
+  flex: 1;
+  min-width: 0;
+}
+
+.app-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.app-title {
+  font-size: 12px;
+  color: rgba(255,255,255,0.9);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.win-window:not(.focused) .app-title {
+  color: rgba(255,255,255,0.5);
+}
+
+.titlebar-controls {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.ctrl-btn {
+  width: 46px;
+  height: var(--titlebar-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.8);
+  transition: background 0.1s, color 0.1s;
+
+  &:hover { background: rgba(255,255,255,0.12); color: white; }
+}
+
+.btn-close:hover {
+  background: #e81123 !important;
+  color: white !important;
+}
+
+.win-content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: #191919;
+}
+
+/* Resizers */
+.resizer {
+  position: absolute;
+  z-index: 10;
+}
+
+.resizer.n { top: -4px; left: 4px; right: 4px; height: 8px; cursor: n-resize; }
+.resizer.s { bottom: -4px; left: 4px; right: 4px; height: 8px; cursor: s-resize; }
+.resizer.e { right: -4px; top: 4px; bottom: 4px; width: 8px; cursor: e-resize; }
+.resizer.w { left: -4px; top: 4px; bottom: 4px; width: 8px; cursor: w-resize; }
+
+.resizer.nw { top: -4px; left: -4px; width: 12px; height: 12px; cursor: nw-resize; }
+.resizer.ne { top: -4px; right: -4px; width: 12px; height: 12px; cursor: ne-resize; }
+.resizer.sw { bottom: -4px; left: -4px; width: 12px; height: 12px; cursor: sw-resize; }
+.resizer.se { bottom: -4px; right: -4px; width: 12px; height: 12px; cursor: se-resize; }
+
+/* Transition */
+.win-enter-active, .win-leave-active {
+  transition: opacity 0.15s, transform 0.15s;
+  transform-origin: center bottom;
+}
+.win-enter-from {
+  opacity: 0;
+  transform: scale(0.95) translateY(10px);
+}
+.win-leave-to {
+  opacity: 0;
+  transform: scale(0.9) translateY(20px);
+}
+</style>

@@ -16,6 +16,7 @@
     "windows-ui-fabric": "^4.0.2"
   },
   "devDependencies": {
+    "@nuxt/icon": "^2.2.1",
     "sass-embedded": "^1.98.0"
   }
 }
