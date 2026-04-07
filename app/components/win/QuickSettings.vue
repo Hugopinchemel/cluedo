@@ -10,7 +10,8 @@
           @click="qa.on = !qa.on"
         >
           <div class="qa-icon-wrapper">
-            <img :src="qa.icon" width="20" height="20" style="filter: invert(1)" alt="" />
+            <img v-if="qa.icon.startsWith('/')" :src="qa.icon" width="20" height="20"  alt="" />
+            <Icon v-else :name="qa.icon" size="20" />
           </div>
           <span class="qa-label">{{ qa.label }}</span>
         </button>
@@ -18,23 +19,27 @@
 
       <div class="qs-sliders">
         <div class="qs-slider-row">
-          <img :src="ICON_QS_BRIGHTNESS" width="16" height="16" class="qs-slider-icon" style="filter: invert(1)" alt="" />
+          <img v-if="ICON_QS_BRIGHTNESS.startsWith('/')" :src="ICON_QS_BRIGHTNESS" width="16" height="16" class="qs-slider-icon"  alt="" />
+          <Icon v-else :name="ICON_QS_BRIGHTNESS" size="16" class="qs-slider-icon" />
           <input type="range" v-model="brightness" min="0" max="100" class="qs-range">
         </div>
         <div class="qs-slider-row">
-          <img :src="ICON_QS_VOLUME" width="16" height="16" class="qs-slider-icon" style="filter: invert(1)" alt="" />
+          <img v-if="ICON_QS_VOLUME.startsWith('/')" :src="ICON_QS_VOLUME" width="16" height="16" class="qs-slider-icon" alt="" />
+          <Icon v-else :name="ICON_QS_VOLUME" size="16" class="qs-slider-icon" />
           <input type="range" v-model="volume" min="0" max="100" class="qs-range">
         </div>
       </div>
 
       <div class="qs-footer">
         <div class="qs-battery">
-          <img :src="ICON_TRAY_BATTERY" width="16" height="16" class="qs-battery-icon" style="filter: invert(1)" alt="" />
+          <img v-if="ICON_TRAY_BATTERY.startsWith('/')" :src="ICON_TRAY_BATTERY" width="16" height="16" class="qs-battery-icon"  alt="" />
+          <Icon v-else :name="ICON_TRAY_BATTERY" size="16" class="qs-battery-icon" />
           <span>100%</span>
         </div>
         <div class="qs-footer-right">
           <button class="qs-settings-btn" @click="$emit('openSettings')">
-            <img :src="ICON_APP_SETTINGS" width="16" height="16" style="filter: invert(1)" alt="" />
+            <img v-if="ICON_APP_SETTINGS.startsWith('/')" :src="ICON_APP_SETTINGS" width="16" height="16"  alt="" />
+            <Icon v-else :name="ICON_APP_SETTINGS" size="16" />
           </button>
         </div>
       </div>
@@ -48,7 +53,6 @@ import {
   ICON_QS_BLUETOOTH,
   ICON_QS_AIRPLANE,
   ICON_QS_DND,
-  ICON_QS_FLASHLIGHT,
   ICON_QS_BATTERY,
   ICON_QS_BRIGHTNESS,
   ICON_QS_VOLUME,
@@ -67,7 +71,6 @@ const quickActions = ref([
   { icon: ICON_QS_BLUETOOTH, label: 'Bluetooth', on: true },
   { icon: ICON_QS_AIRPLANE, label: 'Mode avion', on: false },
   { icon: ICON_QS_DND, label: 'Ne pas déranger', on: false },
-  { icon: ICON_QS_FLASHLIGHT, label: 'Lampe torche', on: false },
   { icon: ICON_QS_BATTERY, label: 'Économiseur', on: false },
 ])
 

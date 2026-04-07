@@ -5,28 +5,33 @@
       <div class="left-rail">
         <button class="rail-btn user-btn" title="Compte">
           <div class="user-avatar">
-            <img :src="ICON_START_USER" width="22" height="22" style="filter: invert(1)" alt="User" />
+            <img v-if="ICON_START_USER.startsWith('/')" :src="ICON_START_USER" width="28" height="28"  alt="User" />
+            <Icon v-else :name="ICON_START_USER" size="28" />
           </div>
           <span class="rail-label">Utilisateur</span>
         </button>
 
         <button class="rail-btn" title="Documents" @click="openAndClose('explorer')">
-          <img :src="ICON_START_DOCS" width="20" height="20" style="filter: invert(1)" alt="Documents" />
+          <img v-if="ICON_START_DOCS.startsWith('/')" :src="ICON_START_DOCS" width="20" height="20"  alt="Documents" />
+          <Icon v-else :name="ICON_START_DOCS" size="20" />
           <span class="rail-label">Documents</span>
         </button>
 
         <button class="rail-btn" title="Images" @click="openAndClose('photos')">
-          <img :src="ICON_START_IMAGES" width="20" height="20" style="filter: invert(1)" alt="Images" />
+          <img v-if="ICON_START_IMAGES.startsWith('/')" :src="ICON_START_IMAGES" width="20" height="20"  alt="Images" />
+          <Icon v-else :name="ICON_START_IMAGES" size="20" />
           <span class="rail-label">Images</span>
         </button>
 
         <button class="rail-btn" title="Paramètres" @click="openAndClose('settings')">
-          <img :src="ICON_START_SETTINGS" width="20" height="20" alt="Settings" />
+          <img v-if="ICON_START_SETTINGS.startsWith('/')" :src="ICON_START_SETTINGS" width="20" height="20" alt="Settings" />
+          <Icon v-else :name="ICON_START_SETTINGS" size="20" />
           <span class="rail-label">Paramètres</span>
         </button>
 
         <button class="rail-btn power-btn" title="Alimentation">
-          <img :src="ICON_START_POWER" width="20" height="20" style="filter: invert(1)" alt="Power" />
+          <img v-if="ICON_START_POWER.startsWith('/')" :src="ICON_START_POWER" width="20" height="20"  alt="Power" />
+          <Icon v-else :name="ICON_START_POWER" size="20" />
           <span class="rail-label">Arrêter</span>
         </button>
       </div>
@@ -173,6 +178,10 @@ const recentItems = [
   display: flex;
   align-items: center;
   justify-content: center;
+
+  img{
+    border-radius: 50%;
+  }
 }
 
 .main-area {

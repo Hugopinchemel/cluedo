@@ -13,21 +13,31 @@
       </div>
       <div class="ribbon-actions">
         <button class="rib-btn" title="Nouveau dossier" @click="newFolder">
-          <Icon :name="ICON_EXPLORER_NEW_FOLDER" /><span>Nouveau dossier</span>
+          <img v-if="ICON_EXPLORER_NEW_FOLDER.startsWith('/')" :src="ICON_EXPLORER_NEW_FOLDER" width="16" height="16" alt="" />
+          <Icon v-else :name="ICON_EXPLORER_NEW_FOLDER" />
+          <span>Nouveau dossier</span>
         </button>
         <div class="rib-sep" />
         <button class="rib-btn" title="Copier">
-          <Icon :name="ICON_EXPLORER_COPY" /><span>Copier</span>
+          <img v-if="ICON_EXPLORER_COPY.startsWith('/')" :src="ICON_EXPLORER_COPY" width="16" height="16" alt="" />
+          <Icon v-else :name="ICON_EXPLORER_COPY" />
+          <span>Copier</span>
         </button>
         <button class="rib-btn" title="Coller">
-          <Icon :name="ICON_EXPLORER_PASTE" /><span>Coller</span>
+          <img v-if="ICON_EXPLORER_PASTE.startsWith('/')" :src="ICON_EXPLORER_PASTE" width="16" height="16" alt="" />
+          <Icon v-else :name="ICON_EXPLORER_PASTE" />
+          <span>Coller</span>
         </button>
         <div class="rib-sep" />
         <button class="rib-btn" title="Renommer">
-          <Icon :name="ICON_EXPLORER_RENAME" /><span>Renommer</span>
+          <img v-if="ICON_EXPLORER_RENAME.startsWith('/')" :src="ICON_EXPLORER_RENAME" width="16" height="16" alt="" />
+          <Icon v-else :name="ICON_EXPLORER_RENAME" />
+          <span>Renommer</span>
         </button>
         <button class="rib-btn" title="Supprimer">
-          <Icon :name="ICON_EXPLORER_DELETE" /><span>Supprimer</span>
+          <img v-if="ICON_EXPLORER_DELETE.startsWith('/')" :src="ICON_EXPLORER_DELETE" width="16" height="16" alt="" />
+          <Icon v-else :name="ICON_EXPLORER_DELETE" />
+          <span>Supprimer</span>
         </button>
       </div>
     </div>
@@ -104,7 +114,7 @@
             class="file-tile"
             :class="{ selected: selected === item.name }"
             @click="selected = item.name"
-            @dblclick="item.type === 'folder' ? navigateTo(item.path ?? '') : null"
+            @dblclick="item.type === 'folder-icons' ? navigateTo(item.path ?? '') : null"
           >
             <img v-if="item.icon.startsWith('/')" :src="item.icon" width="40" height="40" class="file-icon-img" alt="" />
             <Icon v-else :name="item.icon" class="file-icon" />
@@ -124,7 +134,7 @@
             class="list-row"
             :class="{ selected: selected === item.name }"
             @click="selected = item.name"
-            @dblclick="item.type === 'folder' ? navigateTo(item.path ?? '') : null"
+            @dblclick="item.type === 'folder-icons' ? navigateTo(item.path ?? '') : null"
           >
             <span class="col-name">
               <img v-if="item.icon.startsWith('/')" :src="item.icon" width="16" height="16" class="row-icon-img" alt="" />
@@ -181,7 +191,7 @@ import {
 interface FsItem {
   name: string
   icon: string
-  type: 'folder' | 'file'
+  type: 'folder-icons' | 'file'
   path?: string
   date: string
   typeName: string
@@ -211,8 +221,8 @@ const thisPC = [
 
 const filesystem: Record<string, FsItem[]> = {
   'quick/desktop': [
-    { name: 'Ce PC', icon: ICON_DESKTOP_PC, type: 'folder', path: 'drive/c', date: '01/04/2026 10:00', typeName: 'Dossier système', size: '' },
-    { name: 'Corbeille', icon: ICON_APP_TRASH, type: 'folder', path: 'trash', date: '01/04/2026 10:00', typeName: 'Corbeille', size: '' },
+    { name: 'Ce PC', icon: ICON_DESKTOP_PC, type: 'folder-icons', path: 'drive/c', date: '01/04/2026 10:00', typeName: 'Dossier système', size: '' },
+    { name: 'Corbeille', icon: ICON_APP_TRASH, type: 'folder-icons', path: 'trash', date: '01/04/2026 10:00', typeName: 'Corbeille', size: '' },
     { name: 'Notes.txt', icon: ICON_FILE_TEXT, type: 'file', date: '01/04/2026 09:30', typeName: 'Fichier texte', size: '2 Ko' },
     { name: 'Projet.docx', icon: ICON_FILE_DOC, type: 'file', date: '31/03/2026 18:00', typeName: 'Document Word', size: '45 Ko' },
   ],
@@ -222,20 +232,20 @@ const filesystem: Record<string, FsItem[]> = {
     { name: 'photo.jpg', icon: ICON_FOLDER_PICTURES, type: 'file', date: '28/03/2026', typeName: 'Image JPEG', size: '3,2 Mo' },
   ],
   'quick/documents': [
-    { name: 'Travail', icon: ICON_FOLDER_GENERIC, type: 'folder', path: 'quick/documents/travail', date: '01/04/2026', typeName: 'Dossier de fichiers', size: '' },
-    { name: 'Personnel', icon: ICON_FOLDER_GENERIC, type: 'folder', path: 'quick/documents/perso', date: '28/03/2026', typeName: 'Dossier de fichiers', size: '' },
+    { name: 'Travail', icon: ICON_FOLDER_GENERIC, type: 'folder-icons', path: 'quick/documents/travail', date: '01/04/2026', typeName: 'Dossier de fichiers', size: '' },
+    { name: 'Personnel', icon: ICON_FOLDER_GENERIC, type: 'folder-icons', path: 'quick/documents/perso', date: '28/03/2026', typeName: 'Dossier de fichiers', size: '' },
     { name: 'CV.docx', icon: ICON_FILE_DOC, type: 'file', date: '15/03/2026', typeName: 'Document Word', size: '42 Ko' },
   ],
   'quick/pictures': [
-    { name: 'Vacances 2025', icon: ICON_FOLDER_GENERIC, type: 'folder', path: 'quick/pictures/vacances', date: '10/09/2025', typeName: 'Dossier de fichiers', size: '' },
+    { name: 'Vacances 2025', icon: ICON_FOLDER_GENERIC, type: 'folder-icons', path: 'quick/pictures/vacances', date: '10/09/2025', typeName: 'Dossier de fichiers', size: '' },
     { name: 'fond_ecran.jpg', icon: ICON_FOLDER_PICTURES, type: 'file', date: '01/01/2026', typeName: 'Image JPEG', size: '8,4 Mo' },
     { name: 'photo_profil.png', icon: ICON_FOLDER_PICTURES, type: 'file', date: '15/02/2026', typeName: 'Image PNG', size: '2,1 Mo' },
   ],
   'drive/c': [
-    { name: 'Utilisateurs', icon: ICON_FOLDER_GENERIC, type: 'folder', path: 'drive/c/users', date: '01/04/2026', typeName: 'Dossier de fichiers', size: '' },
-    { name: 'Windows', icon: ICON_FOLDER_GENERIC, type: 'folder', path: 'drive/c/windows', date: '01/04/2026', typeName: 'Dossier de fichiers', size: '' },
-    { name: 'Program Files', icon: ICON_FOLDER_GENERIC, type: 'folder', path: 'drive/c/pf', date: '01/04/2026', typeName: 'Dossier de fichiers', size: '' },
-    { name: 'Program Files (x86)', icon: ICON_FOLDER_GENERIC, type: 'folder', path: 'drive/c/pf86', date: '01/04/2026', typeName: 'Dossier de fichiers', size: '' },
+    { name: 'Utilisateurs', icon: ICON_FOLDER_GENERIC, type: 'folder-icons', path: 'drive/c/users', date: '01/04/2026', typeName: 'Dossier de fichiers', size: '' },
+    { name: 'Windows', icon: ICON_FOLDER_GENERIC, type: 'folder-icons', path: 'drive/c/windows', date: '01/04/2026', typeName: 'Dossier de fichiers', size: '' },
+    { name: 'Program Files', icon: ICON_FOLDER_GENERIC, type: 'folder-icons', path: 'drive/c/pf', date: '01/04/2026', typeName: 'Dossier de fichiers', size: '' },
+    { name: 'Program Files (x86)', icon: ICON_FOLDER_GENERIC, type: 'folder-icons', path: 'drive/c/pf86', date: '01/04/2026', typeName: 'Dossier de fichiers', size: '' },
   ],
   'default': [],
 }
@@ -287,7 +297,7 @@ function goUp() {
 function newFolder() {
   const items = filesystem[currentPath.value]
   if (items) {
-    items.push({ name: 'Nouveau dossier', icon: ICON_FOLDER_GENERIC, type: 'folder', date: new Date().toLocaleDateString('fr-FR'), typeName: 'Dossier de fichiers', size: '' })
+    items.push({ name: 'Nouveau dossier', icon: ICON_FOLDER_GENERIC, type: 'folder-icons', date: new Date().toLocaleDateString('fr-FR'), typeName: 'Dossier de fichiers', size: '' })
   }
 }
 </script>

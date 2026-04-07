@@ -1,6 +1,6 @@
 <template>
   <div class="auth-screen">
-    <WinLockScreen v-if="phase === 'lock'" @unlock="phase = 'login'" />
+    <WinLockScreen v-if="phase === 'lock'" @unlock="onUnlock" />
     <WinLoginScreen v-else-if="phase === 'login'" @login="goDesktop" @back="phase = 'lock'" />
   </div>
 </template>
@@ -9,6 +9,19 @@
 definePageMeta({ layout: false })
 
 const phase = ref<'lock' | 'login'>('lock')
+
+const requestFullscreen = () => {
+  if (document.documentElement.requestFullscreen) {
+    document.documentElement.requestFullscreen().catch(err => {
+      console.warn(`Error attempting to enable full-screen mode: ${err.message}`);
+    });
+  }
+}
+
+const onUnlock = () => {
+  requestFullscreen()
+  phase.value = 'login'
+}
 
 async function goDesktop() {
   await navigateTo('/desktop')

@@ -13,7 +13,7 @@
 
     <!-- Task view button -->
     <button class="icon-btn taskview-btn" title="Vue des tâches">
-      <img :src="ICON_TASKBAR_TASKVIEW" width="16" height="16" style="filter: invert(1)" alt="Task View" />
+      <img :src="ICON_TASKBAR_TASKVIEW" width="16" height="16"  alt="Task View" />
     </button>
 
     <!-- Pinned + Running apps -->
@@ -37,20 +37,20 @@
 
     <!-- System tray -->
     <div class="tray">
-      <button class="tray-btn" title="Afficher les icônes masquées">
-        <img :src="ICON_TRAY_EXPAND" width="14" height="14" style="filter: invert(1); opacity: 0.7" alt="Expand" />
-      </button>
       <!-- Network -->
       <button class="tray-btn" :class="{ active: qsOpen }" title="Réseau" @click="$emit('toggleQuickSettings')">
-        <img :src="ICON_TRAY_NETWORK" width="16" height="16" style="filter: invert(1); opacity: 0.85" alt="Network" />
+        <img v-if="ICON_TRAY_NETWORK.startsWith('/')" :src="ICON_TRAY_NETWORK" width="16" height="16" style="opacity: 0.85" alt="Network" />
+        <Icon v-else :name="ICON_TRAY_NETWORK" size="16" style="opacity: 0.85" />
       </button>
       <!-- Sound -->
       <button class="tray-btn" :class="{ active: qsOpen }" title="Volume" @click="$emit('toggleQuickSettings')">
-        <img :src="ICON_TRAY_VOLUME" width="16" height="16" style="filter: invert(1); opacity: 0.85" alt="Volume" />
+        <img v-if="ICON_TRAY_VOLUME.startsWith('/')" :src="ICON_TRAY_VOLUME" width="16" height="16" style="opacity: 0.85" alt="Volume" />
+        <Icon v-else :name="ICON_TRAY_VOLUME" size="16" style="opacity: 0.85" />
       </button>
       <!-- Battery -->
       <button class="tray-btn" :class="{ active: qsOpen }" title="Batterie" @click="$emit('toggleQuickSettings')">
-        <img :src="ICON_TRAY_BATTERY" width="16" height="16" style="filter: invert(1); opacity: 0.85" alt="Battery" />
+        <img v-if="ICON_TRAY_BATTERY.startsWith('/')" :src="ICON_TRAY_BATTERY" width="16" height="16" style="opacity: 0.85" alt="Battery" />
+        <Icon v-else :name="ICON_TRAY_BATTERY" size="16" style="opacity: 0.85" />
       </button>
 
       <!-- Clock -->
@@ -61,7 +61,8 @@
 
       <!-- Notification center -->
       <button class="icon-btn notif-btn" :class="{ active: notifOpen }" title="Centre de notifications" @click="$emit('toggleNotif')">
-        <img :src="ICON_TRAY_NOTIFICATIONS" width="16" height="16" style="filter: invert(1); opacity: 0.85" alt="Notifications" />
+        <img v-if="ICON_TRAY_NOTIFICATIONS.startsWith('/')" :src="ICON_TRAY_NOTIFICATIONS" width="16" height="16" style="opacity: 0.85" alt="Notifications" />
+        <Icon v-else :name="ICON_TRAY_NOTIFICATIONS" size="16" style="opacity: 0.85" />
       </button>
     </div>
   </div>
@@ -296,5 +297,6 @@ const dateShort = computed(() =>
 
 .notif-btn {
   width: 36px;
+  filter: invert(1);
 }
 </style>

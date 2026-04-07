@@ -42,42 +42,17 @@
       @toggleNotif="toggleNotif" 
       @toggleQuickSettings="toggleQuickSettings"
       @toggleCalendar="toggleNotif"
+      @click.stop
     />
 
     <!-- Start menu -->
     <WinStartMenu :open="startOpen" @close="startOpen = false" />
 
-    <!-- Notification panel (simplified version for now) -->
-    <Transition name="slide-right">
-      <div v-if="notifOpen" class="notif-panel" @click.stop>
-        <div class="notif-header">
-          <span>Notifications</span>
-          <button @click="notifications = []">Effacer tout</button>
-        </div>
-        <div v-if="!notifications.length" class="notif-empty">
-          <Icon :name="ICON_FLUENT_ALERT_OFF" size="48" style="color: rgba(255,255,255,0.3)" />
-          <p>Pas de nouvelles notifications</p>
-        </div>
-        <div v-for="(n, i) in notifications" :key="i" class="notif-item">
-          <div class="notif-app">{{ n.app }}</div>
-          <div class="notif-msg">{{ n.message }}</div>
-        </div>
-      </div>
-    </Transition>
+    <!-- Notification panel -->
+    <WinNotificationCenter :open="notifOpen" />
 
     <!-- Quick Actions Panel -->
-    <Transition name="slide-up">
-      <div v-if="qsOpen" class="qs-panel" @click.stop>
-        <div class="quick-actions">
-          <div class="qa-grid">
-            <button v-for="qa in quickActions" :key="qa.label" class="qa-btn" :class="{ on: qa.on }" @click="qa.on = !qa.on">
-              <Icon :name="qa.icon" class="qa-icon" />
-              <span class="qa-label">{{ qa.label }}</span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </Transition>
+    <WinQuickSettings :open="qsOpen" @openSettings="openApp('settings')" />
 
     <!-- Context menu -->
     <WinContextMenu
@@ -163,14 +138,38 @@ const focusedId = computed(() => {
 })
 
 const desktopIcons = ref([
-  { id: 'thispc', appId: 'explorer', icon: ICON_DESKTOP_PC, label: 'Ce PC', x: GRID_OFFSET_X, y: GRID_OFFSET_Y },
-  { id: 'explorer', appId: 'explorer', icon: ICON_DESKTOP_DOCS, label: 'Documents', x: GRID_OFFSET_X, y: GRID_OFFSET_Y + GRID_H },
-  { id: 'notepad', appId: 'notepad', icon: ICON_DESKTOP_NOTEPAD, label: 'Bloc-notes', x: GRID_OFFSET_X, y: GRID_OFFSET_Y + GRID_H * 2 },
-  { id: 'calc', appId: 'calculator', icon: ICON_DESKTOP_CALC, label: 'Calculatrice', x: GRID_OFFSET_X, y: GRID_OFFSET_Y + GRID_H * 3 },
-  { id: 'settings', appId: 'settings', icon: ICON_DESKTOP_SETTINGS, label: 'Paramètres', x: GRID_OFFSET_X, y: GRID_OFFSET_Y + GRID_H * 4 },
-  { id: 'photos', appId: 'photos', icon: ICON_DESKTOP_PHOTOS, label: 'Photos', x: GRID_OFFSET_X, y: GRID_OFFSET_Y + GRID_H * 5 },
-  { id: 'trash', appId: 'explorer', icon: ICON_DESKTOP_TRASH, label: 'Corbeille', x: GRID_OFFSET_X, y: GRID_OFFSET_Y + GRID_H * 6 },
+  { id: 'trash', appId: 'explorer', icon: ICON_DESKTOP_TRASH, label: 'Corbeille', x: 0, y: 0 },
+  { id: 'thispc', appId: 'explorer', icon: ICON_DESKTOP_PC, label: 'Ce PC', x: 0, y: 5 },
+  { id: 'explorer', appId: 'explorer', icon: ICON_DESKTOP_DOCS, label: 'Documents', x: 0, y: 0 },
+  { id: 'notepad', appId: 'notepad', icon: ICON_DESKTOP_NOTEPAD, label: 'Bloc-notes', x: 0, y: 0 },
+  { id: 'calc', appId: 'calculator', icon: ICON_DESKTOP_CALC, label: 'Calculatrice', x: 0, y: 0 },
+  { id: 'photos', appId: 'photos', icon: ICON_DESKTOP_PHOTOS, label: 'Photos', x: 0, y: 0 },
 ])
+
+function arrangeIcons() {
+  const h = window.innerHeight - 60 // Taskbar + margin
+  let currentX = GRID_OFFSET_X
+  let currentY = GRID_OFFSET_Y
+  
+  desktopIcons.value.forEach(icon => {
+    if (currentY + GRID_H > h) {
+      currentX += GRID_W
+      currentY = GRID_OFFSET_Y
+    }
+    icon.x = currentX
+    icon.y = currentY
+    currentY += GRID_H
+  })
+}
+
+onMounted(() => {
+  arrangeIcons()
+  window.addEventListener('resize', arrangeIcons)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', arrangeIcons)
+})
 
 function onIconDragStart(e: MouseEvent, icon: any) {
   if (e.button !== 0) return // Only left click
@@ -206,22 +205,6 @@ function onIconDragStart(e: MouseEvent, icon: any) {
   document.addEventListener('mousemove', onMove)
   document.addEventListener('mouseup', onUp)
 }
-
-const notifications = ref([
-  { app: 'Windows Update', message: 'Des mises à jour sont disponibles.' },
-  { app: 'Sécurité Windows', message: 'Votre appareil est protégé.' },
-])
-
-const quickActions = ref([
-  { icon: ICON_FLUENT_WIFI, label: 'Wi-Fi', on: true },
-  { icon: ICON_FLUENT_BLUETOOTH, label: 'Bluetooth', on: false },
-  { icon: ICON_FLUENT_AIRPLANE, label: 'Mode avion', on: false },
-  { icon: ICON_FLUENT_DND, label: 'Ne pas déranger', on: false },
-  { icon: ICON_FLUENT_FLASHLIGHT, label: 'Lampe torche', on: false },
-  { icon: ICON_FLUENT_EASE, label: 'Facilité d\'accès', on: false },
-  { icon: ICON_FLUENT_PROJECT, label: 'Projeter', on: false },
-  { icon: ICON_FLUENT_BATTERY, label: 'Économiseur', on: false },
-])
 
 const ctxItems = computed(() => [
   { label: 'Affichage', icon: ICON_FLUENT_VIEW, action: () => {} },
@@ -324,98 +307,13 @@ function closeMenus() {
   text-align: center;
   text-shadow: 0 1px 3px rgba(0,0,0,0.8), 0 0 8px rgba(0,0,0,0.5);
   line-height: 1.3;
-  max-width: 72px;
-  overflow: hidden;
+  max-width: 80px;
+  overflow: visible;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
-}
-
-/* Panels */
-.notif-panel, .qs-panel {
-  position: fixed;
-  right: 12px;
-  bottom: calc(var(--taskbar-height) + 12px);
-  width: 360px;
-  background: rgba(30, 30, 30, 0.85);
-  backdrop-filter: blur(30px);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 8px;
-  z-index: 7500;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-}
-
-.notif-panel {
-  height: calc(100vh - var(--taskbar-height) - 24px);
-  top: 12px;
-}
-
-.notif-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 16px 12px;
-  font-size: 14px;
-  font-weight: 600;
-  color: white;
-
-  button {
-    font-size: 12px;
-    color: var(--accent);
-    &:hover { text-decoration: underline; }
-  }
-}
-
-.notif-empty {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 40px;
-  color: rgba(255,255,255,0.4);
-  font-size: 13px;
-}
-
-.notif-item {
-  margin: 4px 8px;
-  padding: 12px;
-  background: rgba(255,255,255,0.06);
-  border-radius: 6px;
-}
-
-.notif-app { font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 4px; }
-.notif-msg { font-size: 13px; color: rgba(255,255,255,0.9); }
-
-.qs-panel {
-  width: 320px;
-  padding: 16px;
-}
-
-.qa-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
-
-.qa-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  padding: 12px 4px;
-  border-radius: 4px;
-  background: rgba(255,255,255,0.06);
-  transition: background 0.15s;
-
-  &:hover { background: rgba(255,255,255,0.12); }
-  &.on { background: var(--accent); }
-
-  .qa-icon { font-size: 20px; }
-  .qa-label { font-size: 11px; color: white; }
 }
 
 /* Edge placeholder */
@@ -450,21 +348,5 @@ function closeMenus() {
   justify-content: center;
   gap: 8px;
   color: #666;
-}
-
-/* Transitions */
-.slide-right-enter-active, .slide-right-leave-active {
-  transition: transform 0.25s cubic-bezier(0.1, 0.9, 0.2, 1);
-}
-.slide-right-enter-from, .slide-right-leave-to {
-  transform: translateX(380px);
-}
-
-.slide-up-enter-active, .slide-up-leave-active {
-  transition: transform 0.25s cubic-bezier(0.1, 0.9, 0.2, 1), opacity 0.2s;
-}
-.slide-up-enter-from, .slide-up-leave-to {
-  transform: translateY(20px);
-  opacity: 0;
 }
 </style>
