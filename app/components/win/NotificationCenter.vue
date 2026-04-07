@@ -9,14 +9,14 @@
         </div>
         
         <div v-if="!notifications.length" class="notif-empty">
-          <Icon name="fluent:alert-off-24-regular" size="48" style="color: rgba(255,255,255,0.2)" />
+          <Icon :name="ICON_FLUENT_ALERT_OFF" size="48" style="color: rgba(255,255,255,0.2)" />
           <p>Pas de nouvelles notifications</p>
         </div>
 
         <div class="notif-list">
           <div v-for="(n, i) in notifications" :key="i" class="notif-item">
             <div class="notif-app-header">
-              <Icon :name="n.icon || 'fluent:alert-24-regular'" class="notif-app-icon" />
+              <Icon :name="n.icon || ICON_FLUENT_ALERT" class="notif-app-icon" />
               <span class="notif-app-name">{{ n.app }}</span>
               <button class="notif-close" @click="removeNotif(i)">✕</button>
             </div>
@@ -33,8 +33,8 @@
         <div class="cal-header">
           <span class="cal-month">{{ currentMonth }}</span>
           <div class="cal-controls">
-            <button><Icon name="fluent:chevron-up-24-regular" size="14" /></button>
-            <button><Icon name="fluent:chevron-down-24-regular" size="14" /></button>
+            <button><Icon :name="ICON_FLUENT_CHEVRON_UP" size="14" /></button>
+            <button><Icon :name="ICON_FLUENT_CHEVRON_DOWN" size="14" /></button>
           </div>
         </div>
         <div class="cal-grid">
@@ -47,12 +47,22 @@
 </template>
 
 <script setup lang="ts">
+import {
+  ICON_FLUENT_ALERT,
+  ICON_FLUENT_ALERT_OFF,
+  ICON_FLUENT_CHEVRON_UP,
+  ICON_FLUENT_CHEVRON_DOWN,
+  ICON_FLUENT_UPDATE,
+  ICON_FLUENT_SECURITY,
+} from '~/composables/icons'
+
 defineProps<{ open: boolean }>()
 
 const notifications = ref([
-  { app: 'Windows Update', title: 'Mise à jour prête', message: 'Une mise à jour importante est prête à être installée.', icon: 'fluent:arrow-sync-24-regular' },
-  { app: 'Sécurité Windows', title: 'Analyse terminée', message: 'Aucune menace n\'a été détectée lors de la dernière analyse.', icon: 'fluent:shield-check-24-regular' },
+  { app: 'Windows Update', title: 'Mise à jour prête', message: 'Une mise à jour importante est prête à être installée.', icon: ICON_FLUENT_UPDATE },
+  { app: 'Sécurité Windows', title: 'Analyse terminée', message: 'Aucune menace n\'a été détectée lors de la dernière analyse.', icon: ICON_FLUENT_SECURITY },
 ])
+
 
 function removeNotif(index: number) {
   notifications.value.splice(index, 1)

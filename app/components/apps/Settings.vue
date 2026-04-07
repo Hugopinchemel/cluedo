@@ -176,6 +176,26 @@
 </template>
 
 <script setup lang="ts">
+import {
+  ICON_SETTINGS_SYSTEM,
+  ICON_SETTINGS_DEVICES,
+  ICON_SETTINGS_PHONE,
+  ICON_SETTINGS_NETWORK,
+  ICON_SETTINGS_PERSONAL,
+  ICON_SETTINGS_APPS,
+  ICON_SETTINGS_ACCOUNTS,
+  ICON_SETTINGS_TIME,
+  ICON_SETTINGS_GAMING,
+  ICON_SETTINGS_EASE,
+  ICON_SETTINGS_PRIVACY,
+  ICON_SETTINGS_UPDATE,
+  ICON_APP_NOTEPAD,
+  ICON_APP_PHOTOS,
+  ICON_APP_EXPLORER,
+  ICON_APP_SETTINGS,
+  ICON_APP_CALCULATOR,
+} from '~/composables/icons'
+
 defineEmits<{ changeBg: [css: string] }>()
 
 const activeCategory = ref('system')
@@ -186,18 +206,18 @@ const darkMode = ref(false)
 const accentColor = ref('#0078d4')
 
 const categories = [
-  { id: 'system', icon: '/icons/user-desktop-symbolic.svg', name: 'Système' },
-  { id: 'devices', icon: '/icons/keyboard-brightness-symbolic.svg', name: 'Périphériques' },
-  { id: 'phone', icon: '/icons/network-cellular-connected-symbolic.svg', name: 'Téléphone' },
-  { id: 'network', icon: '/icons/network-idle-symbolic.svg', name: 'Réseau et Internet' },
-  { id: 'personalization', icon: '/icons/preferences-desktop-wallpaper-symbolic.svg', name: 'Personnalisation' },
-  { id: 'apps', icon: '/icons/application-certificate-symbolic.svg', name: 'Applications' },
-  { id: 'accounts', icon: '/icons/avatar-default-symbolic.svg', name: 'Comptes' },
-  { id: 'time', icon: '/icons/preferences-system-time-symbolic.svg', name: 'Heure et langue' },
-  { id: 'gaming', icon: '/icons/audio-volume-high-symbolic.svg', name: 'Jeux' },
-  { id: 'ease', icon: '/icons/preferences-desktop-accessibility-symbolic.svg', name: 'Facilité d\'accès' },
-  { id: 'privacy', icon: '/icons/dialog-password-symbolic.svg', name: 'Confidentialité' },
-  { id: 'update', icon: '/icons/software-update-available-symbolic.svg', name: 'Mise à jour et sécurité' },
+  { id: 'system', icon: ICON_SETTINGS_SYSTEM, name: 'Système' },
+  { id: 'devices', icon: ICON_SETTINGS_DEVICES, name: 'Périphériques' },
+  { id: 'phone', icon: ICON_SETTINGS_PHONE, name: 'Téléphone' },
+  { id: 'network', icon: ICON_SETTINGS_NETWORK, name: 'Réseau et Internet' },
+  { id: 'personalization', icon: ICON_SETTINGS_PERSONAL, name: 'Personnalisation' },
+  { id: 'apps', icon: ICON_SETTINGS_APPS, name: 'Applications' },
+  { id: 'accounts', icon: ICON_SETTINGS_ACCOUNTS, name: 'Comptes' },
+  { id: 'time', icon: ICON_SETTINGS_TIME, name: 'Heure et langue' },
+  { id: 'gaming', icon: ICON_SETTINGS_GAMING, name: 'Jeux' },
+  { id: 'ease', icon: ICON_SETTINGS_EASE, name: 'Facilité d\'accès' },
+  { id: 'privacy', icon: ICON_SETTINGS_PRIVACY, name: 'Confidentialité' },
+  { id: 'update', icon: ICON_SETTINGS_UPDATE, name: 'Mise à jour et sécurité' },
 ]
 
 const backgrounds = [
@@ -215,13 +235,14 @@ const accentColors = [
 ]
 
 const installedApps = [
-  { icon: '/icons/web-browser-symbolic.svg', name: 'Microsoft Edge', size: '120 Mo', date: '01/04/2026' },
-  { icon: '/icons/text-editor-symbolic.svg', name: 'Bloc-notes', size: '2,3 Mo', date: '01/04/2026' },
-  { icon: '/icons/accessories-calculator-symbolic.svg', name: 'Calculatrice', size: '15 Mo', date: '01/04/2026' },
-  { icon: '/icons/folder-pictures-symbolic.svg', name: 'Photos', size: '80 Mo', date: '01/04/2026' },
-  { icon: '/icons/system-file-manager-symbolic.svg', name: 'Explorateur de fichiers', size: '45 Mo', date: '01/04/2026' },
-  { icon: '/icons/gnome-power-manager-symbolic.svg', name: 'Paramètres', size: '18 Mo', date: '01/04/2026' },
+  { icon: ICON_APP_EDGE, name: 'Microsoft Edge', size: '120 Mo', date: '01/04/2026' },
+  { icon: ICON_APP_NOTEPAD, name: 'Bloc-notes', size: '2,3 Mo', date: '01/04/2026' },
+  { icon: ICON_APP_CALCULATOR, name: 'Calculatrice', size: '15 Mo', date: '01/04/2026' },
+  { icon: ICON_APP_PHOTOS, name: 'Photos', size: '80 Mo', date: '01/04/2026' },
+  { icon: ICON_APP_EXPLORER, name: 'Explorateur de fichiers', size: '45 Mo', date: '01/04/2026' },
+  { icon: ICON_APP_SETTINGS, name: 'Paramètres', size: '18 Mo', date: '01/04/2026' },
 ]
+
 </script>
 
 <style scoped>

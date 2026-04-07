@@ -73,6 +73,9 @@ import {
   ICON_START_IMAGES,
   ICON_START_SETTINGS,
   ICON_START_POWER,
+  ICON_APP_NOTEPAD,
+  ICON_APP_PHOTOS,
+  ICON_FOLDER_GENERIC,
   ICON_RECENT_NOTEPAD,
   ICON_RECENT_FOLDER,
   ICON_RECENT_PHOTOS,
@@ -95,6 +98,7 @@ const recentItems = [
   { icon: ICON_RECENT_PHOTOS,   name: 'Fond d\'écran.png', meta: 'Photos · Il y a 3 jours' },
   { icon: ICON_RECENT_SETTINGS, name: 'Paramètres',       meta: 'Paramètres · Il y a 1 semaine' },
 ]
+
 </script>
 
 <style scoped>

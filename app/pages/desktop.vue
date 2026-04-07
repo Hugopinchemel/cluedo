@@ -55,7 +55,7 @@
           <button @click="notifications = []">Effacer tout</button>
         </div>
         <div v-if="!notifications.length" class="notif-empty">
-          <Icon name="fluent:alert-off-24-regular" size="48" style="color: rgba(255,255,255,0.3)" />
+          <Icon :name="ICON_FLUENT_ALERT_OFF" size="48" style="color: rgba(255,255,255,0.3)" />
           <p>Pas de nouvelles notifications</p>
         </div>
         <div v-for="(n, i) in notifications" :key="i" class="notif-item">
@@ -97,6 +97,32 @@ import FileExplorer from '~/components/apps/FileExplorer.vue'
 import Settings from '~/components/apps/Settings.vue'
 import Photos from '~/components/apps/Photos.vue'
 
+import {
+  ICON_DESKTOP_PC,
+  ICON_DESKTOP_DOCS,
+  ICON_DESKTOP_NOTEPAD,
+  ICON_DESKTOP_CALC,
+  ICON_DESKTOP_SETTINGS,
+  ICON_DESKTOP_PHOTOS,
+  ICON_DESKTOP_TRASH,
+  ICON_FLUENT_WIFI,
+  ICON_FLUENT_BLUETOOTH,
+  ICON_FLUENT_AIRPLANE,
+  ICON_FLUENT_DND,
+  ICON_FLUENT_FLASHLIGHT,
+  ICON_FLUENT_EASE,
+  ICON_FLUENT_PROJECT,
+  ICON_FLUENT_BATTERY,
+  ICON_FLUENT_VIEW,
+  ICON_FLUENT_SORT,
+  ICON_FLUENT_REFRESH,
+  ICON_FLUENT_NEW_DOC,
+  ICON_FLUENT_PERSONALIZE,
+  ICON_FLUENT_DISPLAY,
+  ICON_FLUENT_ALERT_OFF,
+  ICON_APP_EDGE_LOGO,
+} from '~/composables/icons'
+
 definePageMeta({ layout: false })
 
 const { windows, openApp, focusWindow } = useWindows()
@@ -108,7 +134,7 @@ const appComponents: Record<string, any> = {
   explorer: FileExplorer,
   settings: Settings,
   photos: Photos,
-  edge: { template: `<div class="edge-placeholder"><div class="edge-bar"><span><Icon name="logos:microsoft-edge" /></span><div class="edge-url">https://www.bing.com</div></div><div class="edge-content"><h2>Microsoft Edge</h2><p>Navigateur simulé</p></div></div>`, styles: [] },
+  edge: { template: `<div class="edge-placeholder"><div class="edge-bar"><span><Icon :name="ICON_APP_EDGE_LOGO" /></span><div class="edge-url">https://www.bing.com</div></div><div class="edge-content"><h2>Microsoft Edge</h2><p>Navigateur simulé</p></div></div>`, styles: [] },
 }
 
 const wallpaper = ref(
@@ -124,6 +150,12 @@ const ctxVisible = ref(false)
 const ctxX = ref(0)
 const ctxY = ref(0)
 
+// Grid constants for desktop icons
+const GRID_W = 80
+const GRID_H = 104
+const GRID_OFFSET_X = 6
+const GRID_OFFSET_Y = 6
+
 const focusedId = computed(() => {
   const visible = windows.value.filter(w => !w.minimized)
   if (!visible.length) return ''
@@ -131,20 +163,25 @@ const focusedId = computed(() => {
 })
 
 const desktopIcons = ref([
-  { id: 'thispc', appId: 'explorer', icon: '/icons/user-desktop-symbolic.svg', label: 'Ce PC', x: 12, y: 12 },
-  { id: 'explorer', appId: 'explorer', icon: '/icons/folder_open.png', label: 'Documents', x: 12, y: 112 },
-  { id: 'notepad', appId: 'notepad', icon: '/icons/text-editor-symbolic.svg', label: 'Bloc-notes', x: 12, y: 212 },
-  { id: 'calc', appId: 'calculator', icon: '/icons/accessories-calculator-symbolic.svg', label: 'Calculatrice', x: 12, y: 312 },
-  { id: 'settings', appId: 'settings', icon: '/icons/gnome-power-manager-symbolic.svg', label: 'Paramètres', x: 12, y: 412 },
-  { id: 'photos', appId: 'photos', icon: '/icons/folder-pictures-symbolic.svg', label: 'Photos', x: 12, y: 512 },
-  { id: 'trash', appId: 'explorer', icon: '/icons/user-trash-symbolic.svg', label: 'Corbeille', x: 12, y: 612 },
+  { id: 'thispc', appId: 'explorer', icon: ICON_DESKTOP_PC, label: 'Ce PC', x: GRID_OFFSET_X, y: GRID_OFFSET_Y },
+  { id: 'explorer', appId: 'explorer', icon: ICON_DESKTOP_DOCS, label: 'Documents', x: GRID_OFFSET_X, y: GRID_OFFSET_Y + GRID_H },
+  { id: 'notepad', appId: 'notepad', icon: ICON_DESKTOP_NOTEPAD, label: 'Bloc-notes', x: GRID_OFFSET_X, y: GRID_OFFSET_Y + GRID_H * 2 },
+  { id: 'calc', appId: 'calculator', icon: ICON_DESKTOP_CALC, label: 'Calculatrice', x: GRID_OFFSET_X, y: GRID_OFFSET_Y + GRID_H * 3 },
+  { id: 'settings', appId: 'settings', icon: ICON_DESKTOP_SETTINGS, label: 'Paramètres', x: GRID_OFFSET_X, y: GRID_OFFSET_Y + GRID_H * 4 },
+  { id: 'photos', appId: 'photos', icon: ICON_DESKTOP_PHOTOS, label: 'Photos', x: GRID_OFFSET_X, y: GRID_OFFSET_Y + GRID_H * 5 },
+  { id: 'trash', appId: 'explorer', icon: ICON_DESKTOP_TRASH, label: 'Corbeille', x: GRID_OFFSET_X, y: GRID_OFFSET_Y + GRID_H * 6 },
 ])
 
 function onIconDragStart(e: MouseEvent, icon: any) {
+  if (e.button !== 0) return // Only left click
+  
   selectedIcon.value = icon.id
   draggingIcon.value = icon.id
   const startX = e.clientX - icon.x
   const startY = e.clientY - icon.y
+
+  // Prevent selection/native drag which can cause icons to get stuck
+  e.preventDefault()
 
   function onMove(e: MouseEvent) {
     icon.x = e.clientX - startX
@@ -153,6 +190,15 @@ function onIconDragStart(e: MouseEvent, icon: any) {
 
   function onUp() {
     draggingIcon.value = ''
+    
+    // Snap to grid
+    icon.x = Math.round((icon.x - GRID_OFFSET_X) / GRID_W) * GRID_W + GRID_OFFSET_X
+    icon.y = Math.round((icon.y - GRID_OFFSET_Y) / GRID_H) * GRID_H + GRID_OFFSET_Y
+
+    // Basic bounds check
+    icon.x = Math.max(GRID_OFFSET_X, icon.x)
+    icon.y = Math.max(GRID_OFFSET_Y, icon.y)
+
     document.removeEventListener('mousemove', onMove)
     document.removeEventListener('mouseup', onUp)
   }
@@ -167,26 +213,27 @@ const notifications = ref([
 ])
 
 const quickActions = ref([
-  { icon: 'fluent:wifi-1-24-regular', label: 'Wi-Fi', on: true },
-  { icon: 'fluent:bluetooth-24-regular', label: 'Bluetooth', on: false },
-  { icon: 'fluent:airplane-24-regular', label: 'Mode avion', on: false },
-  { icon: 'fluent:dismiss-circle-24-regular', label: 'Ne pas déranger', on: false },
-  { icon: 'fluent:flashlight-24-regular', label: 'Lampe torche', on: false },
-  { icon: 'fluent:accessibility-24-regular', label: 'Facilité d\'accès', on: false },
-  { icon: 'fluent:projection-screen-24-regular', label: 'Projeter', on: false },
-  { icon: 'fluent:battery-saver-24-regular', label: 'Économiseur', on: false },
+  { icon: ICON_FLUENT_WIFI, label: 'Wi-Fi', on: true },
+  { icon: ICON_FLUENT_BLUETOOTH, label: 'Bluetooth', on: false },
+  { icon: ICON_FLUENT_AIRPLANE, label: 'Mode avion', on: false },
+  { icon: ICON_FLUENT_DND, label: 'Ne pas déranger', on: false },
+  { icon: ICON_FLUENT_FLASHLIGHT, label: 'Lampe torche', on: false },
+  { icon: ICON_FLUENT_EASE, label: 'Facilité d\'accès', on: false },
+  { icon: ICON_FLUENT_PROJECT, label: 'Projeter', on: false },
+  { icon: ICON_FLUENT_BATTERY, label: 'Économiseur', on: false },
 ])
 
 const ctxItems = computed(() => [
-  { label: 'Affichage', icon: 'fluent:view-desktop-24-regular', action: () => {} },
-  { label: 'Trier par', icon: 'fluent:arrow-sort-24-regular', action: () => {} },
-  { label: 'Actualiser', icon: 'fluent:arrow-counterclockwise-24-regular', action: () => {} },
+  { label: 'Affichage', icon: ICON_FLUENT_VIEW, action: () => {} },
+  { label: 'Trier par', icon: ICON_FLUENT_SORT, action: () => {} },
+  { label: 'Actualiser', icon: ICON_FLUENT_REFRESH, action: () => {} },
   { separator: true },
-  { label: 'Nouveau', icon: 'fluent:document-add-24-regular', action: () => openApp('notepad') },
+  { label: 'Nouveau', icon: ICON_FLUENT_NEW_DOC, action: () => openApp('notepad') },
   { separator: true },
-  { label: 'Personnaliser', icon: 'fluent:paint-brush-24-regular', action: () => openApp('settings') },
-  { label: 'Paramètres d\'affichage', icon: 'fluent:desktop-24-regular', action: () => openApp('settings') },
+  { label: 'Personnaliser', icon: ICON_FLUENT_PERSONALIZE, action: () => openApp('settings') },
+  { label: 'Paramètres d\'affichage', icon: ICON_FLUENT_DISPLAY, action: () => openApp('settings') },
 ])
+
 
 function onRightClick(e: MouseEvent) {
   selectedIcon.value = ''

@@ -18,23 +18,23 @@
 
       <div class="qs-sliders">
         <div class="qs-slider-row">
-          <img src="/icons/display-brightness-symbolic.svg" width="16" height="16" class="qs-slider-icon" style="filter: invert(1)" alt="" />
+          <img :src="ICON_QS_BRIGHTNESS" width="16" height="16" class="qs-slider-icon" style="filter: invert(1)" alt="" />
           <input type="range" v-model="brightness" min="0" max="100" class="qs-range">
         </div>
         <div class="qs-slider-row">
-          <img src="/icons/audio-volume-medium-symbolic.svg" width="16" height="16" class="qs-slider-icon" style="filter: invert(1)" alt="" />
+          <img :src="ICON_QS_VOLUME" width="16" height="16" class="qs-slider-icon" style="filter: invert(1)" alt="" />
           <input type="range" v-model="volume" min="0" max="100" class="qs-range">
         </div>
       </div>
 
       <div class="qs-footer">
         <div class="qs-battery">
-          <img src="/icons/battery-full-symbolic.svg" width="16" height="16" class="qs-battery-icon" style="filter: invert(1)" alt="" />
+          <img :src="ICON_TRAY_BATTERY" width="16" height="16" class="qs-battery-icon" style="filter: invert(1)" alt="" />
           <span>100%</span>
         </div>
         <div class="qs-footer-right">
           <button class="qs-settings-btn" @click="$emit('openSettings')">
-            <img src="/icons/gnome-power-manager-symbolic.svg" width="16" height="16" style="filter: invert(1)" alt="" />
+            <img :src="ICON_APP_SETTINGS" width="16" height="16" style="filter: invert(1)" alt="" />
           </button>
         </div>
       </div>
@@ -43,6 +43,19 @@
 </template>
 
 <script setup lang="ts">
+import {
+  ICON_QS_WIFI,
+  ICON_QS_BLUETOOTH,
+  ICON_QS_AIRPLANE,
+  ICON_QS_DND,
+  ICON_QS_FLASHLIGHT,
+  ICON_QS_BATTERY,
+  ICON_QS_BRIGHTNESS,
+  ICON_QS_VOLUME,
+  ICON_TRAY_BATTERY,
+  ICON_APP_SETTINGS,
+} from '~/composables/icons'
+
 defineProps<{ open: boolean }>()
 defineEmits(['openSettings'])
 
@@ -50,13 +63,14 @@ const brightness = ref(80)
 const volume = ref(50)
 
 const quickActions = ref([
-  { icon: '/icons/network-wireless-signal-excellent-symbolic.svg', label: 'Wi-Fi', on: true },
-  { icon: '/icons/bluetooth-symbolic.svg', label: 'Bluetooth', on: true },
-  { icon: '/icons/airplane-mode-symbolic.svg', label: 'Mode avion', on: false },
-  { icon: '/icons/audio-volume-muted-symbolic.svg', label: 'Ne pas déranger', on: false },
-  { icon: '/icons/display-brightness-symbolic.svg', label: 'Lampe torche', on: false },
-  { icon: '/icons/battery-good-symbolic.svg', label: 'Économiseur', on: false },
+  { icon: ICON_QS_WIFI, label: 'Wi-Fi', on: true },
+  { icon: ICON_QS_BLUETOOTH, label: 'Bluetooth', on: true },
+  { icon: ICON_QS_AIRPLANE, label: 'Mode avion', on: false },
+  { icon: ICON_QS_DND, label: 'Ne pas déranger', on: false },
+  { icon: ICON_QS_FLASHLIGHT, label: 'Lampe torche', on: false },
+  { icon: ICON_QS_BATTERY, label: 'Économiseur', on: false },
 ])
+
 </script>
 
 <style scoped>
