@@ -29,7 +29,7 @@
 </script>
 
 <style scoped>
-.pdf-viewer {
+.pdf-viewer2 {
   display: flex;
   flex-direction: column;
   height: 100%;
