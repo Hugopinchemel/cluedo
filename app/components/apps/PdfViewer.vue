@@ -3,7 +3,7 @@
     <div class="pdf-toolbar">
       <div class="toolbar-left">
         <Icon name="fluent:document-pdf-24-filled" class="pdf-icon" />
-        <span class="file-name">sample.pdf</span>
+        <span class="file-name">Rapport_d'Autopsie.pdf</span>
       </div>
       <div class="toolbar-right">
         <button class="tb-btn" title="Imprimer">
@@ -16,7 +16,7 @@
     </div>
     <div class="pdf-content">
       <iframe
-        src="/sample.pdf"
+        src="/doc/A4 - 1.pdf"
         class="pdf-iframe"
         frameborder="0"
       ></iframe>
