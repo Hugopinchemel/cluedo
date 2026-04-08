@@ -43,6 +43,7 @@ export const APPS: AppDef[] = [
   { id: 'edge',        name: 'Microsoft Edge',          icon: ICON_APP_EDGE,       defaultWidth: 960, defaultHeight: 620 },
   { id: 'photos',      name: 'Photos',                  icon: ICON_APP_PHOTOS,     defaultWidth: 820, defaultHeight: 560 },
   { id: 'pdfviewer',   name: 'Lecteur PDF',             icon: ICON_APP_PDF,        defaultWidth: 820, defaultHeight: 680 },
+  { id: 'pdfviewer2',  name: 'Dossier_interne.pdf',     icon: ICON_APP_PDF,        defaultWidth: 820, defaultHeight: 680 },
 ]
 
 // Module-level singleton state

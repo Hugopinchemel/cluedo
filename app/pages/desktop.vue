@@ -72,6 +72,8 @@ import FileExplorer from '~/components/apps/FileExplorer.vue'
 import Settings from '~/components/apps/Settings.vue'
 import Photos from '~/components/apps/Photos.vue'
 import PdfViewer from '~/components/apps/PdfViewer.vue'
+import PdfViewer2 from '~/components/apps/PdfViewer2.vue'
+
 
 import {
   ICON_DESKTOP_PC,
@@ -112,7 +114,10 @@ const appComponents: Record<string, any> = {
   settings: Settings,
   photos: Photos,
   pdfviewer: PdfViewer,
+  pdfviewer2: PdfViewer2,
+
   edge: { template: `<div class="edge-placeholder"><div class="edge-bar"><span><Icon :name="ICON_APP_EDGE_LOGO" /></span><div class="edge-url">https://www.bing.com</div></div><div class="edge-content"><h2>Microsoft Edge</h2><p>Navigateur simulé</p></div></div>`, styles: [] },
+
 }
 
 const wallpaper = ref(
@@ -147,7 +152,8 @@ const desktopIcons = ref([
   { id: 'notepad', appId: 'notepad', icon: ICON_DESKTOP_NOTEPAD, label: 'Bloc-notes', x: 0, y: 0 },
   { id: 'calc', appId: 'calculator', icon: ICON_DESKTOP_CALC, label: 'Calculatrice', x: 0, y: 0 },
   { id: 'photos', appId: 'photos', icon: ICON_DESKTOP_PHOTOS, label: 'Photos', x: 0, y: 0 },
-  { id: 'pdf', appId: 'pdfviewer', icon: ICON_DESKTOP_PDF, label: 'Dossier.pdf', x: 0, y: 0 },
+  { id: 'pdf', appId: 'pdfviewer', icon: ICON_DESKTOP_PDF, label: 'Dossiers.pdf', x: 0, y: 0 },
+  { id: 'pdf', appId: 'pdfviewer2', icon: ICON_DESKTOP_PDF, label: 'Rapport_d\'Autopsie.pdf', x: 0, y: 0 },
 ])
 
 function arrangeIcons() {
