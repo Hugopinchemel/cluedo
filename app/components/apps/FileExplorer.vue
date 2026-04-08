@@ -4,39 +4,41 @@
     <div class="ribbon">
       <div class="ribbon-tabs">
         <button
-          v-for="tab in ['Accueil', 'Partager', 'Affichage']"
-          :key="tab"
-          class="ribbon-tab"
-          :class="{ active: activeTab === tab }"
-          @click="activeTab = tab"
-        >{{ tab }}</button>
+            v-for="tab in ['Accueil', 'Partager', 'Affichage']"
+            :key="tab"
+            :class="{ active: activeTab === tab }"
+            class="ribbon-tab"
+            @click="activeTab = tab"
+        >{{ tab }}
+        </button>
       </div>
       <div class="ribbon-actions">
         <button class="rib-btn" title="Nouveau dossier" @click="newFolder">
-          <img v-if="ICON_EXPLORER_NEW_FOLDER.startsWith('/')" :src="ICON_EXPLORER_NEW_FOLDER" width="16" height="16" alt="" />
-          <Icon v-else :name="ICON_EXPLORER_NEW_FOLDER" />
+          <img v-if="ICON_EXPLORER_NEW_FOLDER.startsWith('/')" :src="ICON_EXPLORER_NEW_FOLDER" alt="" height="16"
+               width="16"/>
+          <Icon v-else :name="ICON_EXPLORER_NEW_FOLDER"/>
           <span>Nouveau dossier</span>
         </button>
-        <div class="rib-sep" />
+        <div class="rib-sep"/>
         <button class="rib-btn" title="Copier">
-          <img v-if="ICON_EXPLORER_COPY.startsWith('/')" :src="ICON_EXPLORER_COPY" width="16" height="16" alt="" />
-          <Icon v-else :name="ICON_EXPLORER_COPY" />
+          <img v-if="ICON_EXPLORER_COPY.startsWith('/')" :src="ICON_EXPLORER_COPY" alt="" height="16" width="16"/>
+          <Icon v-else :name="ICON_EXPLORER_COPY"/>
           <span>Copier</span>
         </button>
         <button class="rib-btn" title="Coller">
-          <img v-if="ICON_EXPLORER_PASTE.startsWith('/')" :src="ICON_EXPLORER_PASTE" width="16" height="16" alt="" />
-          <Icon v-else :name="ICON_EXPLORER_PASTE" />
+          <img v-if="ICON_EXPLORER_PASTE.startsWith('/')" :src="ICON_EXPLORER_PASTE" alt="" height="16" width="16"/>
+          <Icon v-else :name="ICON_EXPLORER_PASTE"/>
           <span>Coller</span>
         </button>
-        <div class="rib-sep" />
+        <div class="rib-sep"/>
         <button class="rib-btn" title="Renommer">
-          <img v-if="ICON_EXPLORER_RENAME.startsWith('/')" :src="ICON_EXPLORER_RENAME" width="16" height="16" alt="" />
-          <Icon v-else :name="ICON_EXPLORER_RENAME" />
+          <img v-if="ICON_EXPLORER_RENAME.startsWith('/')" :src="ICON_EXPLORER_RENAME" alt="" height="16" width="16"/>
+          <Icon v-else :name="ICON_EXPLORER_RENAME"/>
           <span>Renommer</span>
         </button>
         <button class="rib-btn" title="Supprimer">
-          <img v-if="ICON_EXPLORER_DELETE.startsWith('/')" :src="ICON_EXPLORER_DELETE" width="16" height="16" alt="" />
-          <Icon v-else :name="ICON_EXPLORER_DELETE" />
+          <img v-if="ICON_EXPLORER_DELETE.startsWith('/')" :src="ICON_EXPLORER_DELETE" alt="" height="16" width="16"/>
+          <Icon v-else :name="ICON_EXPLORER_DELETE"/>
           <span>Supprimer</span>
         </button>
       </div>
@@ -44,31 +46,41 @@
 
     <!-- Nav bar -->
     <div class="nav-bar">
-      <button class="nav-btn" :disabled="!canBack" @click="goBack">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      <button :disabled="!canBack" class="nav-btn" @click="goBack">
+        <svg fill="currentColor" height="16" viewBox="0 0 24 24" width="16">
+          <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+        </svg>
       </button>
       <button class="nav-btn" disabled>
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+        <svg fill="currentColor" height="16" viewBox="0 0 24 24" width="16">
+          <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+        </svg>
       </button>
       <button class="nav-btn" @click="goUp">
-        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z" transform="rotate(-90 12 12)"/></svg>
+        <svg fill="currentColor" height="16" viewBox="0 0 24 24" width="16">
+          <path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z" transform="rotate(-90 12 12)"/>
+        </svg>
       </button>
       <!-- Address bar -->
       <div class="address-bar">
         <span
-          v-for="(part, i) in breadcrumbs"
-          :key="i"
-          class="breadcrumb"
-          @click="navigateTo(part.path)"
+            v-for="(part, i) in breadcrumbs"
+            :key="i"
+            class="breadcrumb"
+            @click="navigateTo(part.path)"
         >
           {{ part.name }}
-          <svg v-if="i < breadcrumbs.length - 1" viewBox="0 0 24 24" width="12" height="12" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+          <svg v-if="i < breadcrumbs.length - 1" fill="currentColor" height="12" viewBox="0 0 24 24" width="12"><path
+              d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
         </span>
       </div>
       <!-- Search -->
       <div class="search-box">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="#888"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-        <input :placeholder="`Rechercher dans ${currentFolder.name}`" />
+        <svg fill="#888" height="14" viewBox="0 0 24 24" width="14">
+          <path
+              d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        </svg>
+        <input :placeholder="`Rechercher dans ${currentFolder.name}`"/>
       </div>
     </div>
 
@@ -79,27 +91,29 @@
         <div class="sidebar-section">
           <div class="sidebar-title">Accès rapide</div>
           <button
-            v-for="item in quickAccess"
-            :key="item.name"
-            class="sidebar-item"
-            :class="{ active: currentPath === item.path }"
-            @click="navigateTo(item.path)"
+              v-for="item in quickAccess"
+              :key="item.name"
+              :class="{ active: currentPath === item.path }"
+              class="sidebar-item"
+              @click="navigateTo(item.path)"
           >
-            <img v-if="item.icon.startsWith('/')" :src="item.icon" width="16" height="16" class="sidebar-icon-img" alt="" />
-            <Icon v-else :name="item.icon" class="sidebar-icon" />
+            <img v-if="item.icon.startsWith('/')" :src="item.icon" alt="" class="sidebar-icon-img" height="16"
+                 width="16"/>
+            <Icon v-else :name="item.icon" class="sidebar-icon"/>
             <span>{{ item.name }}</span>
           </button>
         </div>
         <div class="sidebar-section">
           <div class="sidebar-title">Ce PC</div>
           <button
-            v-for="item in thisPC"
-            :key="item.name"
-            class="sidebar-item"
-            @click="navigateTo(item.path)"
+              v-for="item in thisPC"
+              :key="item.name"
+              class="sidebar-item"
+              @click="navigateTo(item.path)"
           >
-            <img v-if="item.icon.startsWith('/')" :src="item.icon" width="16" height="16" class="sidebar-icon-img" alt="" />
-            <Icon v-else :name="item.icon" class="sidebar-icon" />
+            <img v-if="item.icon.startsWith('/')" :src="item.icon" alt="" class="sidebar-icon-img" height="16"
+                 width="16"/>
+            <Icon v-else :name="item.icon" class="sidebar-icon"/>
             <span>{{ item.name }}</span>
           </button>
         </div>
@@ -109,15 +123,15 @@
       <div class="files-area">
         <div v-if="viewMode === 'grid'" class="files-grid">
           <div
-            v-for="item in currentItems"
-            :key="item.name"
-            class="file-tile"
-            :class="{ selected: selected === item.name }"
-            @click="selected = item.name"
-            @dblclick="item.type === 'folder-icons' ? navigateTo(item.path ?? '') : null"
+              v-for="item in currentItems"
+              :key="item.name"
+              :class="{ selected: selected === item.name }"
+              class="file-tile"
+              @click="selected = item.name"
+              @dblclick="item.type === 'folder-icons' ? navigateTo(item.path ?? '') : null"
           >
-            <img v-if="item.icon.startsWith('/')" :src="item.icon" width="40" height="40" class="file-icon-img" alt="" />
-            <Icon v-else :name="item.icon" class="file-icon" />
+            <img v-if="item.icon.startsWith('/')" :src="item.icon" alt="" class="file-icon-img" height="40" width="40"/>
+            <Icon v-else :name="item.icon" class="file-icon"/>
             <span class="file-name">{{ item.name }}</span>
           </div>
         </div>
@@ -129,16 +143,17 @@
             <span class="col-size">Taille</span>
           </div>
           <div
-            v-for="item in currentItems"
-            :key="item.name"
-            class="list-row"
-            :class="{ selected: selected === item.name }"
-            @click="selected = item.name"
-            @dblclick="item.type === 'folder-icons' ? navigateTo(item.path ?? '') : null"
+              v-for="item in currentItems"
+              :key="item.name"
+              :class="{ selected: selected === item.name }"
+              class="list-row"
+              @click="selected = item.name"
+              @dblclick="item.type === 'folder-icons' ? navigateTo(item.path ?? '') : null"
           >
             <span class="col-name">
-              <img v-if="item.icon.startsWith('/')" :src="item.icon" width="16" height="16" class="row-icon-img" alt="" />
-              <Icon v-else :name="item.icon" class="row-icon" />
+              <img v-if="item.icon.startsWith('/')" :src="item.icon" alt="" class="row-icon-img" height="16"
+                   width="16"/>
+              <Icon v-else :name="item.icon" class="row-icon"/>
               {{ item.name }}
             </span>
             <span class="col-date">{{ item.date }}</span>
@@ -154,38 +169,42 @@
       <span>{{ currentItems?.length ?? 0 }} élément(s)</span>
       <span v-if="selected">{{ selected }} sélectionné(s)</span>
       <div class="view-toggle">
-        <button @click="viewMode = 'grid'" :class="{ active: viewMode === 'grid' }">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></svg>
+        <button :class="{ active: viewMode === 'grid' }" @click="viewMode = 'grid'">
+          <svg fill="currentColor" height="14" viewBox="0 0 24 24" width="14">
+            <path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/>
+          </svg>
         </button>
-        <button @click="viewMode = 'list'" :class="{ active: viewMode === 'list' }">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+        <button :class="{ active: viewMode === 'list' }" @click="viewMode = 'list'">
+          <svg fill="currentColor" height="14" viewBox="0 0 24 24" width="14">
+            <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
+          </svg>
         </button>
       </div>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {
-  ICON_EXPLORER_NEW_FOLDER,
+  ICON_APP_TRASH,
+  ICON_DESKTOP_PC,
+  ICON_DRIVE_DVD,
+  ICON_DRIVE_HDD,
   ICON_EXPLORER_COPY,
+  ICON_EXPLORER_DELETE,
+  ICON_EXPLORER_NEW_FOLDER,
   ICON_EXPLORER_PASTE,
   ICON_EXPLORER_RENAME,
-  ICON_EXPLORER_DELETE,
-  ICON_FOLDER_DOWNLOADS,
-  ICON_FOLDER_DOCUMENTS,
-  ICON_FOLDER_PICTURES,
-  ICON_FOLDER_MUSIC,
-  ICON_FOLDER_VIDEOS,
-  ICON_FOLDER_GENERIC,
-  ICON_DESKTOP_PC,
-  ICON_DRIVE_HDD,
-  ICON_DRIVE_DVD,
-  ICON_APP_TRASH,
-  ICON_FILE_TEXT,
   ICON_FILE_DOC,
   ICON_FILE_EXE,
+  ICON_FILE_TEXT,
   ICON_FILE_ZIP,
+  ICON_FOLDER_DOCUMENTS,
+  ICON_FOLDER_DOWNLOADS,
+  ICON_FOLDER_GENERIC,
+  ICON_FOLDER_MUSIC,
+  ICON_FOLDER_PICTURES,
+  ICON_FOLDER_VIDEOS,
 } from '~/composables/icons'
 
 interface FsItem {
@@ -205,47 +224,168 @@ const currentPath = ref('quick/desktop')
 const history = ref<string[]>([])
 
 const quickAccess = [
-  { icon: ICON_DESKTOP_PC, name: 'Bureau', path: 'quick/desktop' },
-  { icon: ICON_FOLDER_DOWNLOADS, name: 'Téléchargements', path: 'quick/downloads' },
-  { icon: ICON_FOLDER_DOCUMENTS, name: 'Documents', path: 'quick/documents' },
-  { icon: ICON_FOLDER_PICTURES, name: 'Images', path: 'quick/pictures' },
-  { icon: ICON_FOLDER_MUSIC, name: 'Musique', path: 'quick/music' },
-  { icon: ICON_FOLDER_VIDEOS, name: 'Vidéos', path: 'quick/videos' },
+  {icon: ICON_DESKTOP_PC, name: 'Bureau', path: 'quick/desktop'},
+  {icon: ICON_FOLDER_DOWNLOADS, name: 'Téléchargements', path: 'quick/downloads'},
+  {icon: ICON_FOLDER_DOCUMENTS, name: 'Documents', path: 'quick/documents'},
+  {icon: ICON_FOLDER_PICTURES, name: 'Images', path: 'quick/pictures'},
+  {icon: ICON_FOLDER_MUSIC, name: 'Musique', path: 'quick/music'},
+  {icon: ICON_FOLDER_VIDEOS, name: 'Vidéos', path: 'quick/videos'},
 ]
 
 const thisPC = [
-  { icon: ICON_DESKTOP_PC, name: 'Bureau', path: 'quick/desktop' },
-  { icon: ICON_DRIVE_HDD, name: 'Disque local (C:)', path: 'drive/c' },
-  { icon: ICON_DRIVE_DVD, name: 'Lecteur DVD (D:)', path: 'drive/d' },
+  {icon: ICON_DESKTOP_PC, name: 'Bureau', path: 'quick/desktop'},
+  {icon: ICON_DRIVE_HDD, name: 'Disque local (C:)', path: 'drive/c'},
+  {icon: ICON_DRIVE_DVD, name: 'Lecteur DVD (D:)', path: 'drive/d'},
 ]
 
 const filesystem: Record<string, FsItem[]> = {
   'quick/desktop': [
-    { name: 'Ce PC', icon: ICON_DESKTOP_PC, type: 'folder-icons', path: 'drive/c', date: '01/04/2026 10:00', typeName: 'Dossier système', size: '' },
-    { name: 'Corbeille', icon: ICON_APP_TRASH, type: 'folder-icons', path: 'trash', date: '01/04/2026 10:00', typeName: 'Corbeille', size: '' },
-    { name: 'Notes.txt', icon: ICON_FILE_TEXT, type: 'file', date: '01/04/2026 09:30', typeName: 'Fichier texte', size: '2 Ko' },
-    { name: 'Projet.docx', icon: ICON_FILE_DOC, type: 'file', date: '31/03/2026 18:00', typeName: 'Document Word', size: '45 Ko' },
+    {
+      name: 'Ce PC',
+      icon: ICON_DESKTOP_PC,
+      type: 'folder-icons',
+      path: 'drive/c',
+      date: '01/04/2026 10:00',
+      typeName: 'Dossier système',
+      size: ''
+    },
+    {
+      name: 'Corbeille',
+      icon: ICON_APP_TRASH,
+      type: 'folder-icons',
+      path: 'trash',
+      date: '01/04/2026 10:00',
+      typeName: 'Corbeille',
+      size: ''
+    },
+    {
+      name: 'Notes.txt',
+      icon: ICON_FILE_TEXT,
+      type: 'file',
+      date: '01/04/2026 09:30',
+      typeName: 'Fichier texte',
+      size: '2 Ko'
+    },
+    {
+      name: 'Projet.docx',
+      icon: ICON_FILE_DOC,
+      type: 'file',
+      date: '31/03/2026 18:00',
+      typeName: 'Document Word',
+      size: '45 Ko'
+    },
   ],
   'quick/downloads': [
-    { name: 'setup.exe', icon: ICON_FILE_EXE, type: 'file', date: '30/03/2026 14:00', typeName: 'Application', size: '58 Mo' },
-    { name: 'archive.zip', icon: ICON_FILE_ZIP, type: 'file', date: '29/03/2026 11:30', typeName: 'Archive ZIP', size: '120 Mo' },
-    { name: 'photo.jpg', icon: ICON_FOLDER_PICTURES, type: 'file', date: '28/03/2026', typeName: 'Image JPEG', size: '3,2 Mo' },
+    {
+      name: 'setup.exe',
+      icon: ICON_FILE_EXE,
+      type: 'file',
+      date: '30/03/2026 14:00',
+      typeName: 'Application',
+      size: '58 Mo'
+    },
+    {
+      name: 'archive.zip',
+      icon: ICON_FILE_ZIP,
+      type: 'file',
+      date: '29/03/2026 11:30',
+      typeName: 'Archive ZIP',
+      size: '120 Mo'
+    },
+    {
+      name: 'photo.jpg',
+      icon: ICON_FOLDER_PICTURES,
+      type: 'file',
+      date: '28/03/2026',
+      typeName: 'Image JPEG',
+      size: '3,2 Mo'
+    },
   ],
   'quick/documents': [
-    { name: 'Travail', icon: ICON_FOLDER_GENERIC, type: 'folder-icons', path: 'quick/documents/travail', date: '01/04/2026', typeName: 'Dossier de fichiers', size: '' },
-    { name: 'Personnel', icon: ICON_FOLDER_GENERIC, type: 'folder-icons', path: 'quick/documents/perso', date: '28/03/2026', typeName: 'Dossier de fichiers', size: '' },
-    { name: 'CV.docx', icon: ICON_FILE_DOC, type: 'file', date: '15/03/2026', typeName: 'Document Word', size: '42 Ko' },
+    {
+      name: 'Travail',
+      icon: ICON_FOLDER_GENERIC,
+      type: 'folder-icons',
+      path: 'quick/documents/travail',
+      date: '01/04/2026',
+      typeName: 'Dossier de fichiers',
+      size: ''
+    },
+    {
+      name: 'Personnel',
+      icon: ICON_FOLDER_GENERIC,
+      type: 'folder-icons',
+      path: 'quick/documents/perso',
+      date: '28/03/2026',
+      typeName: 'Dossier de fichiers',
+      size: ''
+    },
+    {name: 'CV.docx', icon: ICON_FILE_DOC, type: 'file', date: '15/03/2026', typeName: 'Document Word', size: '42 Ko'},
   ],
   'quick/pictures': [
-    { name: 'Vacances 2025', icon: ICON_FOLDER_GENERIC, type: 'folder-icons', path: 'quick/pictures/vacances', date: '10/09/2025', typeName: 'Dossier de fichiers', size: '' },
-    { name: 'fond_ecran.jpg', icon: ICON_FOLDER_PICTURES, type: 'file', date: '01/01/2026', typeName: 'Image JPEG', size: '8,4 Mo' },
-    { name: 'photo_profil.png', icon: ICON_FOLDER_PICTURES, type: 'file', date: '15/02/2026', typeName: 'Image PNG', size: '2,1 Mo' },
+    {
+      name: 'Vacances 2025',
+      icon: ICON_FOLDER_GENERIC,
+      type: 'folder-icons',
+      path: 'quick/pictures/vacances',
+      date: '10/09/2025',
+      typeName: 'Dossier de fichiers',
+      size: ''
+    },
+    {
+      name: 'fond_ecran.jpg',
+      icon: ICON_FOLDER_PICTURES,
+      type: 'file',
+      date: '01/01/2026',
+      typeName: 'Image JPEG',
+      size: '8,4 Mo'
+    },
+    {
+      name: 'photo_profil.png',
+      icon: ICON_FOLDER_PICTURES,
+      type: 'file',
+      date: '15/02/2026',
+      typeName: 'Image PNG',
+      size: '2,1 Mo'
+    },
   ],
   'drive/c': [
-    { name: 'Utilisateurs', icon: ICON_FOLDER_GENERIC, type: 'folder-icons', path: 'drive/c/users', date: '01/04/2026', typeName: 'Dossier de fichiers', size: '' },
-    { name: 'Windows', icon: ICON_FOLDER_GENERIC, type: 'folder-icons', path: 'drive/c/windows', date: '01/04/2026', typeName: 'Dossier de fichiers', size: '' },
-    { name: 'Program Files', icon: ICON_FOLDER_GENERIC, type: 'folder-icons', path: 'drive/c/pf', date: '01/04/2026', typeName: 'Dossier de fichiers', size: '' },
-    { name: 'Program Files (x86)', icon: ICON_FOLDER_GENERIC, type: 'folder-icons', path: 'drive/c/pf86', date: '01/04/2026', typeName: 'Dossier de fichiers', size: '' },
+    {
+      name: 'Utilisateurs',
+      icon: ICON_FOLDER_GENERIC,
+      type: 'folder-icons',
+      path: 'drive/c/users',
+      date: '01/04/2026',
+      typeName: 'Dossier de fichiers',
+      size: ''
+    },
+    {
+      name: 'Windows',
+      icon: ICON_FOLDER_GENERIC,
+      type: 'folder-icons',
+      path: 'drive/c/windows',
+      date: '01/04/2026',
+      typeName: 'Dossier de fichiers',
+      size: ''
+    },
+    {
+      name: 'Program Files',
+      icon: ICON_FOLDER_GENERIC,
+      type: 'folder-icons',
+      path: 'drive/c/pf',
+      date: '01/04/2026',
+      typeName: 'Dossier de fichiers',
+      size: ''
+    },
+    {
+      name: 'Program Files (x86)',
+      icon: ICON_FOLDER_GENERIC,
+      type: 'folder-icons',
+      path: 'drive/c/pf86',
+      date: '01/04/2026',
+      typeName: 'Dossier de fichiers',
+      size: ''
+    },
   ],
   'default': [],
 }
@@ -253,23 +393,23 @@ const filesystem: Record<string, FsItem[]> = {
 
 const currentFolder = computed(() => {
   const parts = currentPath.value.split('/')
-  return { name: parts[parts.length - 1] || 'Ce PC', path: currentPath.value }
+  return {name: parts[parts.length - 1] || 'Ce PC', path: currentPath.value}
 })
 
 const breadcrumbs = computed(() => {
   const parts = currentPath.value.split('/')
-  const crumbs = [{ name: 'Ce PC', path: '' }]
+  const crumbs = [{name: 'Ce PC', path: ''}]
   let p = ''
   for (const part of parts) {
     p = p ? `${p}/${part}` : part
     const label = quickAccess.find(q => q.path === p)?.name ?? part
-    crumbs.push({ name: label, path: p })
+    crumbs.push({name: label, path: p})
   }
   return crumbs
 })
 
 const currentItems = computed(() =>
-  filesystem[currentPath.value] ?? filesystem['default']
+    filesystem[currentPath.value] ?? filesystem['default']
 )
 
 const canBack = computed(() => history.value.length > 0)
@@ -297,7 +437,14 @@ function goUp() {
 function newFolder() {
   const items = filesystem[currentPath.value]
   if (items) {
-    items.push({ name: 'Nouveau dossier', icon: ICON_FOLDER_GENERIC, type: 'folder-icons', date: new Date().toLocaleDateString('fr-FR'), typeName: 'Dossier de fichiers', size: '' })
+    items.push({
+      name: 'Nouveau dossier',
+      icon: ICON_FOLDER_GENERIC,
+      type: 'folder-icons',
+      date: new Date().toLocaleDateString('fr-FR'),
+      typeName: 'Dossier de fichiers',
+      size: ''
+    })
   }
 }
 </script>
@@ -329,8 +476,16 @@ function newFolder() {
   color: #333;
   transition: background 0.1s;
 
-  &:hover { background: rgba(0,0,0,0.05); }
-  &.active { background: white; border: 1px solid #d0d0d0; border-bottom: 1px solid white; margin-bottom: -1px; }
+  &:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  &.active {
+    background: white;
+    border: 1px solid #d0d0d0;
+    border-bottom: 1px solid white;
+    margin-bottom: -1px;
+  }
 }
 
 .ribbon-actions {
@@ -352,12 +507,21 @@ function newFolder() {
   color: #333;
   transition: background 0.1s;
 
-  &:hover { background: rgba(0,120,212,0.1); }
+  &:hover {
+    background: rgba(0, 120, 212, 0.1);
+  }
 
-  span:first-child { font-size: 16px; }
+  span:first-child {
+    font-size: 16px;
+  }
 }
 
-.rib-sep { width: 1px; height: 36px; background: #d0d0d0; margin: 0 4px; }
+.rib-sep {
+  width: 1px;
+  height: 36px;
+  background: #d0d0d0;
+  margin: 0 4px;
+}
 
 .nav-bar {
   display: flex;
@@ -379,8 +543,13 @@ function newFolder() {
   color: #333;
   transition: background 0.1s;
 
-  &:hover:not(:disabled) { background: rgba(0,0,0,0.08); }
-  &:disabled { opacity: 0.35; }
+  &:hover:not(:disabled) {
+    background: rgba(0, 0, 0, 0.08);
+  }
+
+  &:disabled {
+    opacity: 0.35;
+  }
 }
 
 .address-bar {
@@ -395,7 +564,9 @@ function newFolder() {
   gap: 0;
   overflow: hidden;
 
-  &:focus-within { border-color: var(--accent); }
+  &:focus-within {
+    border-color: var(--accent);
+  }
 }
 
 .breadcrumb {
@@ -409,8 +580,13 @@ function newFolder() {
   border-radius: 2px;
   white-space: nowrap;
 
-  &:hover { background: rgba(0,0,0,0.07); }
-  &:last-child { font-weight: 500; }
+  &:hover {
+    background: rgba(0, 0, 0, 0.07);
+  }
+
+  &:last-child {
+    font-weight: 500;
+  }
 }
 
 .search-box {
@@ -431,10 +607,15 @@ function newFolder() {
     flex: 1;
     background: transparent;
     color: #333;
-    &::placeholder { color: #999; }
+
+    &::placeholder {
+      color: #999;
+    }
   }
 
-  &:focus-within { border-color: var(--accent); }
+  &:focus-within {
+    border-color: var(--accent);
+  }
 }
 
 .content {
@@ -451,7 +632,9 @@ function newFolder() {
   padding: 8px 0;
 }
 
-.sidebar-section { margin-bottom: 8px; }
+.sidebar-section {
+  margin-bottom: 8px;
+}
 
 .sidebar-title {
   font-size: 11px;
@@ -473,8 +656,14 @@ function newFolder() {
   text-align: left;
   transition: background 0.1s;
 
-  &:hover { background: rgba(0,0,0,0.05); }
-  &.active { background: var(--accent-light); color: var(--accent-dark); }
+  &:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  &.active {
+    background: var(--accent-light);
+    color: var(--accent-dark);
+  }
 }
 
 .files-area {
@@ -501,11 +690,18 @@ function newFolder() {
   cursor: default;
   transition: background 0.1s;
 
-  &:hover { background: rgba(0,120,212,0.1); }
-  &.selected { background: rgba(0,120,212,0.2); }
+  &:hover {
+    background: rgba(0, 120, 212, 0.1);
+  }
+
+  &.selected {
+    background: rgba(0, 120, 212, 0.2);
+  }
 }
 
-.file-icon { font-size: 36px; }
+.file-icon {
+  font-size: 36px;
+}
 
 .file-name {
   font-size: 11px;
@@ -518,7 +714,9 @@ function newFolder() {
   -webkit-box-orient: vertical;
 }
 
-.files-list { width: 100%; }
+.files-list {
+  width: 100%;
+}
 
 .list-header {
   display: grid;
@@ -543,12 +741,24 @@ function newFolder() {
   align-items: center;
   transition: background 0.1s;
 
-  &:hover { background: rgba(0,120,212,0.06); }
-  &.selected { background: rgba(0,120,212,0.15); }
+  &:hover {
+    background: rgba(0, 120, 212, 0.06);
+  }
+
+  &.selected {
+    background: rgba(0, 120, 212, 0.15);
+  }
 }
 
-.col-name { display: flex; align-items: center; gap: 8px; }
-.row-icon { font-size: 16px; }
+.col-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.row-icon {
+  font-size: 16px;
+}
 
 .status-bar {
   display: flex;
@@ -573,8 +783,14 @@ function newFolder() {
     color: #555;
     transition: background 0.1s;
 
-    &:hover { background: rgba(0,0,0,0.08); }
-    &.active { background: rgba(0,120,212,0.15); color: var(--accent); }
+    &:hover {
+      background: rgba(0, 0, 0, 0.08);
+    }
+
+    &.active {
+      background: rgba(0, 120, 212, 0.15);
+      color: var(--accent);
+    }
   }
 }
 </style>

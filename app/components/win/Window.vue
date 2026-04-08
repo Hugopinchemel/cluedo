@@ -1,67 +1,77 @@
 <template>
   <Transition name="win">
     <div
-      v-if="!win.minimized"
-      class="win-window"
-      :class="{ maximized: win.maximized, focused: isFocused }"
-      :style="windowStyle"
-      @mousedown="onFocus"
+        v-if="!win.minimized"
+        :class="{ maximized: win.maximized, focused: isFocused }"
+        :style="windowStyle"
+        class="win-window"
+        @mousedown="onFocus"
     >
       <!-- Title bar -->
       <div
-        class="titlebar"
-        @mousedown.stop="onDragStart"
-        @dblclick="onToggleMax"
+          class="titlebar"
+          @dblclick="onToggleMax"
+          @mousedown.stop="onDragStart"
       >
         <div class="titlebar-left">
-          <img v-if="appIcon.startsWith('/')" :src="appIcon" width="16" height="16" class="app-icon-img" alt="" />
-          <Icon v-else :name="appIcon" class="app-icon" />
+          <img v-if="appIcon.startsWith('/')" :src="appIcon" alt="" class="app-icon-img" height="16" width="16"/>
+          <Icon v-else :name="appIcon" class="app-icon"/>
           <span class="app-title">{{ win.title }}</span>
         </div>
         <div class="titlebar-controls">
-          <button class="ctrl-btn btn-min" @mousedown.stop @click.stop="onMin" title="Réduire">
-            <svg viewBox="0 0 10 1" width="10" height="1"><rect width="10" height="1" fill="currentColor"/></svg>
+          <button class="ctrl-btn btn-min" title="Réduire" @mousedown.stop @click.stop="onMin">
+            <svg height="1" viewBox="0 0 10 1" width="10">
+              <rect fill="currentColor" height="1" width="10"/>
+            </svg>
           </button>
-          <button class="ctrl-btn btn-max" @mousedown.stop @click.stop="onToggleMax" title="Agrandir">
-            <svg v-if="!win.maximized" viewBox="0 0 10 10" width="10" height="10"><rect x="0" y="0" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1"/></svg>
-            <svg v-else viewBox="0 0 10 10" width="10" height="10"><rect x="2" y="0" width="8" height="8" fill="none" stroke="currentColor" stroke-width="1"/><path d="M0 2v8h8" fill="none" stroke="currentColor" stroke-width="1"/></svg>
+          <button class="ctrl-btn btn-max" title="Agrandir" @mousedown.stop @click.stop="onToggleMax">
+            <svg v-if="!win.maximized" height="10" viewBox="0 0 10 10" width="10">
+              <rect fill="none" height="10" stroke="currentColor" stroke-width="1" width="10" x="0" y="0"/>
+            </svg>
+            <svg v-else height="10" viewBox="0 0 10 10" width="10">
+              <rect fill="none" height="8" stroke="currentColor" stroke-width="1" width="8" x="2" y="0"/>
+              <path d="M0 2v8h8" fill="none" stroke="currentColor" stroke-width="1"/>
+            </svg>
           </button>
-          <button class="ctrl-btn btn-close" @mousedown.stop @click.stop="onClose" title="Fermer">
-            <svg viewBox="0 0 10 10" width="10" height="10"><line x1="0" y1="0" x2="10" y2="10" stroke="currentColor" stroke-width="1.2"/><line x1="10" y1="0" x2="0" y2="10" stroke="currentColor" stroke-width="1.2"/></svg>
+          <button class="ctrl-btn btn-close" title="Fermer" @mousedown.stop @click.stop="onClose">
+            <svg height="10" viewBox="0 0 10 10" width="10">
+              <line stroke="currentColor" stroke-width="1.2" x1="0" x2="10" y1="0" y2="10"/>
+              <line stroke="currentColor" stroke-width="1.2" x1="10" x2="0" y1="0" y2="10"/>
+            </svg>
           </button>
         </div>
       </div>
       <!-- Content -->
       <div class="win-content">
-        <slot />
+        <slot/>
       </div>
 
       <!-- Resize handles -->
       <template v-if="!win.maximized">
-        <div class="resizer n" @mousedown.stop="onResizeStart($event, 'n')" />
-        <div class="resizer s" @mousedown.stop="onResizeStart($event, 's')" />
-        <div class="resizer e" @mousedown.stop="onResizeStart($event, 'e')" />
-        <div class="resizer w" @mousedown.stop="onResizeStart($event, 'w')" />
-        <div class="resizer ne" @mousedown.stop="onResizeStart($event, 'ne')" />
-        <div class="resizer nw" @mousedown.stop="onResizeStart($event, 'nw')" />
-        <div class="resizer se" @mousedown.stop="onResizeStart($event, 'se')" />
-        <div class="resizer sw" @mousedown.stop="onResizeStart($event, 'sw')" />
+        <div class="resizer n" @mousedown.stop="onResizeStart($event, 'n')"/>
+        <div class="resizer s" @mousedown.stop="onResizeStart($event, 's')"/>
+        <div class="resizer e" @mousedown.stop="onResizeStart($event, 'e')"/>
+        <div class="resizer w" @mousedown.stop="onResizeStart($event, 'w')"/>
+        <div class="resizer ne" @mousedown.stop="onResizeStart($event, 'ne')"/>
+        <div class="resizer nw" @mousedown.stop="onResizeStart($event, 'nw')"/>
+        <div class="resizer se" @mousedown.stop="onResizeStart($event, 'se')"/>
+        <div class="resizer sw" @mousedown.stop="onResizeStart($event, 'sw')"/>
       </template>
     </div>
   </Transition>
 </template>
 
-<script setup lang="ts">
-import type { WinInstance } from '~/composables/useWindows'
-import { APPS } from '~/composables/useWindows'
+<script lang="ts" setup>
+import type {WinInstance} from '~/composables/useWindows'
+import {APPS} from '~/composables/useWindows'
 
 const props = defineProps<{ win: WinInstance; focusedId?: string }>()
-const { closeWindow, minimizeWindow, toggleMaximize, focusWindow, moveWindow, resizeWindow } = useWindows()
+const {closeWindow, minimizeWindow, toggleMaximize, focusWindow, moveWindow, resizeWindow} = useWindows()
 
 const isFocused = computed(() => !props.focusedId || props.focusedId === props.win.id)
 
 const appIcon = computed(() =>
-  APPS.find(a => a.id === props.win.appId)?.icon ?? 'fluent-color:document-24'
+    APPS.find(a => a.id === props.win.appId)?.icon ?? 'fluent-color:document-24'
 )
 
 const windowStyle = computed(() => {
@@ -86,10 +96,21 @@ const windowStyle = computed(() => {
   }
 })
 
-function onFocus() { focusWindow(props.win.id) }
-function onMin() { minimizeWindow(props.win.id) }
-function onToggleMax() { toggleMaximize(props.win.id) }
-function onClose() { closeWindow(props.win.id) }
+function onFocus() {
+  focusWindow(props.win.id)
+}
+
+function onMin() {
+  minimizeWindow(props.win.id)
+}
+
+function onToggleMax() {
+  toggleMaximize(props.win.id)
+}
+
+function onClose() {
+  closeWindow(props.win.id)
+}
 
 function onDragStart(e: MouseEvent) {
   if (props.win.maximized) return
@@ -100,10 +121,12 @@ function onDragStart(e: MouseEvent) {
   function onMove(e: MouseEvent) {
     moveWindow(props.win.id, e.clientX - startX, Math.max(0, e.clientY - startY))
   }
+
   function onUp() {
     document.removeEventListener('mousemove', onMove)
     document.removeEventListener('mouseup', onUp)
   }
+
   document.addEventListener('mousemove', onMove)
   document.addEventListener('mouseup', onUp)
   e.preventDefault()
@@ -165,8 +188,8 @@ function onResizeStart(e: MouseEvent, dir: string) {
   display: flex;
   flex-direction: column;
   background: var(--window-bg);
-  border: 1px solid rgba(0,0,0,0.18);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.35), 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 6px;
   overflow: visible;
   min-width: 200px;
@@ -188,7 +211,7 @@ function onResizeStart(e: MouseEvent, dir: string) {
   cursor: default;
   -webkit-user-select: none;
   user-select: none;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .win-window:not(.focused) .titlebar {
@@ -212,14 +235,14 @@ function onResizeStart(e: MouseEvent, dir: string) {
 
 .app-title {
   font-size: 12px;
-  color: rgba(255,255,255,0.9);
+  color: rgba(255, 255, 255, 0.9);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .win-window:not(.focused) .app-title {
-  color: rgba(255,255,255,0.5);
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .titlebar-controls {
@@ -233,10 +256,13 @@ function onResizeStart(e: MouseEvent, dir: string) {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(255,255,255,0.8);
+  color: rgba(255, 255, 255, 0.8);
   transition: background 0.1s, color 0.1s;
 
-  &:hover { background: rgba(255,255,255,0.12); color: white; }
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: white;
+  }
 }
 
 .btn-close:hover {
@@ -258,25 +284,81 @@ function onResizeStart(e: MouseEvent, dir: string) {
   z-index: 10;
 }
 
-.resizer.n { top: -4px; left: 4px; right: 4px; height: 8px; cursor: n-resize; }
-.resizer.s { bottom: -4px; left: 4px; right: 4px; height: 8px; cursor: s-resize; }
-.resizer.e { right: -4px; top: 4px; bottom: 4px; width: 8px; cursor: e-resize; }
-.resizer.w { left: -4px; top: 4px; bottom: 4px; width: 8px; cursor: w-resize; }
+.resizer.n {
+  top: -4px;
+  left: 4px;
+  right: 4px;
+  height: 8px;
+  cursor: n-resize;
+}
 
-.resizer.nw { top: -4px; left: -4px; width: 12px; height: 12px; cursor: nw-resize; }
-.resizer.ne { top: -4px; right: -4px; width: 12px; height: 12px; cursor: ne-resize; }
-.resizer.sw { bottom: -4px; left: -4px; width: 12px; height: 12px; cursor: sw-resize; }
-.resizer.se { bottom: -4px; right: -4px; width: 12px; height: 12px; cursor: se-resize; }
+.resizer.s {
+  bottom: -4px;
+  left: 4px;
+  right: 4px;
+  height: 8px;
+  cursor: s-resize;
+}
+
+.resizer.e {
+  right: -4px;
+  top: 4px;
+  bottom: 4px;
+  width: 8px;
+  cursor: e-resize;
+}
+
+.resizer.w {
+  left: -4px;
+  top: 4px;
+  bottom: 4px;
+  width: 8px;
+  cursor: w-resize;
+}
+
+.resizer.nw {
+  top: -4px;
+  left: -4px;
+  width: 12px;
+  height: 12px;
+  cursor: nw-resize;
+}
+
+.resizer.ne {
+  top: -4px;
+  right: -4px;
+  width: 12px;
+  height: 12px;
+  cursor: ne-resize;
+}
+
+.resizer.sw {
+  bottom: -4px;
+  left: -4px;
+  width: 12px;
+  height: 12px;
+  cursor: sw-resize;
+}
+
+.resizer.se {
+  bottom: -4px;
+  right: -4px;
+  width: 12px;
+  height: 12px;
+  cursor: se-resize;
+}
 
 /* Transition */
 .win-enter-active, .win-leave-active {
   transition: opacity 0.15s, transform 0.15s;
   transform-origin: center bottom;
 }
+
 .win-enter-from {
   opacity: 0;
   transform: scale(0.95) translateY(10px);
 }
+
 .win-leave-to {
   opacity: 0;
   transform: scale(0.9) translateY(20px);

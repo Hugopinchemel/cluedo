@@ -2,29 +2,29 @@
   <div class="pdf-viewer">
     <div class="pdf-toolbar">
       <div class="toolbar-left">
-        <Icon name="fluent:document-pdf-24-filled" class="pdf-icon" />
+        <Icon class="pdf-icon" name="fluent:document-pdf-24-filled"/>
         <span class="file-name">Rapport_d'Autopsie.pdf</span>
       </div>
       <div class="toolbar-right">
         <button class="tb-btn" title="Imprimer">
-          <Icon name="fluent:print-24-regular" />
+          <Icon name="fluent:print-24-regular"/>
         </button>
         <button class="tb-btn" title="Télécharger">
-          <Icon name="fluent:save-24-regular" />
+          <Icon name="fluent:save-24-regular"/>
         </button>
       </div>
     </div>
     <div class="pdf-content">
       <iframe
-        src="/doc/Dossier_interne.pdf"
-        class="pdf-iframe"
-        frameborder="0"
+          class="pdf-iframe"
+          frameborder="0"
+          src="/doc/Dossier_interne.pdf"
       ></iframe>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 // Basic PDF Viewer using native browser capabilities
 </script>
 
@@ -44,7 +44,7 @@
   background: #323639;
   padding: 0 16px;
   color: white;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
   z-index: 10;
 }
 
@@ -80,7 +80,7 @@
   transition: background 0.1s, color 0.1s;
 
   &:hover {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
     color: white;
   }
 }

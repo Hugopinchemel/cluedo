@@ -7,16 +7,16 @@
           <span>Notifications</span>
           <button v-if="notifications.length" @click="notifications = []">Effacer tout</button>
         </div>
-        
+
         <div v-if="!notifications.length" class="notif-empty">
-          <Icon :name="ICON_FLUENT_ALERT_OFF" size="48" style="color: rgba(255,255,255,0.2)" />
+          <Icon :name="ICON_FLUENT_ALERT_OFF" size="48" style="color: rgba(255,255,255,0.2)"/>
           <p>Pas de nouvelles notifications</p>
         </div>
 
         <div class="notif-list">
           <div v-for="(n, i) in notifications" :key="i" class="notif-item">
             <div class="notif-app-header">
-              <Icon :name="n.icon || ICON_FLUENT_ALERT" class="notif-app-icon" />
+              <Icon :name="n.icon || ICON_FLUENT_ALERT" class="notif-app-icon"/>
               <span class="notif-app-name">{{ n.app }}</span>
               <button class="notif-close" @click="removeNotif(i)">✕</button>
             </div>
@@ -33,34 +33,48 @@
         <div class="cal-header">
           <span class="cal-month">{{ currentMonth }}</span>
           <div class="cal-controls">
-            <button><Icon :name="ICON_FLUENT_CHEVRON_UP" size="14" /></button>
-            <button><Icon :name="ICON_FLUENT_CHEVRON_DOWN" size="14" /></button>
+            <button>
+              <Icon :name="ICON_FLUENT_CHEVRON_UP" size="14"/>
+            </button>
+            <button>
+              <Icon :name="ICON_FLUENT_CHEVRON_DOWN" size="14"/>
+            </button>
           </div>
         </div>
         <div class="cal-grid">
           <div v-for="d in ['Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa', 'Di']" :key="d" class="cal-day-label">{{ d }}</div>
-          <div v-for="n in 31" :key="n" class="cal-day" :class="{ today: n === today }">{{ n }}</div>
+          <div v-for="n in 31" :key="n" :class="{ today: n === today }" class="cal-day">{{ n }}</div>
         </div>
       </div>
     </div>
   </Transition>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {
   ICON_FLUENT_ALERT,
   ICON_FLUENT_ALERT_OFF,
-  ICON_FLUENT_CHEVRON_UP,
   ICON_FLUENT_CHEVRON_DOWN,
-  ICON_FLUENT_UPDATE,
+  ICON_FLUENT_CHEVRON_UP,
   ICON_FLUENT_SECURITY,
+  ICON_FLUENT_UPDATE,
 } from '~/composables/icons'
 
 defineProps<{ open: boolean }>()
 
 const notifications = ref([
-  { app: 'Windows Update', title: 'Mise à jour prête', message: 'Une mise à jour importante est prête à être installée.', icon: ICON_FLUENT_UPDATE },
-  { app: 'Sécurité Windows', title: 'Analyse terminée', message: 'Aucune menace n\'a été détectée lors de la dernière analyse.', icon: ICON_FLUENT_SECURITY },
+  {
+    app: 'Windows Update',
+    title: 'Mise à jour prête',
+    message: 'Une mise à jour importante est prête à être installée.',
+    icon: ICON_FLUENT_UPDATE
+  },
+  {
+    app: 'Sécurité Windows',
+    title: 'Analyse terminée',
+    message: 'Aucune menace n\'a été détectée lors de la dernière analyse.',
+    icon: ICON_FLUENT_SECURITY
+  },
 ])
 
 
@@ -70,7 +84,7 @@ function removeNotif(index: number) {
 
 const now = new Date()
 const today = now.getDate()
-const currentMonth = now.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })
+const currentMonth = now.toLocaleDateString('fr-FR', {month: 'long', year: 'numeric'})
 </script>
 
 <style scoped>
@@ -88,7 +102,7 @@ const currentMonth = now.toLocaleDateString('fr-FR', { month: 'long', year: 'num
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .notif-section {
@@ -111,10 +125,13 @@ const currentMonth = now.toLocaleDateString('fr-FR', { month: 'long', year: 'num
   button {
     font-size: 12px;
     color: var(--accent);
-    background: rgba(255,255,255,0.05);
+    background: rgba(255, 255, 255, 0.05);
     padding: 4px 8px;
     border-radius: 4px;
-    &:hover { background: rgba(255,255,255,0.1); }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
   }
 }
 
@@ -125,7 +142,7 @@ const currentMonth = now.toLocaleDateString('fr-FR', { month: 'long', year: 'num
   align-items: center;
   justify-content: center;
   gap: 12px;
-  color: rgba(255,255,255,0.3);
+  color: rgba(255, 255, 255, 0.3);
   font-size: 13px;
 }
 
@@ -138,9 +155,9 @@ const currentMonth = now.toLocaleDateString('fr-FR', { month: 'long', year: 'num
 
 .notif-item {
   padding: 12px;
-  background: rgba(255,255,255,0.06);
+  background: rgba(255, 255, 255, 0.06);
   border-radius: 8px;
-  border: 1px solid rgba(255,255,255,0.05);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .notif-app-header {
@@ -150,17 +167,38 @@ const currentMonth = now.toLocaleDateString('fr-FR', { month: 'long', year: 'num
   margin-bottom: 8px;
 }
 
-.notif-app-icon { font-size: 14px; }
-.notif-app-name { font-size: 11px; color: rgba(255,255,255,0.5); flex: 1; }
-.notif-close { color: rgba(255,255,255,0.4); font-size: 10px; }
+.notif-app-icon {
+  font-size: 14px;
+}
 
-.notif-title { font-size: 13px; font-weight: 600; color: white; margin-bottom: 2px; }
-.notif-msg { font-size: 12px; color: rgba(255,255,255,0.8); line-height: 1.4; }
+.notif-app-name {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  flex: 1;
+}
+
+.notif-close {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 10px;
+}
+
+.notif-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 2px;
+}
+
+.notif-msg {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.4;
+}
 
 .calendar-section {
   padding: 20px;
-  background: rgba(255,255,255,0.03);
-  border-top: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.03);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .cal-header {
@@ -170,9 +208,26 @@ const currentMonth = now.toLocaleDateString('fr-FR', { month: 'long', year: 'num
   margin-bottom: 16px;
 }
 
-.cal-month { font-size: 14px; font-weight: 600; color: white; text-transform: capitalize; }
-.cal-controls { display: flex; gap: 4px; }
-.cal-controls button { padding: 4px 8px; border-radius: 4px; &:hover { background: rgba(255,255,255,0.1); } }
+.cal-month {
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  text-transform: capitalize;
+}
+
+.cal-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.cal-controls button {
+  padding: 4px 8px;
+  border-radius: 4px;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
 
 .cal-grid {
   display: grid;
@@ -181,11 +236,16 @@ const currentMonth = now.toLocaleDateString('fr-FR', { month: 'long', year: 'num
   text-align: center;
 }
 
-.cal-day-label { font-size: 11px; color: rgba(255,255,255,0.5); padding: 8px 0; }
+.cal-day-label {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  padding: 8px 0;
+}
+
 .cal-day {
   font-size: 12px;
   padding: 8px 0;
-  color: rgba(255,255,255,0.9);
+  color: rgba(255, 255, 255, 0.9);
   border-radius: 50%;
   cursor: default;
   aspect-ratio: 1;
@@ -193,13 +253,21 @@ const currentMonth = now.toLocaleDateString('fr-FR', { month: 'long', year: 'num
   align-items: center;
   justify-content: center;
 
-  &:hover { background: rgba(255,255,255,0.1); }
-  &.today { background: var(--accent); color: white; font-weight: 600; }
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  &.today {
+    background: var(--accent);
+    color: white;
+    font-weight: 600;
+  }
 }
 
 .slide-right-enter-active, .slide-right-leave-active {
   transition: all 0.25s cubic-bezier(0.1, 0.9, 0.2, 1);
 }
+
 .slide-right-enter-from, .slide-right-leave-to {
   transform: translateX(20px);
   opacity: 0;

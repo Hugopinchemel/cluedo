@@ -5,34 +5,35 @@
       <div class="left-rail">
         <button class="rail-btn user-btn" title="Compte">
           <div class="user-avatar">
-            <img v-if="ICON_START_USER.startsWith('/')" :src="ICON_START_USER" width="28" height="28"  alt="User" />
-            <Icon v-else :name="ICON_START_USER" size="28" />
+            <img v-if="ICON_START_USER.startsWith('/')" :src="ICON_START_USER" alt="User" height="28" width="28"/>
+            <Icon v-else :name="ICON_START_USER" size="28"/>
           </div>
           <span class="rail-label">Utilisateur</span>
         </button>
 
         <button class="rail-btn" title="Documents" @click="openAndClose('explorer')">
-          <img v-if="ICON_START_DOCS.startsWith('/')" :src="ICON_START_DOCS" width="20" height="20"  alt="Documents" />
-          <Icon v-else :name="ICON_START_DOCS" size="20" />
+          <img v-if="ICON_START_DOCS.startsWith('/')" :src="ICON_START_DOCS" alt="Documents" height="20" width="20"/>
+          <Icon v-else :name="ICON_START_DOCS" size="20"/>
           <span class="rail-label">Documents</span>
         </button>
 
         <button class="rail-btn" title="Images" @click="openAndClose('photos')">
-          <img v-if="ICON_START_IMAGES.startsWith('/')" :src="ICON_START_IMAGES" width="20" height="20"  alt="Images" />
-          <Icon v-else :name="ICON_START_IMAGES" size="20" />
+          <img v-if="ICON_START_IMAGES.startsWith('/')" :src="ICON_START_IMAGES" alt="Images" height="20" width="20"/>
+          <Icon v-else :name="ICON_START_IMAGES" size="20"/>
           <span class="rail-label">Images</span>
         </button>
 
         <button class="rail-btn" title="Paramètres" @click="openAndClose('settings')">
-          <img v-if="ICON_START_SETTINGS.startsWith('/')" :src="ICON_START_SETTINGS" width="20" height="20" alt="Settings" />
-          <Icon v-else :name="ICON_START_SETTINGS" size="20" />
+          <img v-if="ICON_START_SETTINGS.startsWith('/')" :src="ICON_START_SETTINGS" alt="Settings" height="20"
+               width="20"/>
+          <Icon v-else :name="ICON_START_SETTINGS" size="20"/>
           <span class="rail-label">Paramètres</span>
         </button>
 
-        <button class="rail-btn power-btn" title="Alimentation">
-          <img v-if="ICON_START_POWER.startsWith('/')" :src="ICON_START_POWER" width="20" height="20"  alt="Power" />
-          <Icon v-else :name="ICON_START_POWER" size="20" />
-          <span class="rail-label">Arrêter</span>
+        <button class="rail-btn" title="Corbeille">
+          <img v-if="ICON_START_POWER.startsWith('/')" :src="ICON_START_POWER" alt="Corbeille" height="20" width="20"/>
+          <Icon v-else :name="ICON_START_POWER" size="20"/>
+          <span class="rail-label">Corbeille</span>
         </button>
       </div>
 
@@ -42,13 +43,13 @@
         <div class="section-title">Épinglées</div>
         <div class="app-grid">
           <button
-            v-for="app in APPS"
-            :key="app.id"
-            class="app-tile"
-            @click="openAndClose(app.id)"
+              v-for="app in APPS"
+              :key="app.id"
+              class="app-tile"
+              @click="openAndClose(app.id)"
           >
-            <img v-if="app.icon.startsWith('/')" :src="app.icon" width="24" height="24" class="tile-icon-img" alt="" />
-            <Icon v-else :name="app.icon" class="tile-icon" />
+            <img v-if="app.icon.startsWith('/')" :src="app.icon" alt="" class="tile-icon-img" height="24" width="24"/>
+            <Icon v-else :name="app.icon" class="tile-icon"/>
             <span class="tile-name">{{ app.name }}</span>
           </button>
         </div>
@@ -56,9 +57,10 @@
         <!-- Récentes -->
         <div class="section-title">Recommandées</div>
         <div class="recent-list">
-          <button class="recent-item" v-for="item in recentItems" :key="item.name">
-            <img v-if="item.icon.startsWith('/')" :src="item.icon" width="20" height="20" class="recent-icon-img" alt="" />
-            <Icon v-else :name="item.icon" class="recent-icon" />
+          <button v-for="item in recentItems" :key="item.name" class="recent-item">
+            <img v-if="item.icon.startsWith('/')" :src="item.icon" alt="" class="recent-icon-img" height="20"
+                 width="20"/>
+            <Icon v-else :name="item.icon" class="recent-icon"/>
             <div class="recent-info">
               <div class="recent-name">{{ item.name }}</div>
               <div class="recent-meta">{{ item.meta }}</div>
@@ -70,28 +72,24 @@
   </Transition>
 </template>
 
-<script setup lang="ts">
-import { APPS } from '~/composables/useWindows'
+<script lang="ts" setup>
+import {APPS} from '~/composables/useWindows'
 import {
-  ICON_START_USER,
+  ICON_APP_PDF,
+  ICON_RECENT_FOLDER,
+  ICON_RECENT_NOTEPAD,
+  ICON_RECENT_PHOTOS,
   ICON_START_DOCS,
   ICON_START_IMAGES,
-  ICON_START_SETTINGS,
   ICON_START_POWER,
-  ICON_APP_NOTEPAD,
-  ICON_APP_PHOTOS,
-  ICON_APP_PDF,
-  ICON_FOLDER_GENERIC,
-  ICON_RECENT_NOTEPAD,
-  ICON_RECENT_FOLDER,
-  ICON_RECENT_PHOTOS,
-  ICON_RECENT_SETTINGS,
+  ICON_START_SETTINGS,
+  ICON_START_USER,
 } from '~/composables/icons'
 
 const props = defineProps<{ open: boolean }>()
 const emit = defineEmits<{ close: [] }>()
 
-const { openApp } = useWindows()
+const {openApp} = useWindows()
 
 function openAndClose(appId: string) {
   openApp(appId)
@@ -99,10 +97,10 @@ function openAndClose(appId: string) {
 }
 
 const recentItems = [
-  { icon: ICON_APP_PDF,         name: 'sample.pdf',       meta: 'Lecteur PDF · Il y a 1 min' },
-  { icon: ICON_RECENT_NOTEPAD,  name: 'Notes.txt',        meta: 'Bloc-notes · Il y a 2 min' },
-  { icon: ICON_RECENT_FOLDER,   name: 'Documents',        meta: 'Explorateur · Hier' },
-  { icon: ICON_RECENT_PHOTOS,   name: 'Fond d\'écran.png', meta: 'Photos · Il y a 3 jours' },
+  {icon: ICON_APP_PDF, name: 'sample.pdf', meta: 'Lecteur PDF · Il y a 1 min'},
+  {icon: ICON_RECENT_NOTEPAD, name: 'Notes.txt', meta: 'Bloc-notes · Il y a 2 min'},
+  {icon: ICON_RECENT_FOLDER, name: 'Documents', meta: 'Explorateur · Hier'},
+  {icon: ICON_RECENT_PHOTOS, name: 'Fond d\'écran.png', meta: 'Photos · Il y a 3 jours'},
 ]
 
 </script>
@@ -120,16 +118,16 @@ const recentItems = [
   display: flex;
   z-index: 7999;
   border-radius: 0 8px 0 0;
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-left: none;
   border-bottom: none;
   overflow: hidden;
-  box-shadow: 4px -4px 24px rgba(0,0,0,0.5);
+  box-shadow: 4px -4px 24px rgba(0, 0, 0, 0.5);
 }
 
 .left-rail {
   width: 52px;
-  background: rgba(0,0,0,0.3);
+  background: rgba(0, 0, 0, 0.3);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -150,13 +148,15 @@ const recentItems = [
   position: relative;
   transition: background 0.15s;
 
-  &:hover { background: rgba(255,255,255,0.1); }
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
 
   .rail-label {
     display: none;
     position: absolute;
     left: 56px;
-    background: rgba(50,50,50,0.95);
+    background: rgba(50, 50, 50, 0.95);
     color: white;
     font-size: 12px;
     padding: 4px 8px;
@@ -165,11 +165,19 @@ const recentItems = [
     z-index: 1;
   }
 
-  &:hover .rail-label { display: block; }
+  &:hover .rail-label {
+    display: block;
+  }
 }
 
-.user-btn { margin-top: auto; order: 1; }
-.power-btn { margin-top: auto; }
+.user-btn {
+  margin-top: auto;
+  order: 1;
+}
+
+.power-btn {
+  margin-top: auto;
+}
 
 .user-avatar {
   width: 28px;
@@ -180,7 +188,7 @@ const recentItems = [
   align-items: center;
   justify-content: center;
 
-  img{
+  img {
     border-radius: 50%;
   }
 }
@@ -197,7 +205,7 @@ const recentItems = [
 .section-title {
   font-size: 13px;
   font-weight: 600;
-  color: rgba(255,255,255,0.9);
+  color: rgba(255, 255, 255, 0.9);
   margin-bottom: 4px;
 }
 
@@ -216,14 +224,18 @@ const recentItems = [
   border-radius: 6px;
   transition: background 0.15s;
 
-  &:hover { background: rgba(255,255,255,0.1); }
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
 }
 
-.tile-icon { font-size: 24px; }
+.tile-icon {
+  font-size: 24px;
+}
 
 .tile-name {
   font-size: 11px;
-  color: rgba(255,255,255,0.85);
+  color: rgba(255, 255, 255, 0.85);
   text-align: center;
   line-height: 1.3;
   max-width: 72px;
@@ -247,19 +259,25 @@ const recentItems = [
   border-radius: 6px;
   transition: background 0.15s;
 
-  &:hover { background: rgba(255,255,255,0.08); }
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
 }
 
-.recent-icon { font-size: 20px; flex-shrink: 0; }
+.recent-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
 
 .recent-name {
   font-size: 13px;
-  color: rgba(255,255,255,0.9);
+  color: rgba(255, 255, 255, 0.9);
+  display: flex;
 }
 
 .recent-meta {
   font-size: 11px;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255, 255, 255, 0.4);
   margin-top: 1px;
 }
 
@@ -267,6 +285,7 @@ const recentItems = [
 .start-enter-active, .start-leave-active {
   transition: opacity 0.15s, transform 0.15s;
 }
+
 .start-enter-from, .start-leave-to {
   opacity: 0;
   transform: translateY(12px);

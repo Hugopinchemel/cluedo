@@ -4,7 +4,10 @@
     <div class="settings-nav">
       <div class="settings-header">
         <div class="settings-avatar">
-          <svg viewBox="0 0 24 24" width="28" height="28" fill="white"><path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v2h20v-2c0-3.33-6.67-5-10-5z"/></svg>
+          <svg fill="white" height="28" viewBox="0 0 24 24" width="28">
+            <path
+                d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v2h20v-2c0-3.33-6.67-5-10-5z"/>
+          </svg>
         </div>
         <div>
           <div class="settings-username">Utilisateur</div>
@@ -12,19 +15,22 @@
         </div>
       </div>
       <div class="settings-search">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="#666"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-        <input placeholder="Paramètres de recherche" />
+        <svg fill="#666" height="14" viewBox="0 0 24 24" width="14">
+          <path
+              d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        </svg>
+        <input placeholder="Paramètres de recherche"/>
       </div>
       <nav class="settings-menu">
         <button
-          v-for="cat in categories"
-          :key="cat.id"
-          class="settings-nav-item"
-          :class="{ active: activeCategory === cat.id }"
-          @click="activeCategory = cat.id"
+            v-for="cat in categories"
+            :key="cat.id"
+            :class="{ active: activeCategory === cat.id }"
+            class="settings-nav-item"
+            @click="activeCategory = cat.id"
         >
-          <img v-if="cat.icon.startsWith('/')" :src="cat.icon" width="16" height="16" class="nav-icon-img" alt="" />
-          <Icon v-else :name="cat.icon" class="nav-icon" />
+          <img v-if="cat.icon.startsWith('/')" :src="cat.icon" alt="" class="nav-icon-img" height="16" width="16"/>
+          <Icon v-else :name="cat.icon" class="nav-icon"/>
           <span>{{ cat.name }}</span>
         </button>
       </nav>
@@ -42,7 +48,9 @@
               <div class="setting-name">Luminosité</div>
               <div class="setting-desc">Régler la luminosité intégrée</div>
             </div>
-            <input type="range" min="0" max="100" v-model="brightness" class="setting-slider" />
+            <input :value="settings.brightness" class="setting-slider" max="100" min="0"
+                   type="range"
+                   @input="e => updateSettings({ brightness: parseInt((e.target as HTMLInputElement).value) })"/>
           </div>
           <div class="setting-row">
             <div class="setting-info">
@@ -73,7 +81,9 @@
             <div class="setting-info">
               <div class="setting-name">Volume principal</div>
             </div>
-            <input type="range" min="0" max="100" v-model="volume" class="setting-slider" />
+            <input :value="settings.volume" class="setting-slider" max="100" min="0"
+                   type="range"
+                   @input="e => updateSettings({ volume: parseInt((e.target as HTMLInputElement).value) })"/>
           </div>
         </div>
 
@@ -100,14 +110,16 @@
           <h2>Arrière-plan</h2>
           <div class="bg-options">
             <div
-              v-for="bg in backgrounds"
-              :key="bg.name"
-              class="bg-thumb"
-              :class="{ selected: selectedBg === bg.name }"
-              :style="{ background: bg.css }"
-              @click="selectedBg = bg.name; $emit('changeBg', bg.css)"
+                v-for="bg in backgrounds"
+                :key="bg.name"
+                :class="{ selected: settings.wallpaper === bg.css }"
+                :style="{ background: bg.css }"
+                class="bg-thumb"
+                @click="updateSettings({ wallpaper: bg.css })"
             >
-              <svg v-if="selectedBg === bg.name" viewBox="0 0 24 24" width="18" height="18" fill="white"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+              <svg v-if="settings.wallpaper === bg.css" fill="white" height="18" viewBox="0 0 24 24" width="18">
+                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+              </svg>
             </div>
           </div>
           <div class="setting-row" style="margin-top:12px">
@@ -125,12 +137,12 @@
           <h2>Couleurs</h2>
           <div class="color-options">
             <div
-              v-for="color in accentColors"
-              :key="color"
-              class="color-swatch"
-              :style="{ background: color }"
-              :class="{ selected: accentColor === color }"
-              @click="accentColor = color"
+                v-for="color in accentColors"
+                :key="color"
+                :class="{ selected: settings.accentColor === color }"
+                :style="{ background: color }"
+                class="color-swatch"
+                @click="updateSettings({ accentColor: color })"
             />
           </div>
           <div class="setting-row" style="margin-top:12px">
@@ -138,8 +150,9 @@
               <div class="setting-name">Mode sombre</div>
               <div class="setting-desc">Appliquer le mode sombre aux applications Windows</div>
             </div>
-            <div class="toggle" :class="{ on: darkMode }" @click="darkMode = !darkMode">
-              <div class="toggle-knob" />
+            <div :class="{ on: settings.darkMode }" class="toggle"
+                 @click="updateSettings({ darkMode: !settings.darkMode })">
+              <div class="toggle-knob"/>
             </div>
           </div>
         </div>
@@ -151,14 +164,80 @@
         <div class="settings-section">
           <h2>Applications et fonctionnalités</h2>
           <div class="app-list">
-            <div class="app-row" v-for="app in installedApps" :key="app.name">
-              <img v-if="app.icon.startsWith('/')" :src="app.icon" width="24" height="24" class="app-row-icon-img" alt="" />
-              <Icon v-else :name="app.icon" class="app-row-icon" />
+            <div v-for="app in installedApps" :key="app.name" class="app-row">
+              <img v-if="app.icon.startsWith('/')" :src="app.icon" alt="" class="app-row-icon-img" height="24"
+                   width="24"/>
+              <Icon v-else :name="app.icon" class="app-row-icon"/>
               <div class="app-row-info">
                 <div class="app-row-name">{{ app.name }}</div>
                 <div class="app-row-size">{{ app.size }} · {{ app.date }}</div>
               </div>
               <button class="btn-uninstall">Désinstaller</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accessibility -->
+      <div v-else-if="activeCategory === 'ease'" class="content-panel">
+        <h1>Facilité d'accès</h1>
+
+        <div class="settings-section">
+          <h2>Vision</h2>
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-name">Taille du texte</div>
+              <div class="setting-desc">Modifier la taille du texte sur votre écran ({{ settings.textSize }}%)</div>
+            </div>
+            <input :value="settings.textSize" class="setting-slider" max="200" min="80" step="10"
+                   type="range"
+                   @input="e => updateSettings({ textSize: parseInt((e.target as HTMLInputElement).value) })"/>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-name">Contraste élevé</div>
+              <div class="setting-desc">Utiliser des couleurs contrastées pour rendre le texte plus facile à lire</div>
+            </div>
+            <div :class="{ on: settings.highContrast }" class="toggle"
+                 @click="updateSettings({ highContrast: !settings.highContrast })">
+              <div class="toggle-knob"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h2>Effets visuels</h2>
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-name">Afficher la transparence dans Windows</div>
+            </div>
+            <div :class="{ on: settings.transparency }" class="toggle"
+                 @click="updateSettings({ transparency: !settings.transparency })">
+              <div class="toggle-knob"/>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-name">Afficher les animations dans Windows</div>
+            </div>
+            <div :class="{ on: settings.animations }" class="toggle"
+                 @click="updateSettings({ animations: !settings.animations })">
+              <div class="toggle-knob"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-section">
+          <h2>Audition</h2>
+          <div class="setting-row">
+            <div class="setting-info">
+              <div class="setting-name">Audio mono</div>
+              <div class="setting-desc">Combiner les canaux audio gauche et droit en un seul</div>
+            </div>
+            <div class="toggle">
+              <div class="toggle-knob"/>
             </div>
           </div>
         </div>
@@ -175,58 +254,57 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {
-  ICON_SETTINGS_SYSTEM,
-  ICON_SETTINGS_DEVICES,
-  ICON_SETTINGS_PHONE,
-  ICON_SETTINGS_NETWORK,
-  ICON_SETTINGS_PERSONAL,
-  ICON_SETTINGS_APPS,
-  ICON_SETTINGS_ACCOUNTS,
-  ICON_SETTINGS_TIME,
-  ICON_SETTINGS_GAMING,
-  ICON_SETTINGS_EASE,
-  ICON_SETTINGS_PRIVACY,
-  ICON_SETTINGS_UPDATE,
+  ICON_APP_CALCULATOR,
+  ICON_APP_EDGE,
+  ICON_APP_EXPLORER,
   ICON_APP_NOTEPAD,
   ICON_APP_PHOTOS,
-  ICON_APP_EXPLORER,
   ICON_APP_SETTINGS,
-  ICON_APP_CALCULATOR,
+  ICON_SETTINGS_ACCOUNTS,
+  ICON_SETTINGS_APPS,
+  ICON_SETTINGS_DEVICES,
+  ICON_SETTINGS_EASE,
+  ICON_SETTINGS_GAMING,
+  ICON_SETTINGS_NETWORK,
+  ICON_SETTINGS_PERSONAL,
+  ICON_SETTINGS_PHONE,
+  ICON_SETTINGS_PRIVACY,
+  ICON_SETTINGS_SYSTEM,
+  ICON_SETTINGS_TIME,
+  ICON_SETTINGS_UPDATE,
 } from '~/composables/icons'
 
-defineEmits<{ changeBg: [css: string] }>()
+const {settings, updateSettings} = useSettings()
 
 const activeCategory = ref('system')
-const brightness = ref(80)
-const volume = ref(65)
-const selectedBg = ref('default')
-const darkMode = ref(false)
-const accentColor = ref('#0078d4')
 
 const categories = [
-  { id: 'system', icon: ICON_SETTINGS_SYSTEM, name: 'Système' },
-  { id: 'devices', icon: ICON_SETTINGS_DEVICES, name: 'Périphériques' },
-  { id: 'phone', icon: ICON_SETTINGS_PHONE, name: 'Téléphone' },
-  { id: 'network', icon: ICON_SETTINGS_NETWORK, name: 'Réseau et Internet' },
-  { id: 'personalization', icon: ICON_SETTINGS_PERSONAL, name: 'Personnalisation' },
-  { id: 'apps', icon: ICON_SETTINGS_APPS, name: 'Applications' },
-  { id: 'accounts', icon: ICON_SETTINGS_ACCOUNTS, name: 'Comptes' },
-  { id: 'time', icon: ICON_SETTINGS_TIME, name: 'Heure et langue' },
-  { id: 'gaming', icon: ICON_SETTINGS_GAMING, name: 'Jeux' },
-  { id: 'ease', icon: ICON_SETTINGS_EASE, name: 'Facilité d\'accès' },
-  { id: 'privacy', icon: ICON_SETTINGS_PRIVACY, name: 'Confidentialité' },
-  { id: 'update', icon: ICON_SETTINGS_UPDATE, name: 'Mise à jour et sécurité' },
+  {id: 'system', icon: ICON_SETTINGS_SYSTEM, name: 'Système'},
+  {id: 'devices', icon: ICON_SETTINGS_DEVICES, name: 'Périphériques'},
+  {id: 'phone', icon: ICON_SETTINGS_PHONE, name: 'Téléphone'},
+  {id: 'network', icon: ICON_SETTINGS_NETWORK, name: 'Réseau et Internet'},
+  {id: 'personalization', icon: ICON_SETTINGS_PERSONAL, name: 'Personnalisation'},
+  {id: 'apps', icon: ICON_SETTINGS_APPS, name: 'Applications'},
+  {id: 'accounts', icon: ICON_SETTINGS_ACCOUNTS, name: 'Comptes'},
+  {id: 'time', icon: ICON_SETTINGS_TIME, name: 'Heure et langue'},
+  {id: 'gaming', icon: ICON_SETTINGS_GAMING, name: 'Jeux'},
+  {id: 'ease', icon: ICON_SETTINGS_EASE, name: 'Facilité d\'accès'},
+  {id: 'privacy', icon: ICON_SETTINGS_PRIVACY, name: 'Confidentialité'},
+  {id: 'update', icon: ICON_SETTINGS_UPDATE, name: 'Mise à jour et sécurité'},
 ]
 
 const backgrounds = [
-  { name: 'default', css: 'linear-gradient(135deg, #1a2744 0%, #0d1f3c 50%, #1a1030 100%)' },
-  { name: 'blue', css: 'linear-gradient(135deg, #0078d4, #005a9e)' },
-  { name: 'purple', css: 'linear-gradient(135deg, #6b35c0, #9b59b6)' },
-  { name: 'teal', css: 'linear-gradient(135deg, #008080, #00b4b4)' },
-  { name: 'dark', css: 'linear-gradient(135deg, #1a1a1a, #333)' },
-  { name: 'sunset', css: 'linear-gradient(135deg, #ff6b35, #f7c59f, #efefd0)' },
+  {
+    name: 'default',
+    css: 'radial-gradient(ellipse 70% 55% at 20% 65%, rgba(74,144,217,0.25) 0%, transparent 60%), radial-gradient(ellipse 55% 70% at 80% 25%, rgba(83,52,131,0.3) 0%, transparent 60%), linear-gradient(155deg, #0d1b2e 0%, #112244 40%, #1a0d2e 70%, #0a1520 100%)'
+  },
+  {name: 'blue', css: 'linear-gradient(135deg, #0078d4, #005a9e)'},
+  {name: 'purple', css: 'linear-gradient(135deg, #6b35c0, #9b59b6)'},
+  {name: 'teal', css: 'linear-gradient(135deg, #008080, #00b4b4)'},
+  {name: 'dark', css: 'linear-gradient(135deg, #1a1a1a, #333)'},
+  {name: 'sunset', css: 'linear-gradient(135deg, #ff6b35, #f7c59f, #efefd0)'},
 ]
 
 const accentColors = [
@@ -235,14 +313,13 @@ const accentColors = [
 ]
 
 const installedApps = [
-  { icon: ICON_APP_EDGE, name: 'Microsoft Edge', size: '120 Mo', date: '01/04/2026' },
-  { icon: ICON_APP_NOTEPAD, name: 'Bloc-notes', size: '2,3 Mo', date: '01/04/2026' },
-  { icon: ICON_APP_CALCULATOR, name: 'Calculatrice', size: '15 Mo', date: '01/04/2026' },
-  { icon: ICON_APP_PHOTOS, name: 'Photos', size: '80 Mo', date: '01/04/2026' },
-  { icon: ICON_APP_EXPLORER, name: 'Explorateur de fichiers', size: '45 Mo', date: '01/04/2026' },
-  { icon: ICON_APP_SETTINGS, name: 'Paramètres', size: '18 Mo', date: '01/04/2026' },
+  {icon: ICON_APP_EDGE, name: 'Microsoft Edge', size: '120 Mo', date: '01/04/2026'},
+  {icon: ICON_APP_NOTEPAD, name: 'Bloc-notes', size: '2,3 Mo', date: '01/04/2026'},
+  {icon: ICON_APP_CALCULATOR, name: 'Calculatrice', size: '15 Mo', date: '01/04/2026'},
+  {icon: ICON_APP_PHOTOS, name: 'Photos', size: '80 Mo', date: '01/04/2026'},
+  {icon: ICON_APP_EXPLORER, name: 'Explorateur de fichiers', size: '45 Mo', date: '01/04/2026'},
+  {icon: ICON_APP_SETTINGS, name: 'Paramètres', size: '18 Mo', date: '01/04/2026'},
 ]
-
 </script>
 
 <style scoped>
@@ -281,8 +358,15 @@ const installedApps = [
   flex-shrink: 0;
 }
 
-.settings-username { font-size: 14px; font-weight: 600; }
-.settings-account { font-size: 11px; color: #666; }
+.settings-username {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.settings-account {
+  font-size: 11px;
+  color: #666;
+}
 
 .settings-search {
   display: flex;
@@ -300,11 +384,16 @@ const installedApps = [
     font-size: 12px;
     flex: 1;
     background: transparent;
-    &::placeholder { color: #999; }
+
+    &::placeholder {
+      color: #999;
+    }
   }
 }
 
-.settings-menu { padding: 0 0 16px; }
+.settings-menu {
+  padding: 0 0 16px;
+}
 
 .settings-nav-item {
   width: 100%;
@@ -317,11 +406,23 @@ const installedApps = [
   text-align: left;
   transition: background 0.1s;
 
-  &:hover { background: rgba(0,0,0,0.05); }
-  &.active { background: white; color: var(--accent); font-weight: 500; border-right: 2px solid var(--accent); }
+  &:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  &.active {
+    background: white;
+    color: var(--accent);
+    font-weight: 500;
+    border-right: 2px solid var(--accent);
+  }
 }
 
-.nav-icon { font-size: 16px; width: 20px; text-align: center; }
+.nav-icon {
+  font-size: 16px;
+  width: 20px;
+  text-align: center;
+}
 
 .settings-content {
   flex: 1;
@@ -358,11 +459,20 @@ const installedApps = [
   align-items: center;
   justify-content: space-between;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(0,0,0,0.05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-.setting-name { font-size: 13px; font-weight: 500; color: #1a1a1a; }
-.setting-desc { font-size: 11px; color: #666; margin-top: 2px; }
+.setting-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.setting-desc {
+  font-size: 11px;
+  color: #666;
+  margin-top: 2px;
+}
 
 .setting-slider {
   width: 200px;
@@ -378,7 +488,9 @@ const installedApps = [
   outline: none;
   min-width: 160px;
 
-  &:focus { border-color: var(--accent); }
+  &:focus {
+    border-color: var(--accent);
+  }
 }
 
 .bg-options {
@@ -398,8 +510,13 @@ const installedApps = [
   justify-content: center;
   transition: border-color 0.15s;
 
-  &.selected { border-color: var(--accent); }
-  &:hover { opacity: 0.85; }
+  &.selected {
+    border-color: var(--accent);
+  }
+
+  &:hover {
+    opacity: 0.85;
+  }
 }
 
 .color-options {
@@ -416,7 +533,9 @@ const installedApps = [
   border: 2px solid transparent;
   transition: border-color 0.15s;
 
-  &.selected { border-color: #1a1a1a; }
+  &.selected {
+    border-color: #1a1a1a;
+  }
 }
 
 .toggle {
@@ -429,7 +548,9 @@ const installedApps = [
   transition: background 0.2s;
   flex-shrink: 0;
 
-  &.on { background: var(--accent); }
+  &.on {
+    background: var(--accent);
+  }
 }
 
 .toggle-knob {
@@ -440,10 +561,12 @@ const installedApps = [
   height: 20px;
   border-radius: 50%;
   background: white;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   transition: transform 0.2s;
 
-  .toggle.on & { transform: translateX(22px); }
+  .toggle.on & {
+    transform: translateX(22px);
+  }
 }
 
 .app-list {
@@ -457,13 +580,27 @@ const installedApps = [
   align-items: center;
   gap: 12px;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(0,0,0,0.06);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
-.app-row-icon { font-size: 24px; flex-shrink: 0; }
-.app-row-info { flex: 1; }
-.app-row-name { font-size: 13px; font-weight: 500; }
-.app-row-size { font-size: 11px; color: #666; }
+.app-row-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.app-row-info {
+  flex: 1;
+}
+
+.app-row-name {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.app-row-size {
+  font-size: 11px;
+  color: #666;
+}
 
 .btn-uninstall {
   padding: 5px 12px;
@@ -474,6 +611,8 @@ const installedApps = [
   background: white;
   transition: background 0.1s;
 
-  &:hover { background: #f0f0f0; }
+  &:hover {
+    background: #f0f0f0;
+  }
 }
 </style>

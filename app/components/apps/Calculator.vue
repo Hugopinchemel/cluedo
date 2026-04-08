@@ -8,8 +8,8 @@
     </div>
     <!-- Memory row -->
     <div class="mem-row">
-      <button class="mem-btn" @click="memClear" :disabled="memory === 0">MC</button>
-      <button class="mem-btn" @click="memRecall" :disabled="memory === 0">MR</button>
+      <button :disabled="memory === 0" class="mem-btn" @click="memClear">MC</button>
+      <button :disabled="memory === 0" class="mem-btn" @click="memRecall">MR</button>
       <button class="mem-btn" @click="memAdd">M+</button>
       <button class="mem-btn" @click="memSub">M-</button>
       <button class="mem-btn" @click="memStore">MS</button>
@@ -50,7 +50,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 const display = ref('0')
 const expression = ref('')
 const memory = ref(0)
@@ -69,7 +69,11 @@ function num(n: string) {
 }
 
 function decimal() {
-  if (newInput) { display.value = '0,'; newInput = false; return }
+  if (newInput) {
+    display.value = '0,';
+    newInput = false;
+    return
+  }
   if (!display.value.includes(',')) display.value += ','
 }
 
@@ -94,33 +98,60 @@ function equals() {
 }
 
 function clear() {
-  display.value = '0'; expression.value = ''; currentOp = ''; prevValue = 0; newInput = true
+  display.value = '0';
+  expression.value = '';
+  currentOp = '';
+  prevValue = 0;
+  newInput = true
 }
-function clearEntry() { display.value = '0'; newInput = true }
+
+function clearEntry() {
+  display.value = '0';
+  newInput = true
+}
+
 function backspace() {
   if (newInput) return
   display.value = display.value.slice(0, -1) || '0'
 }
+
 function pct() {
   display.value = String(parseFloat(display.value.replace(',', '.')) / 100).replace('.', ',')
 }
+
 function toggleSign() {
   const v = parseFloat(display.value.replace(',', '.'))
   display.value = String(-v).replace('.', ',')
 }
+
 function fn(type: string) {
   const v = parseFloat(display.value.replace(',', '.'))
-  if (type === '1/x') display.value = String(v === 0 ? 0 : 1/v).replace('.', ',')
-  else if (type === 'x²') display.value = String(v*v).replace('.', ',')
+  if (type === '1/x') display.value = String(v === 0 ? 0 : 1 / v).replace('.', ',')
+  else if (type === 'x²') display.value = String(v * v).replace('.', ',')
   else if (type === '√') display.value = String(Math.sqrt(v)).replace('.', ',')
   newInput = true
 }
 
-function memClear() { memory.value = 0 }
-function memRecall() { display.value = String(memory.value).replace('.', ','); newInput = true }
-function memAdd() { memory.value += parseFloat(display.value.replace(',', '.')) }
-function memSub() { memory.value -= parseFloat(display.value.replace(',', '.')) }
-function memStore() { memory.value = parseFloat(display.value.replace(',', '.')) }
+function memClear() {
+  memory.value = 0
+}
+
+function memRecall() {
+  display.value = String(memory.value).replace('.', ',');
+  newInput = true
+}
+
+function memAdd() {
+  memory.value += parseFloat(display.value.replace(',', '.'))
+}
+
+function memSub() {
+  memory.value -= parseFloat(display.value.replace(',', '.'))
+}
+
+function memStore() {
+  memory.value = parseFloat(display.value.replace(',', '.'))
+}
 </script>
 
 <style scoped>
@@ -146,7 +177,7 @@ function memStore() { memory.value = parseFloat(display.value.replace(',', '.'))
 
 .expression {
   font-size: 13px;
-  color: rgba(255,255,255,0.5);
+  color: rgba(255, 255, 255, 0.5);
   min-height: 20px;
   margin-bottom: 4px;
 }
@@ -163,19 +194,25 @@ function memStore() { memory.value = parseFloat(display.value.replace(',', '.'))
 .mem-row {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
-  border-top: 1px solid rgba(255,255,255,0.08);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .mem-btn {
   padding: 8px 4px;
   font-size: 12px;
-  color: rgba(255,255,255,0.6);
+  color: rgba(255, 255, 255, 0.6);
   text-align: center;
   transition: background 0.1s;
 
-  &:hover:not(:disabled) { background: rgba(255,255,255,0.1); color: white; }
-  &:disabled { opacity: 0.3; }
+  &:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+  }
 }
 
 .btn-grid {
@@ -183,7 +220,7 @@ function memStore() { memory.value = parseFloat(display.value.replace(',', '.'))
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1px;
-  background: rgba(255,255,255,0.06);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .btn {
@@ -197,20 +234,41 @@ function memStore() { memory.value = parseFloat(display.value.replace(',', '.'))
   transition: background 0.1s;
   border-radius: 0;
 
-  &:hover { background: #3a3a3a; }
-  &:active { background: #444; }
+  &:hover {
+    background: #3a3a3a;
+  }
 
-  &.gray { background: #323232; color: rgba(255,255,255,0.9); }
-  &.gray:hover { background: #3d3d3d; }
+  &:active {
+    background: #444;
+  }
 
-  &.accent { background: #333; color: var(--accent); font-size: 20px; }
-  &.accent:hover { background: #3d3d3d; }
+  &.gray {
+    background: #323232;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  &.gray:hover {
+    background: #3d3d3d;
+  }
+
+  &.accent {
+    background: #333;
+    color: var(--accent);
+    font-size: 20px;
+  }
+
+  &.accent:hover {
+    background: #3d3d3d;
+  }
 
   &.accent-eq {
     background: var(--accent);
     color: white;
     font-size: 20px;
-    &:hover { background: var(--accent-dark); }
+
+    &:hover {
+      background: var(--accent-dark);
+    }
   }
 }
 </style>
