@@ -80,6 +80,7 @@ import {
   ICON_START_POWER,
   ICON_APP_NOTEPAD,
   ICON_APP_PHOTOS,
+  ICON_APP_PDF,
   ICON_FOLDER_GENERIC,
   ICON_RECENT_NOTEPAD,
   ICON_RECENT_FOLDER,
@@ -98,10 +99,10 @@ function openAndClose(appId: string) {
 }
 
 const recentItems = [
+  { icon: ICON_APP_PDF,         name: 'sample.pdf',       meta: 'Lecteur PDF · Il y a 1 min' },
   { icon: ICON_RECENT_NOTEPAD,  name: 'Notes.txt',        meta: 'Bloc-notes · Il y a 2 min' },
   { icon: ICON_RECENT_FOLDER,   name: 'Documents',        meta: 'Explorateur · Hier' },
   { icon: ICON_RECENT_PHOTOS,   name: 'Fond d\'écran.png', meta: 'Photos · Il y a 3 jours' },
-  { icon: ICON_RECENT_SETTINGS, name: 'Paramètres',       meta: 'Paramètres · Il y a 1 semaine' },
 ]
 
 </script>

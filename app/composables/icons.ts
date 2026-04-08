@@ -5,6 +5,7 @@ export const ICON_APP_CALCULATOR = '/icons/calc.png'
 export const ICON_APP_SETTINGS   = '/icons/general-icons/icon-settings.ico' // Fallback
 export const ICON_APP_EDGE       = '/icons/epiphany.png'
 export const ICON_APP_PHOTOS     = '/icons/folder-icons/folder-picture.ico'
+export const ICON_APP_PDF        = '/icons/app-type/app-pdf.png'
 export const ICON_APP_TERMINAL   = '/icons/powershell.ico'
 export const ICON_APP_TRASH      = '/icons/trash-empty.ico'
 export const ICON_APP_EDGE_LOGO  = 'logos:microsoft-edge'
@@ -59,6 +60,7 @@ export const ICON_DESKTOP_NOTEPAD  = '/icons/notepad.ico'
 export const ICON_DESKTOP_CALC     = '/icons/calc.png'
 export const ICON_DESKTOP_SETTINGS = '/icons/epiphany.png'
 export const ICON_DESKTOP_PHOTOS   = '/icons/folder-icons/folder-picture.ico'
+export const ICON_DESKTOP_PDF      = '/icons/app-type/app-pdf.png'
 export const ICON_DESKTOP_TRASH    = '/icons/trash-empty.ico'
 
 // ─── Paramètres Rapides (Quick Settings) ──────────────────────────────────────

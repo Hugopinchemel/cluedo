@@ -71,6 +71,7 @@ import Calculator from '~/components/apps/Calculator.vue'
 import FileExplorer from '~/components/apps/FileExplorer.vue'
 import Settings from '~/components/apps/Settings.vue'
 import Photos from '~/components/apps/Photos.vue'
+import PdfViewer from '~/components/apps/PdfViewer.vue'
 
 import {
   ICON_DESKTOP_PC,
@@ -79,6 +80,7 @@ import {
   ICON_DESKTOP_CALC,
   ICON_DESKTOP_SETTINGS,
   ICON_DESKTOP_PHOTOS,
+  ICON_DESKTOP_PDF,
   ICON_DESKTOP_TRASH,
   ICON_FLUENT_WIFI,
   ICON_FLUENT_BLUETOOTH,
@@ -109,6 +111,7 @@ const appComponents: Record<string, any> = {
   explorer: FileExplorer,
   settings: Settings,
   photos: Photos,
+  pdfviewer: PdfViewer,
   edge: { template: `<div class="edge-placeholder"><div class="edge-bar"><span><Icon :name="ICON_APP_EDGE_LOGO" /></span><div class="edge-url">https://www.bing.com</div></div><div class="edge-content"><h2>Microsoft Edge</h2><p>Navigateur simulé</p></div></div>`, styles: [] },
 }
 
@@ -144,6 +147,7 @@ const desktopIcons = ref([
   { id: 'notepad', appId: 'notepad', icon: ICON_DESKTOP_NOTEPAD, label: 'Bloc-notes', x: 0, y: 0 },
   { id: 'calc', appId: 'calculator', icon: ICON_DESKTOP_CALC, label: 'Calculatrice', x: 0, y: 0 },
   { id: 'photos', appId: 'photos', icon: ICON_DESKTOP_PHOTOS, label: 'Photos', x: 0, y: 0 },
+  { id: 'pdf', appId: 'pdfviewer', icon: ICON_DESKTOP_PDF, label: 'sample.pdf', x: 0, y: 0 },
 ])
 
 function arrangeIcons() {

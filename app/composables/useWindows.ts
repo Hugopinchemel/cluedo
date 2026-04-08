@@ -6,6 +6,7 @@ import {
   ICON_APP_SETTINGS,
   ICON_APP_EDGE,
   ICON_APP_PHOTOS,
+  ICON_APP_PDF,
 } from '~/composables/icons'
 
 export interface AppDef {
@@ -41,6 +42,7 @@ export const APPS: AppDef[] = [
   { id: 'settings',    name: 'Paramètres',              icon: ICON_APP_SETTINGS,   defaultWidth: 860, defaultHeight: 580 },
   { id: 'edge',        name: 'Microsoft Edge',          icon: ICON_APP_EDGE,       defaultWidth: 960, defaultHeight: 620 },
   { id: 'photos',      name: 'Photos',                  icon: ICON_APP_PHOTOS,     defaultWidth: 820, defaultHeight: 560 },
+  { id: 'pdfviewer',   name: 'Lecteur PDF',             icon: ICON_APP_PDF,        defaultWidth: 820, defaultHeight: 680 },
 ]
 
 // Module-level singleton state
