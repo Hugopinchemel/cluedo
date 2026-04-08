@@ -147,7 +147,7 @@ const desktopIcons = ref([
   { id: 'notepad', appId: 'notepad', icon: ICON_DESKTOP_NOTEPAD, label: 'Bloc-notes', x: 0, y: 0 },
   { id: 'calc', appId: 'calculator', icon: ICON_DESKTOP_CALC, label: 'Calculatrice', x: 0, y: 0 },
   { id: 'photos', appId: 'photos', icon: ICON_DESKTOP_PHOTOS, label: 'Photos', x: 0, y: 0 },
-  { id: 'pdf', appId: 'pdfviewer', icon: ICON_DESKTOP_PDF, label: 'Autopsie.pdf', x: 0, y: 0 },
+  { id: 'pdf', appId: 'pdfviewer', icon: ICON_DESKTOP_PDF, label: 'Dossier.pdf', x: 0, y: 0 },
 ])
 
 function arrangeIcons() {
