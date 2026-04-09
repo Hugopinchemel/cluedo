@@ -8,26 +8,29 @@
       @contextmenu.prevent="onRightClick"
   >
     <!-- Desktop icons -->
-    <div aria-label="Icônes du bureau" class="desktop-icons" role="list">
-      <button
+    <ul aria-label="Icônes du bureau" class="desktop-icons">
+      <li
           v-for="icon in desktopIcons"
           :key="icon.id"
-          :aria-label="icon.label"
-          :aria-selected="selectedIcon === icon.id"
-          :class="{ selected: selectedIcon === icon.id, dragging: draggingIcon === icon.id }"
           :style="{ position: 'absolute', left: icon.x + 'px', top: icon.y + 'px' }"
-          class="desktop-icon"
-          role="listitem"
-          @mousedown="onIconDragStart($event, icon)"
-          @click.stop="selectedIcon = icon.id"
-          @dblclick.stop="openApp(icon.appId)"
+          class="desktop-icon-item"
       >
-        <img v-if="icon.icon.startsWith('/')" :src="icon.icon" alt="" aria-hidden="true" class="icon-glyph-img"
-             height="48" width="48"/>
-        <Icon v-else :name="icon.icon" aria-hidden="true" class="icon-glyph"/>
-        <span aria-hidden="true" class="icon-label">{{ icon.label }}</span>
-      </button>
-    </div>
+        <button
+            :aria-label="icon.label"
+            :aria-selected="selectedIcon === icon.id"
+            :class="{ selected: selectedIcon === icon.id, dragging: draggingIcon === icon.id }"
+            class="desktop-icon"
+            @mousedown="onIconDragStart($event, icon)"
+            @click.stop="selectedIcon = icon.id"
+            @dblclick.stop="openApp(icon.appId)"
+        >
+          <img v-if="icon.icon.startsWith('/')" :src="icon.icon" alt="" aria-hidden="true" class="icon-glyph-img"
+               height="48" width="48"/>
+          <Icon v-else :name="icon.icon" aria-hidden="true" class="icon-glyph"/>
+          <span aria-hidden="true" class="icon-label">{{ icon.label }}</span>
+        </button>
+      </li>
+    </ul>
 
     <!-- Open windows -->
     <WinWindow
@@ -287,10 +290,15 @@ function closeMenus() {
   inset: 0;
   pointer-events: none;
   padding: 12px;
+  list-style: none;
+  margin: 0;
+}
+
+.desktop-icon-item {
+  pointer-events: auto;
 }
 
 .desktop-icon {
-  position: absolute;
   pointer-events: auto;
   display: flex;
   flex-direction: column;
