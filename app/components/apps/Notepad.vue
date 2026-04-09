@@ -26,10 +26,14 @@
     </div>
     <!-- Editor -->
     <textarea
+        ref="textareaRef"
         v-model="content"
         :style="{ fontFamily: fontFamily, fontSize: fontSize + 'px', wordWrap: wordWrap ? 'normal' : 'off' }"
         class="editor"
         spellcheck="false"
+        @keyup="updateCursor"
+        @click="updateCursor"
+        @input="updateCursor"
     />
     <!-- Status bar -->
     <div class="status-bar">
@@ -62,20 +66,31 @@ const fontFamily = ref('Consolas')
 const fontSize = ref(14)
 const wordWrap = ref(true)
 const openMenu = ref<string | null>(null)
+const textareaRef = ref<HTMLTextAreaElement | null>(null)
+const cursorPosition = ref({line: 1, col: 1})
 
-const lineCount = computed(() => {
-  const pos = content.value.indexOf('\n')
-  return pos === -1 ? 1 : content.value.substring(0, pos).split('\n').length
-})
-const colCount = computed(() => 1)
+const lineCount = computed(() => cursorPosition.value.line)
+const colCount = computed(() => cursorPosition.value.col)
+
+function updateCursor() {
+  if (!textareaRef.value) return
+  const pos = textareaRef.value.selectionStart
+  const textBefore = content.value.substring(0, pos)
+  const lines = textBefore.split('\n')
+  cursorPosition.value = {
+    line: lines.length,
+    col: lines[lines.length - 1].length + 1
+  }
+}
 
 function newFile() {
   content.value = ''
+  updateCursor()
 }
 
 function selectAll() {
-  const el = document.querySelector('.editor') as HTMLTextAreaElement
-  el?.select()
+  textareaRef.value?.select()
+  updateCursor()
 }
 
 const menus: Menu[] = [
