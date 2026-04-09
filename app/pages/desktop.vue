@@ -1,110 +1,104 @@
 <template>
   <div
-    class="desktop"
-    :style="{ background: wallpaper }"
-    @click="closeMenus"
-    @contextmenu.prevent="onRightClick"
+      :style="{ background: settings.wallpaper }"
+      class="desktop"
+      @click="closeMenus"
+      @contextmenu.prevent="onRightClick"
   >
     <!-- Desktop icons -->
     <div class="desktop-icons">
       <button
-        v-for="icon in desktopIcons"
-        :key="icon.id"
-        class="desktop-icon"
-        :class="{ selected: selectedIcon === icon.id, dragging: draggingIcon === icon.id }"
-        :style="{ position: 'absolute', left: icon.x + 'px', top: icon.y + 'px' }"
-        @mousedown="onIconDragStart($event, icon)"
-        @click.stop="selectedIcon = icon.id"
-        @dblclick.stop="openApp(icon.appId)"
+          v-for="icon in desktopIcons"
+          :key="icon.id"
+          :class="{ selected: selectedIcon === icon.id, dragging: draggingIcon === icon.id }"
+          :style="{ position: 'absolute', left: icon.x + 'px', top: icon.y + 'px' }"
+          class="desktop-icon"
+          @mousedown="onIconDragStart($event, icon)"
+          @click.stop="selectedIcon = icon.id"
+          @dblclick.stop="openApp(icon.appId)"
       >
-        <img v-if="icon.icon.startsWith('/')" :src="icon.icon" width="48" height="48" class="icon-glyph-img" alt="" />
-        <Icon v-else :name="icon.icon" class="icon-glyph" />
+        <img v-if="icon.icon.startsWith('/')" :src="icon.icon" alt="" class="icon-glyph-img" height="48" width="48"/>
+        <Icon v-else :name="icon.icon" class="icon-glyph"/>
         <span class="icon-label">{{ icon.label }}</span>
       </button>
     </div>
 
     <!-- Open windows -->
     <WinWindow
-      v-for="win in windows"
-      :key="win.id"
-      :win="win"
-      :focusedId="focusedId"
+        v-for="win in windows"
+        :key="win.id"
+        :focusedId="focusedId"
+        :win="win"
     >
-      <component :is="appComponents[win.appId]" @changeBg="wallpaper = $event" />
+      <component :is="appComponents[win.appId]" @changeBg="wallpaper = $event"/>
     </WinWindow>
 
     <!-- Taskbar -->
-    <WinTaskbar 
-      :startOpen="startOpen" 
-      :notifOpen="notifOpen"
-      :qsOpen="qsOpen"
-      @toggleStart="toggleStart" 
-      @toggleNotif="toggleNotif" 
-      @toggleQuickSettings="toggleQuickSettings"
-      @toggleCalendar="toggleNotif"
-      @click.stop
+    <WinTaskbar
+        :notifOpen="notifOpen"
+        :qsOpen="qsOpen"
+        :startOpen="startOpen"
+        @toggleCalendar="toggleNotif"
+        @toggleNotif="toggleNotif"
+        @toggleQuickSettings="toggleQuickSettings"
+        @toggleStart="toggleStart"
+        @click.stop
     />
 
     <!-- Start menu -->
-    <WinStartMenu :open="startOpen" @close="startOpen = false" />
+    <WinStartMenu :open="startOpen" @close="startOpen = false"/>
 
     <!-- Notification panel -->
-    <WinNotificationCenter :open="notifOpen" />
+    <WinNotificationCenter :open="notifOpen"/>
 
     <!-- Quick Actions Panel -->
-    <WinQuickSettings :open="qsOpen" @openSettings="openApp('settings')" />
+    <WinQuickSettings :open="qsOpen" @openSettings="openApp('settings')"/>
 
     <!-- Context menu -->
     <WinContextMenu
-      :visible="ctxVisible"
-      :x="ctxX"
-      :y="ctxY"
-      :items="ctxItems"
-      @close="ctxVisible = false"
+        :items="ctxItems"
+        :visible="ctxVisible"
+        :x="ctxX"
+        :y="ctxY"
+        @close="ctxVisible = false"
     />
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import Notepad from '~/components/apps/Notepad.vue'
 import Calculator from '~/components/apps/Calculator.vue'
 import FileExplorer from '~/components/apps/FileExplorer.vue'
 import Settings from '~/components/apps/Settings.vue'
 import Photos from '~/components/apps/Photos.vue'
 import PdfViewer from '~/components/apps/PdfViewer.vue'
+<<<<<<< Updated upstream
 import PdfViewer2 from '~/components/apps/PdfViewer2.vue'
 
+=======
+import Edge from '~/components/apps/Edge.vue'
+>>>>>>> Stashed changes
 
 import {
-  ICON_DESKTOP_PC,
+  ICON_DESKTOP_CALC,
   ICON_DESKTOP_DOCS,
   ICON_DESKTOP_NOTEPAD,
-  ICON_DESKTOP_CALC,
-  ICON_DESKTOP_SETTINGS,
-  ICON_DESKTOP_PHOTOS,
+  ICON_DESKTOP_PC,
   ICON_DESKTOP_PDF,
+  ICON_DESKTOP_PHOTOS,
   ICON_DESKTOP_TRASH,
-  ICON_FLUENT_WIFI,
-  ICON_FLUENT_BLUETOOTH,
-  ICON_FLUENT_AIRPLANE,
-  ICON_FLUENT_DND,
-  ICON_FLUENT_FLASHLIGHT,
-  ICON_FLUENT_EASE,
-  ICON_FLUENT_PROJECT,
-  ICON_FLUENT_BATTERY,
-  ICON_FLUENT_VIEW,
-  ICON_FLUENT_SORT,
-  ICON_FLUENT_REFRESH,
+  ICON_FLUENT_DISPLAY,
   ICON_FLUENT_NEW_DOC,
   ICON_FLUENT_PERSONALIZE,
-  ICON_FLUENT_DISPLAY,
-  ICON_FLUENT_ALERT_OFF,
-  ICON_APP_EDGE_LOGO,
+  ICON_FLUENT_REFRESH,
+  ICON_FLUENT_SORT,
+  ICON_FLUENT_VIEW,
 } from '~/composables/icons'
 
-definePageMeta({ layout: false })
+definePageMeta({layout: false})
 
-const { windows, openApp, focusWindow } = useWindows()
+const {windows, openApp, focusWindow} = useWindows()
+const {settings} = useSettings()
 
 // Map app IDs to components
 const appComponents: Record<string, any> = {
@@ -114,14 +108,18 @@ const appComponents: Record<string, any> = {
   settings: Settings,
   photos: Photos,
   pdfviewer: PdfViewer,
+<<<<<<< Updated upstream
   pdfviewer2: PdfViewer2,
 
   edge: { template: `<div class="edge-placeholder"><div class="edge-bar"><span><Icon :name="ICON_APP_EDGE_LOGO" /></span><div class="edge-url">https://www.bing.com</div></div><div class="edge-content"><h2>Microsoft Edge</h2><p>Navigateur simulé</p></div></div>`, styles: [] },
 
+=======
+  edge: Edge,
+>>>>>>> Stashed changes
 }
 
 const wallpaper = ref(
-  'radial-gradient(ellipse 70% 55% at 20% 65%, rgba(74,144,217,0.25) 0%, transparent 60%), radial-gradient(ellipse 55% 70% at 80% 25%, rgba(83,52,131,0.3) 0%, transparent 60%), linear-gradient(155deg, #0d1b2e 0%, #112244 40%, #1a0d2e 70%, #0a1520 100%)'
+    'radial-gradient(ellipse 70% 55% at 20% 65%, rgba(74,144,217,0.25) 0%, transparent 60%), radial-gradient(ellipse 55% 70% at 80% 25%, rgba(83,52,131,0.3) 0%, transparent 60%), linear-gradient(155deg, #0d1b2e 0%, #112244 40%, #1a0d2e 70%, #0a1520 100%)'
 )
 
 const selectedIcon = ref('')
@@ -146,6 +144,7 @@ const focusedId = computed(() => {
 })
 
 const desktopIcons = ref([
+<<<<<<< Updated upstream
   { id: 'trash', appId: 'explorer', icon: ICON_DESKTOP_TRASH, label: 'Corbeille', x: 0, y: 0 },
   { id: 'thispc', appId: 'explorer', icon: ICON_DESKTOP_PC, label: 'Ce PC', x: 0, y: 5 },
   { id: 'explorer', appId: 'explorer', icon: ICON_DESKTOP_DOCS, label: 'Documents', x: 0, y: 0 },
@@ -154,13 +153,22 @@ const desktopIcons = ref([
   { id: 'photos', appId: 'photos', icon: ICON_DESKTOP_PHOTOS, label: 'Photos', x: 0, y: 0 },
   { id: 'pdf', appId: 'pdfviewer', icon: ICON_DESKTOP_PDF, label: 'Dossiers.pdf', x: 0, y: 0 },
   { id: 'pdf', appId: 'pdfviewer2', icon: ICON_DESKTOP_PDF, label: 'Rapport_d\'Autopsie.pdf', x: 0, y: 0 },
+=======
+  {id: 'trash', appId: 'explorer', icon: ICON_DESKTOP_TRASH, label: 'Corbeille', x: 0, y: 0},
+  {id: 'thispc', appId: 'explorer', icon: ICON_DESKTOP_PC, label: 'Ce PC', x: 0, y: 5},
+  {id: 'explorer', appId: 'explorer', icon: ICON_DESKTOP_DOCS, label: 'Documents', x: 0, y: 0},
+  {id: 'notepad', appId: 'notepad', icon: ICON_DESKTOP_NOTEPAD, label: 'Bloc-notes', x: 0, y: 0},
+  {id: 'calc', appId: 'calculator', icon: ICON_DESKTOP_CALC, label: 'Calculatrice', x: 0, y: 0},
+  {id: 'photos', appId: 'photos', icon: ICON_DESKTOP_PHOTOS, label: 'Photos', x: 0, y: 0},
+  {id: 'pdf', appId: 'pdfviewer', icon: ICON_DESKTOP_PDF, label: 'Dossier.pdf', x: 0, y: 0},
+>>>>>>> Stashed changes
 ])
 
 function arrangeIcons() {
   const h = window.innerHeight - 60 // Taskbar + margin
   let currentX = GRID_OFFSET_X
   let currentY = GRID_OFFSET_Y
-  
+
   desktopIcons.value.forEach(icon => {
     if (currentY + GRID_H > h) {
       currentX += GRID_W
@@ -183,7 +191,7 @@ onUnmounted(() => {
 
 function onIconDragStart(e: MouseEvent, icon: any) {
   if (e.button !== 0) return // Only left click
-  
+
   selectedIcon.value = icon.id
   draggingIcon.value = icon.id
   const startX = e.clientX - icon.x
@@ -199,7 +207,7 @@ function onIconDragStart(e: MouseEvent, icon: any) {
 
   function onUp() {
     draggingIcon.value = ''
-    
+
     // Snap to grid
     icon.x = Math.round((icon.x - GRID_OFFSET_X) / GRID_W) * GRID_W + GRID_OFFSET_X
     icon.y = Math.round((icon.y - GRID_OFFSET_Y) / GRID_H) * GRID_H + GRID_OFFSET_Y
@@ -217,14 +225,23 @@ function onIconDragStart(e: MouseEvent, icon: any) {
 }
 
 const ctxItems = computed(() => [
-  { label: 'Affichage', icon: ICON_FLUENT_VIEW, action: () => {} },
-  { label: 'Trier par', icon: ICON_FLUENT_SORT, action: () => {} },
-  { label: 'Actualiser', icon: ICON_FLUENT_REFRESH, action: () => {} },
-  { separator: true },
-  { label: 'Nouveau', icon: ICON_FLUENT_NEW_DOC, action: () => openApp('notepad') },
-  { separator: true },
-  { label: 'Personnaliser', icon: ICON_FLUENT_PERSONALIZE, action: () => openApp('settings') },
-  { label: 'Paramètres d\'affichage', icon: ICON_FLUENT_DISPLAY, action: () => openApp('settings') },
+  {
+    label: 'Affichage', icon: ICON_FLUENT_VIEW, action: () => {
+    }
+  },
+  {
+    label: 'Trier par', icon: ICON_FLUENT_SORT, action: () => {
+    }
+  },
+  {
+    label: 'Actualiser', icon: ICON_FLUENT_REFRESH, action: () => {
+    }
+  },
+  {separator: true},
+  {label: 'Nouveau', icon: ICON_FLUENT_NEW_DOC, action: () => openApp('notepad')},
+  {separator: true},
+  {label: 'Personnaliser', icon: ICON_FLUENT_PERSONALIZE, action: () => openApp('settings')},
+  {label: 'Paramètres d\'affichage', icon: ICON_FLUENT_DISPLAY, action: () => openApp('settings')},
 ])
 
 
@@ -300,8 +317,14 @@ function closeMenus() {
   transition: background 0.1s;
   user-select: none;
 
-  &:hover { background: rgba(255,255,255,0.12); }
-  &.selected { background: rgba(255,255,255,0.2); }
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  &.selected {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
   &.dragging {
     opacity: 0.7;
     z-index: 1000;
@@ -309,13 +332,15 @@ function closeMenus() {
   }
 }
 
-.icon-glyph { font-size: 36px; }
+.icon-glyph {
+  font-size: 36px;
+}
 
 .icon-label {
   font-size: 12px;
   color: white;
   text-align: center;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.8), 0 0 8px rgba(0,0,0,0.5);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8), 0 0 8px rgba(0, 0, 0, 0.5);
   line-height: 1.3;
   max-width: 80px;
   overflow: visible;
@@ -333,6 +358,7 @@ function closeMenus() {
   height: 100%;
   background: white;
 }
+
 :deep(.edge-bar) {
   display: flex;
   align-items: center;
@@ -341,6 +367,7 @@ function closeMenus() {
   background: #f3f3f3;
   border-bottom: 1px solid #d0d0d0;
 }
+
 :deep(.edge-url) {
   flex: 1;
   padding: 4px 10px;
@@ -350,6 +377,7 @@ function closeMenus() {
   font-size: 12px;
   color: #333;
 }
+
 :deep(.edge-content) {
   flex: 1;
   display: flex;

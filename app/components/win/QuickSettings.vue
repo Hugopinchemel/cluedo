@@ -3,15 +3,15 @@
     <div v-if="open" class="quick-settings" @click.stop>
       <div class="qs-grid">
         <button
-          v-for="qa in quickActions"
-          :key="qa.label"
-          class="qa-btn"
-          :class="{ on: qa.on }"
-          @click="qa.on = !qa.on"
+            v-for="qa in quickActions"
+            :key="qa.label"
+            :class="{ on: qa.on }"
+            class="qa-btn"
+            @click="qa.on = !qa.on"
         >
           <div class="qa-icon-wrapper">
-            <img v-if="qa.icon.startsWith('/')" :src="qa.icon" width="20" height="20"  alt="" />
-            <Icon v-else :name="qa.icon" size="20" />
+            <img v-if="qa.icon.startsWith('/')" :src="qa.icon" alt="" height="20" width="20"/>
+            <Icon v-else :name="qa.icon" size="20"/>
           </div>
           <span class="qa-label">{{ qa.label }}</span>
         </button>
@@ -19,27 +19,34 @@
 
       <div class="qs-sliders">
         <div class="qs-slider-row">
-          <img v-if="ICON_QS_BRIGHTNESS.startsWith('/')" :src="ICON_QS_BRIGHTNESS" width="16" height="16" class="qs-slider-icon"  alt="" />
-          <Icon v-else :name="ICON_QS_BRIGHTNESS" size="16" class="qs-slider-icon" />
-          <input type="range" v-model="brightness" min="0" max="100" class="qs-range">
+          <img v-if="ICON_QS_BRIGHTNESS.startsWith('/')" :src="ICON_QS_BRIGHTNESS" alt="" class="qs-slider-icon"
+               height="16" width="16"/>
+          <Icon v-else :name="ICON_QS_BRIGHTNESS" class="qs-slider-icon" size="16"/>
+          <input :value="settings.brightness" class="qs-range"
+                 max="100" min="0"
+                 type="range" @input="e => updateSettings({ brightness: parseInt((e.target as HTMLInputElement).value) })">
         </div>
         <div class="qs-slider-row">
-          <img v-if="ICON_QS_VOLUME.startsWith('/')" :src="ICON_QS_VOLUME" width="16" height="16" class="qs-slider-icon" alt="" />
-          <Icon v-else :name="ICON_QS_VOLUME" size="16" class="qs-slider-icon" />
-          <input type="range" v-model="volume" min="0" max="100" class="qs-range">
+          <img v-if="ICON_QS_VOLUME.startsWith('/')" :src="ICON_QS_VOLUME" alt="" class="qs-slider-icon" height="16"
+               width="16"/>
+          <Icon v-else :name="ICON_QS_VOLUME" class="qs-slider-icon" size="16"/>
+          <input :value="settings.volume" class="qs-range"
+                 max="100" min="0"
+                 type="range" @input="e => updateSettings({ volume: parseInt((e.target as HTMLInputElement).value) })">
         </div>
       </div>
 
       <div class="qs-footer">
         <div class="qs-battery">
-          <img v-if="ICON_TRAY_BATTERY.startsWith('/')" :src="ICON_TRAY_BATTERY" width="16" height="16" class="qs-battery-icon"  alt="" />
-          <Icon v-else :name="ICON_TRAY_BATTERY" size="16" class="qs-battery-icon" />
+          <img v-if="ICON_TRAY_BATTERY.startsWith('/')" :src="ICON_TRAY_BATTERY" alt="" class="qs-battery-icon"
+               height="16" width="16"/>
+          <Icon v-else :name="ICON_TRAY_BATTERY" class="qs-battery-icon" size="16"/>
           <span>100%</span>
         </div>
         <div class="qs-footer-right">
           <button class="qs-settings-btn" @click="$emit('openSettings')">
-            <img v-if="ICON_APP_SETTINGS.startsWith('/')" :src="ICON_APP_SETTINGS" width="16" height="16"  alt="" />
-            <Icon v-else :name="ICON_APP_SETTINGS" size="16" />
+            <img v-if="ICON_APP_SETTINGS.startsWith('/')" :src="ICON_APP_SETTINGS" alt="" height="16" width="16"/>
+            <Icon v-else :name="ICON_APP_SETTINGS" size="16"/>
           </button>
         </div>
       </div>
@@ -47,31 +54,30 @@
   </Transition>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {
-  ICON_QS_WIFI,
-  ICON_QS_BLUETOOTH,
-  ICON_QS_AIRPLANE,
-  ICON_QS_DND,
-  ICON_QS_BATTERY,
-  ICON_QS_BRIGHTNESS,
-  ICON_QS_VOLUME,
-  ICON_TRAY_BATTERY,
   ICON_APP_SETTINGS,
+  ICON_QS_AIRPLANE,
+  ICON_QS_BATTERY,
+  ICON_QS_BLUETOOTH,
+  ICON_QS_BRIGHTNESS,
+  ICON_QS_DND,
+  ICON_QS_VOLUME,
+  ICON_QS_WIFI,
+  ICON_TRAY_BATTERY,
 } from '~/composables/icons'
 
 defineProps<{ open: boolean }>()
 defineEmits(['openSettings'])
 
-const brightness = ref(80)
-const volume = ref(50)
+const {settings, updateSettings} = useSettings()
 
 const quickActions = ref([
-  { icon: ICON_QS_WIFI, label: 'Wi-Fi', on: true },
-  { icon: ICON_QS_BLUETOOTH, label: 'Bluetooth', on: true },
-  { icon: ICON_QS_AIRPLANE, label: 'Mode avion', on: false },
-  { icon: ICON_QS_DND, label: 'Ne pas déranger', on: false },
-  { icon: ICON_QS_BATTERY, label: 'Économiseur', on: false },
+  {icon: ICON_QS_WIFI, label: 'Wi-Fi', on: true},
+  {icon: ICON_QS_BLUETOOTH, label: 'Bluetooth', on: true},
+  {icon: ICON_QS_AIRPLANE, label: 'Mode avion', on: false},
+  {icon: ICON_QS_DND, label: 'Ne pas déranger', on: false},
+  {icon: ICON_QS_BATTERY, label: 'Économiseur', on: false},
 ])
 
 </script>
@@ -88,7 +94,7 @@ const quickActions = ref([
   border-radius: 12px;
   padding: 24px;
   z-index: 7000;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 .qs-grid {
@@ -186,12 +192,16 @@ const quickActions = ref([
 .qs-settings-btn {
   padding: 6px;
   border-radius: 4px;
-  &:hover { background: rgba(255, 255, 255, 0.1); }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
 }
 
 .slide-up-enter-active, .slide-up-leave-active {
   transition: all 0.25s cubic-bezier(0.1, 0.9, 0.2, 1);
 }
+
 .slide-up-enter-from, .slide-up-leave-to {
   transform: translateY(20px);
   opacity: 0;

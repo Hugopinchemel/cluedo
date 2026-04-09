@@ -1,15 +1,15 @@
 <template>
   <NuxtLayout>
-    <NuxtPage />
+    <NuxtPage/>
   </NuxtLayout>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 const hasInteracted = ref(false)
 
 const triggerFullscreen = () => {
   if (hasInteracted.value) return
-  
+
   if (document.documentElement.requestFullscreen) {
     document.documentElement.requestFullscreen().catch(() => {
       // Fail silently or handle error

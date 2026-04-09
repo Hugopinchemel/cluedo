@@ -1,12 +1,12 @@
 <template>
   <div class="auth-screen">
-    <WinLockScreen v-if="phase === 'lock'" @unlock="onUnlock" />
-    <WinLoginScreen v-else-if="phase === 'login'" @login="goDesktop" @back="phase = 'lock'" />
+    <WinLockScreen v-if="phase === 'lock'" @unlock="onUnlock"/>
+    <WinLoginScreen v-else-if="phase === 'login'" @back="phase = 'lock'" @login="goDesktop"/>
   </div>
 </template>
 
-<script setup lang="ts">
-definePageMeta({ layout: false })
+<script lang="ts" setup>
+definePageMeta({layout: false})
 
 const phase = ref<'lock' | 'login'>('lock')
 
