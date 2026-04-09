@@ -3,7 +3,7 @@ name: Deploy to Server
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   deploy:
@@ -16,13 +16,5 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            # Aller dans le répertoire du projet sur le serveur
-            cd /var/www/cluedo
-            # Mettre à jour le code
-            git pull origin main
-            # Installer les dépendances
-            npm install
-            # Reconstruire le projet
-            npm run build
-            # Redémarrer l'application avec PM2
-            pm2 restart cluedo-windows || pm2 start .output/server/index.mjs --name "cluedo-windows"
+            cd /home/debian/cluedo
+            bash deploy.sh
