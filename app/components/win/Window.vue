@@ -5,9 +5,9 @@
         :aria-labelledby="`win-title-${win.id}`"
         :class="{ maximized: win.maximized, focused: isFocused }"
         :style="windowStyle"
+        aria-modal="true"
         class="win-window"
         role="dialog"
-        aria-modal="true"
         @mousedown="onFocus"
     >
       <!-- Title bar -->

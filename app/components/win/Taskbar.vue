@@ -1,117 +1,117 @@
 <template>
-  <div class="taskbar" role="toolbar" aria-label="Barre des tâches">
+  <div aria-label="Barre des tâches" class="taskbar" role="toolbar">
     <!-- Start button -->
     <button
-        :class="{ active: startOpen }"
-        class="start-btn"
         :aria-expanded="startOpen"
         :aria-pressed="startOpen"
-        aria-label="Menu Démarrer"
+        :class="{ active: startOpen }"
         aria-haspopup="true"
+        aria-label="Menu Démarrer"
+        class="start-btn"
         @click="$emit('toggleStart')"
     >
       <img :src="ICON_TASKBAR_START" alt="" aria-hidden="true" height="18" width="18"/>
     </button>
 
     <!-- Search -->
-    <button class="search-bar" aria-label="Rechercher dans Windows" @click="$emit('openApp', 'edge')">
+    <button aria-label="Rechercher dans Windows" class="search-bar" @click="$emit('openApp', 'edge')">
       <img :src="ICON_TASKBAR_SEARCH" alt="" aria-hidden="true" height="14" style="opacity: 0.6" width="14"/>
       <span aria-hidden="true">Rechercher dans Windows</span>
     </button>
 
     <!-- Task view button -->
-    <button class="icon-btn taskview-btn" aria-label="Vue des tâches">
+    <button aria-label="Vue des tâches" class="icon-btn taskview-btn">
       <img :src="ICON_TASKBAR_TASKVIEW" alt="" aria-hidden="true" height="16" width="16"/>
     </button>
 
     <!-- Pinned + Running apps -->
-    <nav class="tasks" aria-label="Applications">
+    <nav aria-label="Applications" class="tasks">
       <!-- Pinned apps -->
       <button
           v-for="app in APPS"
           :key="app.id"
-          :class="{ active: isFocused(app.id), running: isRunning(app.id) }"
           :aria-label="isRunning(app.id) ? (isFocused(app.id) ? `${app.name} – actif` : `${app.name} – en cours d'exécution`) : app.name"
           :aria-pressed="isFocused(app.id)"
+          :class="{ active: isFocused(app.id), running: isRunning(app.id) }"
           class="task-btn"
           @click="handleTaskClick(app.id)"
       >
         <img v-if="app.icon.startsWith('/')" :src="app.icon" alt="" aria-hidden="true" class="task-icon-img" height="18"
              width="18"/>
-        <Icon v-else :name="app.icon" class="task-icon" aria-hidden="true"/>
-        <span v-if="isRunning(app.id)" class="task-indicator" aria-hidden="true"/>
+        <Icon v-else :name="app.icon" aria-hidden="true" class="task-icon"/>
+        <span v-if="isRunning(app.id)" aria-hidden="true" class="task-indicator"/>
       </button>
     </nav>
 
-    <div class="spacer" aria-hidden="true"/>
+    <div aria-hidden="true" class="spacer"/>
 
     <!-- System tray -->
-    <div class="tray" role="group" aria-label="Zone de notification">
+    <div aria-label="Zone de notification" class="tray" role="group">
       <!-- Network -->
       <button
-          :class="{ active: qsOpen }"
-          class="tray-btn"
-          aria-label="Réseau – ouvrir les paramètres rapides"
           :aria-expanded="qsOpen"
           :aria-pressed="qsOpen"
+          :class="{ active: qsOpen }"
+          aria-label="Réseau – ouvrir les paramètres rapides"
+          class="tray-btn"
           @click="$emit('toggleQuickSettings')"
       >
         <img v-if="ICON_TRAY_NETWORK.startsWith('/')" :src="ICON_TRAY_NETWORK" alt="" aria-hidden="true" height="16"
              style="opacity: 0.85" width="16"/>
-        <Icon v-else :name="ICON_TRAY_NETWORK" size="16" style="opacity: 0.85" aria-hidden="true"/>
+        <Icon v-else :name="ICON_TRAY_NETWORK" aria-hidden="true" size="16" style="opacity: 0.85"/>
       </button>
       <!-- Sound -->
       <button
-          :class="{ active: qsOpen }"
-          class="tray-btn"
-          aria-label="Volume – ouvrir les paramètres rapides"
           :aria-expanded="qsOpen"
           :aria-pressed="qsOpen"
+          :class="{ active: qsOpen }"
+          aria-label="Volume – ouvrir les paramètres rapides"
+          class="tray-btn"
           @click="$emit('toggleQuickSettings')"
       >
         <img v-if="ICON_TRAY_VOLUME.startsWith('/')" :src="ICON_TRAY_VOLUME" alt="" aria-hidden="true" height="16"
              style="opacity: 0.85" width="16"/>
-        <Icon v-else :name="ICON_TRAY_VOLUME" size="16" style="opacity: 0.85" aria-hidden="true"/>
+        <Icon v-else :name="ICON_TRAY_VOLUME" aria-hidden="true" size="16" style="opacity: 0.85"/>
       </button>
       <!-- Battery -->
       <button
-          :class="{ active: qsOpen }"
-          class="tray-btn"
-          aria-label="Batterie – ouvrir les paramètres rapides"
           :aria-expanded="qsOpen"
           :aria-pressed="qsOpen"
+          :class="{ active: qsOpen }"
+          aria-label="Batterie – ouvrir les paramètres rapides"
+          class="tray-btn"
           @click="$emit('toggleQuickSettings')"
       >
         <img v-if="ICON_TRAY_BATTERY.startsWith('/')" :src="ICON_TRAY_BATTERY" alt="" aria-hidden="true" height="16"
              style="opacity: 0.85" width="16"/>
-        <Icon v-else :name="ICON_TRAY_BATTERY" size="16" style="opacity: 0.85" aria-hidden="true"/>
+        <Icon v-else :name="ICON_TRAY_BATTERY" aria-hidden="true" size="16" style="opacity: 0.85"/>
       </button>
 
       <!-- Clock -->
       <button
+          :aria-expanded="notifOpen"
+          :aria-label="`Heure : ${time}, date : ${dateShort}. Ouvrir le calendrier`"
           :class="{ active: notifOpen }"
           class="clock-btn"
-          :aria-label="`Heure : ${time}, date : ${dateShort}. Ouvrir le calendrier`"
-          :aria-expanded="notifOpen"
           @click="$emit('toggleCalendar')"
       >
-        <div class="clock-time" aria-hidden="true">{{ time }}</div>
-        <div class="clock-date" aria-hidden="true">{{ dateShort }}</div>
+        <div aria-hidden="true" class="clock-time">{{ time }}</div>
+        <div aria-hidden="true" class="clock-date">{{ dateShort }}</div>
       </button>
 
       <!-- Notification center -->
       <button
-          :class="{ active: notifOpen }"
-          class="icon-btn notif-btn"
-          aria-label="Centre de notifications"
           :aria-expanded="notifOpen"
           :aria-pressed="notifOpen"
+          :class="{ active: notifOpen }"
+          aria-label="Centre de notifications"
+          class="icon-btn notif-btn"
           @click="$emit('toggleNotif')"
       >
         <img v-if="ICON_TRAY_NOTIFICATIONS.startsWith('/')" :src="ICON_TRAY_NOTIFICATIONS" alt="" aria-hidden="true"
              height="16"
              style="opacity: 0.85" width="16"/>
-        <Icon v-else :name="ICON_TRAY_NOTIFICATIONS" size="16" style="opacity: 0.85" aria-hidden="true"/>
+        <Icon v-else :name="ICON_TRAY_NOTIFICATIONS" aria-hidden="true" size="16" style="opacity: 0.85"/>
       </button>
     </div>
   </div>

@@ -3,28 +3,30 @@
     <div
         v-if="visible"
         :style="{ left: adjusted.x + 'px', top: adjusted.y + 'px' }"
+        aria-label="Menu contextuel"
         class="ctx-menu"
         role="menu"
-        aria-label="Menu contextuel"
         @click.stop
         @keydown.escape="emit('close')"
         @keydown.arrow-down.prevent="focusNext"
         @keydown.arrow-up.prevent="focusPrev"
     >
       <div v-for="(item, i) in items" :key="i">
-        <div v-if="item.separator" class="separator" role="separator" aria-hidden="true"/>
+        <div v-if="item.separator" aria-hidden="true" class="separator" role="separator"/>
         <button
             v-else
-            :disabled="item.disabled"
             :aria-disabled="item.disabled"
+            :disabled="item.disabled"
             class="ctx-item"
             role="menuitem"
             @click="run(item)"
         >
-          <Icon v-if="item.icon" :name="item.icon" class="ctx-icon" aria-hidden="true"/>
-          <span v-else class="ctx-icon-placeholder" aria-hidden="true"/>
+          <Icon v-if="item.icon" :name="item.icon" aria-hidden="true" class="ctx-icon"/>
+          <span v-else aria-hidden="true" class="ctx-icon-placeholder"/>
           <span class="ctx-label">{{ item.label }}</span>
-          <span v-if="item.shortcut" class="ctx-shortcut" aria-label="`Raccourci : ${item.shortcut}`">{{ item.shortcut }}</span>
+          <span v-if="item.shortcut" aria-label="`Raccourci : ${item.shortcut}`" class="ctx-shortcut">{{
+              item.shortcut
+            }}</span>
         </button>
       </div>
     </div>

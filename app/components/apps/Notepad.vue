@@ -29,12 +29,12 @@
         ref="textareaRef"
         v-model="content"
         :style="{ fontFamily: fontFamily, fontSize: fontSize + 'px', wordWrap: wordWrap ? 'normal' : 'off' }"
+        aria-label="Zone de texte du Bloc-notes"
         class="editor"
         spellcheck="false"
-        aria-label="Zone de texte du Bloc-notes"
-        @keyup="updateCursor"
         @click="updateCursor"
         @input="updateCursor"
+        @keyup="updateCursor"
     />
     <!-- Status bar -->
     <div class="status-bar">

@@ -77,14 +77,15 @@ const instagramChats = [
 
 // Airbnb State
 const airbnbListing = {
-  title: 'Manoir Mystérieux - Suite Tudor',
+  title: 'Villa Rose',
   price: '150€ / nuit',
   rating: '4.92 (124 commentaires)',
   images: [
-    'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=800&q=80',
-    'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80'
+    '/picture/airbnb/9A59DCF2-65DF-4490-860D-F6FADA407C1A.jpg',
+    '/picture/airbnb/FB1A3CD5-7683-4099-B0B0-A81D89DD2193.jpg',
+    '/picture/airbnb/E757D2DC-D509-4DEC-A142-51A1069C3C1F.jpg'
   ],
-  description: 'Un manoir spacieux avec 6 chambres, un grand salon et une serre. Parfait pour les jeux de rôle grandeur nature. Attention aux bruits dans les murs la nuit.'
+  description: 'Une villa spacieuse avec 3 chambres, un grand salon, une cuisine ouverte sur le salon. Idéal pour les soirées en famille.'
 }
 </script>
 
@@ -239,7 +240,7 @@ const airbnbListing = {
             <h1>{{ airbnbListing.title }}</h1>
             <div class="listing-meta">
               <span><Icon name="fluent:star-16-filled"/> {{ airbnbListing.rating }}</span>
-              <u>Manoir, Royaume-Uni</u>
+              <u>Villa, Mimizan</u>
             </div>
           </div>
 
@@ -247,14 +248,15 @@ const airbnbListing = {
             <div :style="{ backgroundImage: `url(${airbnbListing.images[0]})` }" class="main-img"></div>
             <div class="side-imgs">
               <div :style="{ backgroundImage: `url(${airbnbListing.images[1]})` }" class="side-img"></div>
+              <div :style="{ backgroundImage: `url(${airbnbListing.images[2]})` }" class="side-img"></div>
               <div class="side-img more">Afficher toutes les photos</div>
             </div>
           </div>
 
           <div class="listing-details">
             <div class="info">
-              <h2>Logement entier : manoir. Hôte : Colonel Moutarde</h2>
-              <p>12 voyageurs · 6 chambres · 12 lits · 4 salles de bain</p>
+              <h2>Logement entier : Villa Rose</h2>
+              <p>6 voyageurs · 3 chambres · 3 lits · 1 salle de bain</p>
               <hr/>
               <div class="desc">{{ airbnbListing.description }}</div>
             </div>
@@ -265,8 +267,8 @@ const airbnbListing = {
               </div>
               <div class="booking-inputs">
                 <div class="date-inputs">
-                  <div class="input">ARRIVÉE<br/>01/05/2026</div>
-                  <div class="input">DÉPART<br/>03/05/2026</div>
+                  <div class="input">ARRIVÉE<br/>16/07/2025</div>
+                  <div class="input">DÉPART<br/>23/07/2025</div>
                 </div>
                 <div class="guest-input">VOYAGEURS<br/>1 voyageur</div>
               </div>
@@ -277,14 +279,14 @@ const airbnbListing = {
         </main>
       </div>
 
-      <div v-if="isGmail" class="instagram-ui">
-
-      </div>
 
       <!-- DEFAULT BING / HOME -->
       <div v-else class="bing-ui">
         <div class="bing-search">
-          <img alt="Bing" height="80" src="https://www.bing.com/sa/simg/bing_logo_pr.png"/>
+          <div class="bing-logo-container">
+            <Icon name="logos:bing" style="font-size: 80px;"/>
+            <span class="bing-text">Bing</span>
+          </div>
           <div class="search-input-container">
             <input v-model="urlInput" placeholder="Rechercher sur le Web" @keyup.enter="navigate"/>
             <Icon class="search-icon" name="fluent:search-24-filled"/>
@@ -728,6 +730,7 @@ const airbnbListing = {
       .main-img {
         background-size: cover;
         background-position: center;
+        border-radius: 12px;
       }
 
       .side-imgs {
@@ -739,6 +742,7 @@ const airbnbListing = {
           flex: 1;
           background-size: cover;
           background-position: center;
+          border-radius: 12px;
 
           &.more {
             display: flex;
@@ -747,7 +751,15 @@ const airbnbListing = {
             background-color: #f7f7f7;
             font-size: 14px;
             font-weight: 600;
-            border: 1px solid #222;
+            background-image: url('/picture/airbnb/B67B4336-8F16-4E10-9F34-E6452743C5F8.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            cursor: pointer;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+
           }
         }
       }
@@ -869,6 +881,18 @@ const airbnbListing = {
     flex-direction: column;
     align-items: center;
     gap: 32px;
+
+    .bing-logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .bing-text {
+        font-size: 64px;
+        font-weight: 600;
+        color: #0078d4;
+      }
+    }
 
     .search-input-container {
       width: 100%;

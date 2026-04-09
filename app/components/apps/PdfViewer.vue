@@ -3,7 +3,7 @@
     <div class="pdf-toolbar">
       <div class="toolbar-left">
         <Icon class="pdf-icon" name="fluent:document-pdf-24-filled"/>
-        <span class="file-name">Rapport_d'Autopsie.pdf</span>
+        <span aria-live="polite" class="file-name">Rapport_d'Autopsie.pdf</span>
       </div>
       <div class="toolbar-right">
         <button class="tb-btn" title="Imprimer">

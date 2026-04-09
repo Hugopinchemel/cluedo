@@ -4,7 +4,7 @@
     <!-- Display -->
     <div class="display">
       <div class="expression">{{ expression || '&nbsp;' }}</div>
-      <div class="result">{{ display }}</div>
+      <div aria-atomic="true" aria-live="polite" class="result">{{ display }}</div>
     </div>
     <!-- Memory row -->
     <div class="mem-row">

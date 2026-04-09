@@ -7,7 +7,7 @@
       @click="closeMenus"
       @contextmenu.prevent="onRightClick"
   >
-    <a href="#main-content" class="sr-only focus-visible:not-sr-only skip-link">Aller au contenu principal</a>
+    <a class="sr-only skip-link" href="#main-content">Aller au contenu principal</a>
     <h1 class="sr-only">Bureau — Windows 10</h1>
     <main id="main-content">
       <!-- Desktop icons -->
@@ -59,13 +59,29 @@
     />
 
     <!-- Start menu -->
-    <WinStartMenu :open="startOpen" @close="startOpen = false"/>
+    <WinStartMenu :open="startOpen" @close="startOpen = false" @shutdown="onShutdown"/>
+
+    <!-- Shutdown overlay -->
+    <Transition name="shutdown">
+      <div v-if="shutdownActive" aria-label="Cliquez pour rallumer" class="shutdown-overlay" role="button" tabindex="0"
+           @click="onWakeUp" @keydown.enter="onWakeUp" @keydown.space.prevent="onWakeUp"/>
+    </Transition>
+
+    <!-- Boot screen -->
+    <Transition name="boot-fade">
+      <WinBootScreen v-if="bootActive" @done="onBootDone"/>
+    </Transition>
 
     <!-- Notification panel -->
     <WinNotificationCenter :open="notifOpen"/>
 
     <!-- Quick Actions Panel -->
     <WinQuickSettings :open="qsOpen" @openSettings="openApp('settings')"/>
+
+    <!-- Screen reader announcements -->
+    <div aria-live="polite" class="sr-only" role="status">
+      {{ announcement }}
+    </div>
 
     <!-- Context menu -->
     <WinContextMenu
@@ -106,6 +122,10 @@ import {
 
 definePageMeta({layout: false})
 
+useHead({
+  title: 'Bureau — 35mm'
+})
+
 const {windows, openApp, focusWindow} = useWindows()
 const {settings} = useSettings()
 
@@ -126,6 +146,28 @@ const wallpaper = ref(
 )
 
 const selectedIcon = ref('')
+const shutdownActive = ref(false)
+const bootActive = ref(false)
+
+function onShutdown() {
+  closeMenus()
+  shutdownActive.value = true
+  setTimeout(() => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen()
+    }
+  }, 800)
+}
+
+function onWakeUp() {
+  bootActive.value = true
+  shutdownActive.value = false
+}
+
+function onBootDone() {
+  bootActive.value = false
+}
+
 const draggingIcon = ref('')
 const startOpen = ref(false)
 const notifOpen = ref(false)
@@ -133,6 +175,17 @@ const qsOpen = ref(false)
 const ctxVisible = ref(false)
 const ctxX = ref(0)
 const ctxY = ref(0)
+const announcement = ref('')
+
+// Watch windows to announce open/close
+watch(() => windows.value.length, (newCount, oldCount) => {
+  if (newCount > oldCount) {
+    const last = windows.value[windows.value.length - 1]
+    announcement.value = `Ouverture de la fenêtre ${last.title}`
+  } else if (newCount < oldCount) {
+    announcement.value = `Fermeture d'une fenêtre`
+  }
+})
 
 // Grid constants for desktop icons
 const GRID_W = 80
@@ -279,20 +332,6 @@ function closeMenus() {
 </script>
 
 <style scoped>
-.skip-link {
-  position: fixed;
-  top: 8px;
-  left: 8px;
-  z-index: 99999;
-  background: white;
-  color: #000;
-  padding: 8px 16px;
-  border-radius: 4px;
-  font-size: 14px;
-  font-weight: 600;
-  text-decoration: none;
-}
-
 main#main-content {
   position: absolute;
   inset: 0;
@@ -315,6 +354,39 @@ main#main-content {
   padding: 12px;
   list-style: none;
   margin: 0;
+}
+
+.boot-fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.boot-fade-leave-to {
+  opacity: 0;
+}
+
+.shutdown-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 99999;
+}
+
+.shutdown-enter-active {
+  transition: opacity 0.8s ease;
+}
+
+.shutdown-leave-active {
+  transition: opacity 0.6s ease;
+}
+
+.shutdown-enter-from,
+.shutdown-leave-to {
+  opacity: 0;
+}
+
+.shutdown-enter-to,
+.shutdown-leave-from {
+  opacity: 1;
 }
 
 .desktop-icon-item {

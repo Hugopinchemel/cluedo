@@ -83,6 +83,29 @@ input, textarea {
   border: 0;
 }
 
+/* Lien d'évitement (Skip link) */
+.skip-link {
+  &:focus-visible {
+    position: fixed;
+    top: 8px;
+    left: 8px;
+    z-index: 99999;
+    background: white;
+    color: #000;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    /* Annule .sr-only */
+    width: auto;
+    height: auto;
+    clip: auto;
+    white-space: normal;
+    margin: 0;
+  }
+}
+
 /* Respect des préférences de mouvement réduit */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

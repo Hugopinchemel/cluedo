@@ -19,7 +19,7 @@
           <path
               d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
         </svg>
-        <input placeholder="Paramètres de recherche" aria-label="Rechercher dans les paramètres"/>
+        <input aria-label="Rechercher dans les paramètres" placeholder="Paramètres de recherche"/>
       </div>
       <nav class="settings-menu">
         <button
@@ -48,9 +48,9 @@
               <div class="setting-name">Luminosité</div>
               <div class="setting-desc">Régler la luminosité intégrée</div>
             </div>
-            <input :value="settings.brightness" class="setting-slider" max="100" min="0"
+            <input :value="settings.brightness" aria-label="Luminosité" class="setting-slider" max="100"
+                   min="0"
                    type="range"
-                   aria-label="Luminosité"
                    @input="e => updateSettings({ brightness: parseInt((e.target as HTMLInputElement).value) })"/>
           </div>
           <div class="setting-row">
@@ -58,7 +58,7 @@
               <div class="setting-name">Résolution d'affichage</div>
               <div class="setting-desc">1920 × 1080 (Recommandé)</div>
             </div>
-            <select class="setting-select" aria-label="Résolution d'affichage">
+            <select aria-label="Résolution d'affichage" class="setting-select">
               <option>1920 × 1080 (Recommandé)</option>
               <option>2560 × 1440</option>
               <option>1280 × 720</option>
@@ -69,7 +69,7 @@
               <div class="setting-name">Fréquence de rafraîchissement</div>
               <div class="setting-desc">144 Hz</div>
             </div>
-            <select class="setting-select" aria-label="Fréquence de rafraîchissement">
+            <select aria-label="Fréquence de rafraîchissement" class="setting-select">
               <option>144 Hz</option>
               <option>60 Hz</option>
             </select>
@@ -82,9 +82,9 @@
             <div class="setting-info">
               <div class="setting-name">Volume principal</div>
             </div>
-            <input :value="settings.volume" class="setting-slider" max="100" min="0"
+            <input :value="settings.volume" aria-label="Volume principal" class="setting-slider" max="100"
+                   min="0"
                    type="range"
-                   aria-label="Volume principal"
                    @input="e => updateSettings({ volume: parseInt((e.target as HTMLInputElement).value) })"/>
           </div>
         </div>
@@ -95,7 +95,7 @@
             <div class="setting-info">
               <div class="setting-name">Mettre l'écran en veille après</div>
             </div>
-            <select class="setting-select" aria-label="Mettre l'écran en veille après">
+            <select aria-label="Mettre l'écran en veille après" class="setting-select">
               <option>5 minutes</option>
               <option>10 minutes</option>
               <option>15 minutes</option>
@@ -126,7 +126,7 @@
           </div>
           <div class="setting-row" style="margin-top:12px">
             <div class="setting-name">Ajustement de l'image</div>
-            <select class="setting-select">
+            <select aria-label="Ajustement de l'image" class="setting-select">
               <option>Remplir</option>
               <option>Ajuster</option>
               <option>Étirer</option>
@@ -191,9 +191,9 @@
               <div class="setting-name">Taille du texte</div>
               <div class="setting-desc">Modifier la taille du texte sur votre écran ({{ settings.textSize }}%)</div>
             </div>
-            <input :value="settings.textSize" class="setting-slider" max="200" min="80" step="10"
+            <input :value="settings.textSize" aria-label="Taille du texte" class="setting-slider" max="200" min="80"
+                   step="10"
                    type="range"
-                   aria-label="Taille du texte"
                    @input="e => updateSettings({ textSize: parseInt((e.target as HTMLInputElement).value) })"/>
           </div>
 

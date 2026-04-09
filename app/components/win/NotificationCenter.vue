@@ -2,37 +2,39 @@
   <Transition name="slide-right">
     <div
         v-if="open"
+        aria-label="Centre de notifications"
         class="notif-center"
         role="region"
-        aria-label="Centre de notifications"
         @click.stop
     >
       <!-- Notifications Section -->
-      <section class="notif-section" aria-label="Notifications">
+      <section aria-label="Notifications" class="notif-section">
         <div class="notif-header">
           <h2 class="notif-heading">Notifications</h2>
           <button
               v-if="notifications.length"
               aria-label="Effacer toutes les notifications"
               @click="notifications = []"
-          >Effacer tout</button>
+          >Effacer tout
+          </button>
         </div>
 
-        <div v-if="!notifications.length" class="notif-empty" aria-live="polite">
-          <Icon :name="ICON_FLUENT_ALERT_OFF" size="48" style="color: rgba(255,255,255,0.2)" aria-hidden="true"/>
+        <div v-if="!notifications.length" aria-live="polite" class="notif-empty">
+          <Icon :name="ICON_FLUENT_ALERT_OFF" aria-hidden="true" size="48" style="color: rgba(255,255,255,0.2)"/>
           <p>Pas de nouvelles notifications</p>
         </div>
 
-        <ul class="notif-list" aria-live="polite" aria-relevant="additions removals">
+        <ul aria-live="polite" aria-relevant="additions removals" class="notif-list">
           <li v-for="(n, i) in notifications" :key="i" class="notif-item" role="article">
             <div class="notif-app-header">
-              <Icon :name="n.icon || ICON_FLUENT_ALERT" class="notif-app-icon" aria-hidden="true"/>
+              <Icon :name="n.icon || ICON_FLUENT_ALERT" aria-hidden="true" class="notif-app-icon"/>
               <span class="notif-app-name">{{ n.app }}</span>
               <button
-                  class="notif-close"
                   :aria-label="`Fermer la notification de ${n.app} : ${n.title}`"
+                  class="notif-close"
                   @click="removeNotif(i)"
-              >✕</button>
+              >✕
+              </button>
             </div>
             <div class="notif-content">
               <h3 class="notif-title">{{ n.title }}</h3>
@@ -43,35 +45,37 @@
       </section>
 
       <!-- Calendar Section -->
-      <section class="calendar-section" aria-label="Calendrier">
+      <section aria-label="Calendrier" class="calendar-section">
         <div class="cal-header">
           <h2 class="cal-month">{{ currentMonth }}</h2>
-          <div class="cal-controls" role="group" :aria-label="`Navigation du mois : ${currentMonth}`">
+          <div :aria-label="`Navigation du mois : ${currentMonth}`" class="cal-controls" role="group">
             <button aria-label="Mois précédent">
-              <Icon :name="ICON_FLUENT_CHEVRON_UP" size="14" aria-hidden="true"/>
+              <Icon :name="ICON_FLUENT_CHEVRON_UP" aria-hidden="true" size="14"/>
             </button>
             <button aria-label="Mois suivant">
-              <Icon :name="ICON_FLUENT_CHEVRON_DOWN" size="14" aria-hidden="true"/>
+              <Icon :name="ICON_FLUENT_CHEVRON_DOWN" aria-hidden="true" size="14"/>
             </button>
           </div>
         </div>
-        <div class="cal-grid" role="grid" :aria-label="`Calendrier – ${currentMonth}`">
+        <div :aria-label="`Calendrier – ${currentMonth}`" class="cal-grid" role="grid">
           <div
               v-for="d in ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']"
               :key="d"
+              :aria-label="d"
               class="cal-day-label"
               role="columnheader"
-              :aria-label="d"
-          >{{ d.slice(0, 2) }}</div>
+          >{{ d.slice(0, 2) }}
+          </div>
           <div
               v-for="n in 31"
               :key="n"
+              :aria-current="n === today ? 'date' : undefined"
+              :aria-label="n === today ? `${n} – aujourd'hui` : String(n)"
               :class="{ today: n === today }"
               class="cal-day"
               role="gridcell"
-              :aria-label="n === today ? `${n} – aujourd'hui` : String(n)"
-              :aria-current="n === today ? 'date' : undefined"
-          >{{ n }}</div>
+          >{{ n }}
+          </div>
         </div>
       </section>
     </div>

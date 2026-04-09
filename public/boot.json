@@ -1,0 +1,68 @@
+{
+  "logo": [
+    "  ____  _____                        ____   _____ \n |___ \\| ____|                      / __ \\ / ____|\n   __) | |__  _ __ ___  _ __ ___   | |  | | (___  \n  |__ <|___ \\| '_ ` _ \\| '_ ` _ \\  | |  | |\\___ \\ \n  ___) |___) | | | | | | | | | | | | |__| |____) |\n |____/|____/|_| |_| |_|_| |_| |_|  \\____/|_____/ \n                                                  \n                                                  "
+  ],
+  "subtitle": "OS v10.0.26200 — Build 35mm",
+  "items": [
+    {
+      "label": "Chargement du 67",
+      "duration": 180,
+      "status": "ok"
+    },
+    {
+      "label": "Suppression de Tung Tung Tung Sahur",
+      "duration": 260,
+      "status": "ok"
+    },
+    {
+      "label": "Initialisation des Cramptés",
+      "duration": 420,
+      "status": "ok"
+    },
+    {
+      "label": "Activation du module Kayakobémé",
+      "duration": 300,
+      "status": "ok"
+    },
+    {
+      "label": "Chargement des données mystérieuses",
+      "duration": 1800,
+      "status": "ok"
+    },
+    {
+      "label": "Chargement de la Tasty Croustysation",
+      "duration": 220,
+      "status": "ok"
+    },
+    {
+      "label": "Connexion aux données empoisonnées",
+      "duration": 190,
+      "status": "ok"
+    },
+    {
+      "label": "Connexion au serveur d'authentification",
+      "duration": 2400,
+      "status": "ok"
+    },
+    {
+      "label": "Déchiffrement du volume utilisateur",
+      "duration": 850,
+      "status": "ok"
+    },
+    {
+      "label": "Vérification de l'intégrité des fichiers",
+      "duration": 670,
+      "status": "ok"
+    },
+    {
+      "label": "Chargement du profil",
+      "duration": 480,
+      "status": "ok"
+    },
+    {
+      "label": "Démarrage de l'environnement de bureau",
+      "duration": 320,
+      "status": "ok"
+    }
+  ]
+}

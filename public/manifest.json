@@ -1,0 +1,16 @@
+{
+  "name": "35mm ",
+  "short_name": "35mm",
+  "description": "",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0d1b2e",
+  "theme_color": "#0078d4",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "32x32",
+      "type": "image/x-icon"
+    }
+  ]
+}
