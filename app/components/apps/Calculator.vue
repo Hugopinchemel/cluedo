@@ -91,7 +91,13 @@ function equals() {
   else if (currentOp === '-') result = prevValue - cur
   else if (currentOp === '×') result = prevValue * cur
   else if (currentOp === '÷') result = cur === 0 ? 0 : prevValue / cur
-  expression.value = `${expression.value} ${display.value} =`
+
+  if (currentOp) {
+    expression.value = `${String(prevValue).replace('.', ',')} ${currentOp} ${display.value} =`
+  } else {
+    expression.value = `${display.value} =`
+  }
+
   display.value = String(result).replace('.', ',').slice(0, 15)
   currentOp = ''
   newInput = true
@@ -126,9 +132,18 @@ function toggleSign() {
 
 function fn(type: string) {
   const v = parseFloat(display.value.replace(',', '.'))
-  if (type === '1/x') display.value = String(v === 0 ? 0 : 1 / v).replace('.', ',')
-  else if (type === 'x²') display.value = String(v * v).replace('.', ',')
-  else if (type === '√') display.value = String(Math.sqrt(v)).replace('.', ',')
+  let result = 0
+  if (type === '1/x') {
+    result = v === 0 ? 0 : 1 / v
+    expression.value = `1/(${display.value})`
+  } else if (type === 'x²') {
+    result = v * v
+    expression.value = `sqr(${display.value})`
+  } else if (type === '√') {
+    result = Math.sqrt(v)
+    expression.value = `√(${display.value})`
+  }
+  display.value = String(result).replace('.', ',').slice(0, 15)
   newInput = true
 }
 
