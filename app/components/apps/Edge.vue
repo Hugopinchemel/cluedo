@@ -56,21 +56,76 @@ const activeChat = ref(0)
 const instagramChats = [
   {
     id: 0,
-    user: 'Alex Rivers',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex',
+    user: 'Clément',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah',
     messages: [
-      {text: 'Hey, t\'as vu l\'indice dans la cuisine ?', me: false},
-      {text: 'Non, c\'était quoi ?', me: true},
-      {text: 'Un chandelier plein de sang... flippant.', me: false}
+      { text: 'Hey Salut Clara ! Tu vas bien ?', me: false, date: '14 avril' },
+      { text: 'Salut Clément ! Ça va super et toi ?', me: true, date: '14 avril' },
+      { text: 'Ça va ! Dis, j\'ai une place de ciné en trop pour ce week-end, ça te dirait ? ', me: false, date: '14 avril' },
+      { text: 'Carrément ! On se dit quelle heure ?', me: true, date: '14 avril' },
+      { text: 'Go pour 19h !', me: false, date: '14 avril' },
+      { text: 'C’était top ce soir ! Ça te dit de se refaire une sortie demain ? Genre boire un verre en ville ?', me: false, date: '19 avril' },
+      { text: 'Ah demain je peux pas, j\'ai déjà un truc de prévu ! Une prochaine !', me: true, date: '19 avril' },
+      { text: 'Pas de souci ! Bonne soirée alors ❤️', me: false, date: '19 avril' },
+      { text: 'Hey Clara ! Dispo pour se voir aujourd’hui ? Je suis pas loin de chez toi là', me: false, date: '26 avril' },
+      { text: 'Salut Clem ! Désolée je suis pas mal occupée en ce moment, je sors pas trop.', me: true, date: '26 avril' },
+      { text: 'Salut Clara, faut que je te demande un truc... J\'ai l\'impression que tu m\'évites depuis le ciné ?', me: false, date: '1 mai' },
+      { text: 'C\'est pas que je t\'évite Clem, c\'est juste que je préfère qu\'on reste sur des sorties en groupe.', me: true, date: '1 mai' },
+      { text: 'Pourquoi ? J\'ai fait un truc de travers ?', me: false, date: '1 mai' },
+      { text: 'Mais non ! C’est juste que je sens que c’est un peu ambigu entre nous et je veux pas qu’il y ait de malentendu.', me: true, date: '1 mai' },
+      { text: 'Clément, je t’adore, mais c’est purement amical de mon côté. Je veux pas te faire de faux espoirs.', me: true, date: '1 mai' },
+      { text: 'Ah... d\'accord. Je pensais pas que c\'était si flagrant.', me: false, date: '1 mai' },
+      { text: 'Je sais pas trop quoi dire là... Je vais digérer le truc.', me: false, date: '1 mai' },
+      { text: 'Désolé !', me: true, date: '1 mai' },
+      { text: 'Je n\'arrête pas de relire nos derniers messages... J\'arrive pas à croire que c\'est fini comme ça.', me: false, date: '25 août' },
+      { text: 'Je m\'en veux d\'avoir été lourd avec toi, de ne pas avoir juste profité du moment sans rien attendre en retour.', me: false, date: '25 août' },
+      { text: 'T\'étais la personne la plus vraie de ce groupe. Mimizan n\'aura plus aucun sens maintenant.', me: false, date: '25 août' },
+      { text: 'Tu vas me manquer Clara. Vraiment. ❤️', me: false, date: '25 août' },
     ]
   },
   {
     id: 1,
-    user: 'Sarah Miller',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah',
+    user: 'Daphné',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex',
     messages: [
-      {text: 'On se voit ce soir pour la partie ?', me: false},
-      {text: 'Oui ! J\'apporte le jeu.', me: true}
+      { text: 'Clara, j\'ai besoin de te parler de quelque chose...', me: false, date: '12 avril' },
+      { text: 'Oui ! Qu\'est-ce qu\'il y a ?', me: true, date: '12 avril' },
+      { text: 'Hier j\'étais en soirée avec Mathieu... et on s\'est embrassé...', me: false, date: '12 avril' },
+      { text: 'Mais Daphné, tu me fais une blague ?', me: true, date: '12 avril' },
+      { text: 'Écoute, je te jure, j\'étais complètement bourré et je regrette vraiment ce que j\'ai fait...', me: false, date: '12 avril' },
+      { text: 'Arthur est au courant de ça ?', me: true, date: '12 avril' },
+      { text: 'Non, je sais pas comment abordé ça avec lui..', me: false, date: '12 avril' },
+      { text: 'Tu dois lui en parler et au plus vite Daph !', me: true, date: '12 avril' },
+      { text: 'Je lui en parlerai oui promis !', me: false, date: '12 avril' },
+      { text: 'Je te fais confiance !', me: true, date: '12 avril' },
+      { text: 'Clara, faut que je te dise un truc !', me: false, date: '26 avril' },
+      { text: 'Dis moi ? T\'as enfin décider d\'en parler à Arthur ?', me: true, date: '26 avril' },
+      { text: 'Ah non...' , me: false, date: '26 avril' },
+      { text: 'Pour être tout à fait honnête, j\'ai revu mathieu et il m\'a invité chez lui.' , me: false, date: '26 avril' },
+      { text: 'J\'ai passé la soirée là-bas et on a ...' , me: false, date: '26 avril' },
+      { text: 'Tu te fou de moi ?? ' , me: true, date: '26 avril' },
+      { text: 'T\'es pas sérieuse ? ' , me: true, date: '26 avril' },
+      { text: 'Je plaisante pas Clara, mais s\'il te plaît comprends moi ! ' , me: false, date: '26 avril' },
+      { text: 'Comprendre quoi ??? Que t\'as trompé ton mec ? ' , me: true, date: '26 avril' },
+      { text: 'Et puis j\'imagine que Arthur ne sait toujours rien ?' , me: true, date: '26 avril' },
+      { text: '...' , me: false, date: '26 avril' },
+      { text: 'Tu me déçois énormément Daphné.' , me: true, date: '26 avril' },
+      { text: 'Clara.. je sais que tu m\'en veux toujours, mais tu me manques trop. On peut pas rester comme ça pour une erreur que j\'ai faite.' , me: false, date: '10 mai' },
+      { text: 'C\'est pas "une erreur", Daph, c\'est la situation entière qui est nase. Mais bon... tu me manques aussi, j\'avoue.' , me: true, date: '10 mai' },
+      { text: 'Je te jure que je vais régler ça. On peut se voir ? Juste nous deux ?' , me: false, date: '10 mai' },
+      { text: 'Ok. On se voit, mais on parle pas de Mathieu, j\'ai besoin de décompresser.' , me: true, date: '10 mai' },
+      { text: 'Trop hâte de la soirée de demain ! Arthur m\'a demandé si tu venais avec Clément.' , me: false, date: '18 mai' },
+      { text: 'Oui on sera là. Par contre, il m\'a posé des questions sur tes "retards" au boulot l\'autre jour... J\'ai dû inventer un truc pour te couvrir.' , me: true, date: '18 mai' },
+      { text: 'Merci Clara, t\'es la meilleure, je te revaudrai ça ! ❤️' , me: false, date: '18 mai' },
+      { text: 'Me remercie pas, je me sens super mal de lui mentir en plein visage. Fais en sorte que ça n\'arrive plus. ️' , me: true, date: '18 mai' },
+      { text: 'Salut Daphné ! Avec Clément et Mathieu on voulait organiser une soirée pour se revoir tous ensemble' , me: true, date: '6 Août' },
+      { text: 'Ce serait pour un airbnb à Mimizan le 16 au 23 août ? Vous seriez dispo ?' , me: true, date: '6 Août' },
+      { text: 'Salut Clara !! Ouii avec plaisir !! Ça fait super longtemps qu\'on s\'est pas vu en plus !  ' , me: false, date: '6 Août' },
+      { text: 'Super !! Je réserve ça alors ! Je pense que ce serait bien aussi que tu te décides d\'agir ! Mon quota de mensonges pour Arthur est épuisé. ' , me: true, date: '6 Août' },
+      { text: 'Je sais Clara... j\'y pense tout le temps je te jure. Mais là c\'est pas le bon moment, il est tendu avec le boulot... Je lui dirai juste après le séjour, promis ! On en profite une dernière fois tous ensemble ? ' , me: false, date: '6 Août' },
+      { text: 'Tu disais déjà ça les mois derniers Daphné... Bref, on en reparlera.' , me: true, date: '6 Août' },
+      { text: 'Ce weekend soit tu lui dis, soit c\'est moi qui le fait..' , me: true, date: '16 Août' },
+
     ]
   }
 ]
@@ -87,6 +142,63 @@ const airbnbListing = {
   ],
   description: 'Une villa spacieuse avec 3 chambres, un grand salon, une cuisine ouverte sur le salon. Idéal pour les soirées en famille.'
 }
+function shouldShowDate(messages: any[], index: number): boolean {
+  if (index === 0) return true
+  return messages[index].date !== messages[index - 1].date
+}
+
+//Gmail State
+// Gmail State
+const gmailOpen = ref(false)
+const selectedMail = ref(0)
+const replyOpen = ref(false)
+const replySent = ref(false)
+const replyText = ref('')
+const notifVisible = ref(true)
+
+const mails = [
+  {
+    id: 0, unread: true,
+    from: 'Prof. Moriarty', email: 'prof.moriarty@univ.fr',
+    subject: 'Rapport de laboratoire — URGENT',
+    preview: 'Vous devez me remettre le rapport du labo avant vendredi...',
+    date: '10:42',
+    body: `Bonjour,<br><br>Je vous rappelle que vous devez me remettre le rapport de laboratoire <strong>avant vendredi 12 avril</strong> à 18h00.<br><br>Merci de le déposer sur la plateforme Moodle dans la section "Rendus TP".<br><br>Sans retour de votre part, une pénalité sera appliquée.<br><br>Cordialement,<br><strong>Professeur Moriarty</strong><br><span style="color:#888;font-size:12px">Département de Sciences — Bureau 214</span>`
+  },
+  {
+    id: 1, unread: true,
+    from: 'Mme. Leblanc', email: 'm.leblanc@univ.fr',
+    subject: 'Invitation — Réunion projet Cluedo',
+    preview: 'Bonjour, je vous invite à la réunion de présentation du projet...',
+    date: 'Hier',
+    body: `Bonjour,<br><br>Je vous invite à la réunion de présentation du projet Cluedo qui aura lieu <strong>jeudi 10 avril à 14h</strong> en salle B203.<br><br>Merci de confirmer votre présence par retour de mail.<br><br>Cordialement,<br><strong>Mme. Leblanc</strong>`
+  },
+  {
+    id: 2, unread: true,
+    from: 'Secrétariat', email: 'secretariat@univ.fr',
+    subject: 'Rappel — Inscription examens',
+    preview: 'N\'oubliez pas de vous inscrire aux examens du second semestre...',
+    date: 'Lun.',
+    body: `Bonjour,<br><br>N'oubliez pas de vous inscrire aux examens du second semestre avant le <strong>15 avril 2026</strong>.<br><br>La procédure d'inscription est disponible sur le portail étudiant.<br><br>Le Secrétariat`
+  }
+]
+
+const unreadCount = computed(() => mails.filter(m => m.unread).length)
+
+function selectMail(id: number) {
+  selectedMail.value = id
+  mails[id].unread = false
+  replyOpen.value = false
+  replySent.value = false
+  replyText.value = ''
+}
+
+function sendReply() {
+  if (!replyText.value.trim()) return
+  replySent.value = true
+  replyOpen.value = false
+}
+
 </script>
 
 <template>
@@ -193,14 +305,16 @@ const airbnbListing = {
               </div>
             </div>
             <div class="messages-area">
-              <div
-                  v-for="(msg, i) in instagramChats[activeChat].messages"
-                  :key="i"
-                  :class="{ me: msg.me }"
-                  class="msg-bubble"
-              >
-                {{ msg.text }}
-              </div>
+              <template v-for="(msg, i) in instagramChats[activeChat].messages" :key="i">
+                <!-- Séparateur de date -->
+                <div v-if="shouldShowDate(instagramChats[activeChat].messages, i)" class="date-separator">
+                  <span>{{ msg.date }}</span>
+                </div>
+                <!-- Message -->
+                <div :class="{ me: msg.me }" class="msg-bubble">
+                  {{ msg.text }}
+                </div>
+              </template>
             </div>
             <div class="msg-input">
               <Icon name="fluent:emoji-24-regular"/>
@@ -278,7 +392,82 @@ const airbnbListing = {
           </div>
         </main>
       </div>
+      <!-- FAKE GMAIL -->
+      <div v-else-if="isGmail" class="gmail-ui">
 
+        <!-- Notification pop-up -->
+        <div v-if="notifVisible" class="gmail-notif" @click="notifVisible = false">
+          <div class="notif-icon">✉</div>
+          <div class="notif-content">
+            <div class="notif-app">Courrier</div>
+            <div class="notif-title">Prof. Moriarty</div>
+            <div class="notif-body">Vous devez me remettre le rapport du labo...</div>
+          </div>
+          <button class="notif-close" @click.stop="notifVisible = false">✕</button>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="gmail-sidebar">
+          <div class="gmail-sidebar-label">Dossiers</div>
+          <div class="gmail-sidebar-item active">
+            📥 Boîte de réception
+            <span v-if="unreadCount > 0" class="gmail-badge">{{ unreadCount }}</span>
+          </div>
+          <div class="gmail-sidebar-item">📤 Envoyés</div>
+          <div class="gmail-sidebar-item">📝 Brouillons</div>
+          <div class="gmail-sidebar-item">🗑 Corbeille</div>
+        </div>
+
+        <!-- Liste des mails -->
+        <div class="gmail-list">
+          <div class="gmail-list-header">{{ unreadCount }} messages non lus</div>
+          <div
+              v-for="mail in mails" :key="mail.id"
+              :class="{ unread: mail.unread, selected: selectedMail === mail.id }"
+              class="gmail-item"
+              @click="selectMail(mail.id)"
+          >
+            <div class="gmail-item-sender">
+              {{ mail.from }}
+              <div class="gmail-item-right">
+                <span class="gmail-time">{{ mail.date }}</span>
+                <span v-if="mail.unread" class="unread-dot"></span>
+              </div>
+            </div>
+            <div class="gmail-item-subject">{{ mail.subject }}</div>
+            <div class="gmail-item-preview">{{ mail.preview }}</div>
+          </div>
+        </div>
+
+        <!-- Lecteur de mail -->
+        <div class="gmail-reader">
+          <div class="gmail-reader-header">
+            <div class="gmail-reader-subject">{{ mails[selectedMail].subject }}</div>
+            <div class="gmail-reader-meta">
+              <span>De : <strong>{{ mails[selectedMail].email }}</strong></span>
+              <span>À : clara.moreau@univ.fr</span>
+            </div>
+          </div>
+          <div class="gmail-reader-actions">
+            <button class="action-btn primary-action" @click="replyOpen = !replyOpen">↩ Répondre</button>
+            <button class="action-btn">↪ Transférer</button>
+            <button class="action-btn">🗑 Supprimer</button>
+          </div>
+          <div class="gmail-reader-body" v-html="mails[selectedMail].body"></div>
+
+          <!-- Zone de réponse -->
+          <div v-if="replyOpen" class="gmail-reply">
+            <div class="gmail-reply-to">À : {{ mails[selectedMail].email }}</div>
+            <textarea v-model="replyText" placeholder="Écrivez votre réponse..."></textarea>
+            <div class="gmail-reply-actions">
+              <button class="reply-btn secondary" @click="replyOpen = false">Annuler</button>
+              <button class="reply-btn primary" @click="sendReply">Envoyer ✓</button>
+            </div>
+          </div>
+          <div v-if="replySent" class="reply-sent">✓ Email envoyé avec succès !</div>
+        </div>
+
+      </div>
 
       <!-- DEFAULT BING / HOME -->
       <div v-else class="bing-ui">
@@ -298,6 +487,266 @@ const airbnbListing = {
 </template>
 
 <style lang="scss" scoped>
+
+/* GMAIL UI */
+.gmail-ui {
+  display: flex;
+  height: 100%;
+  background: #f3f3f3;
+  position: relative;
+
+  .gmail-notif {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    background: rgba(20, 20, 40, 0.92);
+    border: 0.5px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: white;
+    width: 280px;
+    cursor: pointer;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    z-index: 100;
+    animation: slideIn 0.3s ease;
+
+    @keyframes slideIn {
+      from { transform: translateX(120%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .notif-icon {
+      width: 32px; height: 32px;
+      background: #0078d4;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .notif-content { flex: 1; }
+    .notif-app { font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 2px; }
+    .notif-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+    .notif-body { font-size: 12px; color: rgba(255,255,255,0.7); }
+    .notif-close {
+      background: none; border: none; color: rgba(255,255,255,0.4);
+      cursor: pointer; font-size: 14px;
+      &:hover { color: white; }
+    }
+  }
+
+  .gmail-sidebar {
+    width: 200px;
+    background: #faf9f8;
+    border-right: 0.5px solid #e0e0e0;
+    padding-top: 8px;
+
+    .gmail-sidebar-label {
+      padding: 8px 16px 4px;
+      font-size: 11px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .gmail-sidebar-item {
+      padding: 8px 16px;
+      font-size: 13px;
+      color: #333;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-left: 3px solid transparent;
+
+      &:hover { background: #e8e8e8; }
+      &.active { background: #deecf9; border-left-color: #0078d4; color: #0078d4; font-weight: 500; }
+    }
+
+    .gmail-badge {
+      margin-left: auto;
+      background: #0078d4;
+      color: white;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 10px;
+    }
+  }
+
+  .gmail-list {
+    width: 260px;
+    background: white;
+    border-right: 0.5px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+
+    .gmail-list-header {
+      padding: 10px 14px;
+      background: #f8f8f8;
+      border-bottom: 0.5px solid #e0e0e0;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .gmail-item {
+      padding: 12px 14px;
+      border-bottom: 0.5px solid #f0f0f0;
+      cursor: pointer;
+
+      &:hover { background: #f5f5f5; }
+      &.selected { background: #deecf9; }
+      &.unread .gmail-item-sender { font-weight: 700; }
+
+      .gmail-item-sender {
+        font-size: 13px;
+        color: #1a1a1a;
+        margin-bottom: 2px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .gmail-item-right {
+          display: flex;
+          gap: 6px;
+          align-items: center;
+        }
+      }
+
+      .gmail-time { font-size: 11px; color: #999; }
+
+      .unread-dot {
+        width: 8px; height: 8px;
+        background: #0078d4;
+        border-radius: 50%;
+      }
+
+      .gmail-item-subject {
+        font-size: 12px;
+        color: #333;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-bottom: 2px;
+      }
+
+      .gmail-item-preview {
+        font-size: 11px;
+        color: #888;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+
+  .gmail-reader {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    overflow: hidden;
+
+    .gmail-reader-header {
+      padding: 16px 20px 12px;
+      border-bottom: 0.5px solid #e0e0e0;
+    }
+
+    .gmail-reader-subject {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+    }
+
+    .gmail-reader-meta {
+      font-size: 12px;
+      color: #666;
+      display: flex;
+      gap: 12px;
+    }
+
+    .gmail-reader-actions {
+      display: flex;
+      gap: 8px;
+      padding: 10px 20px;
+      border-bottom: 0.5px solid #f0f0f0;
+
+      .action-btn {
+        padding: 5px 12px;
+        border: 0.5px solid #c8c8c8;
+        border-radius: 4px;
+        background: white;
+        color: #333;
+        font-size: 12px;
+        cursor: pointer;
+        &:hover { background: #f0f0f0; }
+        &.primary-action { background: #0078d4; color: white; border-color: #0078d4; &:hover { background: #106ebe; } }
+      }
+    }
+
+    .gmail-reader-body {
+      flex: 1;
+      padding: 20px;
+      font-size: 14px;
+      color: #333;
+      line-height: 1.7;
+      overflow-y: auto;
+    }
+
+    .gmail-reply {
+      padding: 12px 20px;
+      border-top: 0.5px solid #e0e0e0;
+
+      .gmail-reply-to {
+        font-size: 12px;
+        color: #666;
+        margin-bottom: 8px;
+      }
+
+      textarea {
+        width: 100%;
+        height: 80px;
+        padding: 8px 12px;
+        border: 0.5px solid #c8c8c8;
+        border-radius: 4px;
+        font-size: 13px;
+        resize: none;
+        outline: none;
+        &:focus { border-color: #0078d4; box-shadow: 0 0 0 2px rgba(0,120,212,0.15); }
+      }
+
+      .gmail-reply-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 8px;
+        justify-content: flex-end;
+
+        .reply-btn {
+          padding: 6px 14px;
+          border-radius: 4px;
+          font-size: 13px;
+          cursor: pointer;
+          border: none;
+          &.primary { background: #0078d4; color: white; &:hover { background: #106ebe; } }
+          &.secondary { background: white; color: #333; border: 0.5px solid #c8c8c8; &:hover { background: #f0f0f0; } }
+        }
+      }
+    }
+
+    .reply-sent {
+      margin: 8px 20px;
+      padding: 8px 12px;
+      background: #dff6dd;
+      border: 0.5px solid #a3d977;
+      border-radius: 4px;
+      color: #2a6e1e;
+      font-size: 13px;
+    }
+  }
+}
+
 .edge-app {
   display: flex;
   flex-direction: column;
@@ -565,6 +1014,31 @@ const airbnbListing = {
         flex-direction: column;
         gap: 8px;
         overflow-y: auto;
+
+        .date-separator {        // ← ajoute ce bloc
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          align-self: stretch;   // ← prend toute la largeur
+          margin: 8px 0;
+
+          &::before, &::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #dbdbdb;
+          }
+
+          span {
+            font-size: 12px;
+            color: #737373;      // ← gris, change en #ffffff pour blanc
+            white-space: nowrap;
+          }
+        }
+
+        .msg-bubble {
+          // ... ton code existant, inchangé
+        }
 
         .msg-bubble {
           max-width: 60%;
