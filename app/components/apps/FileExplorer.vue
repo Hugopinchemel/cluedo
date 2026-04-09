@@ -51,7 +51,7 @@
           <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
         </svg>
       </button>
-      <button class="nav-btn" disabled>
+      <button :disabled="!canForward" class="nav-btn" @click="goForward">
         <svg fill="currentColor" height="16" viewBox="0 0 24 24" width="16">
           <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
         </svg>
@@ -222,6 +222,7 @@ const viewMode = ref<'grid' | 'list'>('grid')
 const selected = ref('')
 const currentPath = ref('quick/desktop')
 const history = ref<string[]>([])
+const forwardHistory = ref<string[]>([])
 
 const quickAccess = [
   {icon: ICON_DESKTOP_PC, name: 'Bureau', path: 'quick/desktop'},
@@ -413,24 +414,33 @@ const currentItems = computed(() =>
 )
 
 const canBack = computed(() => history.value.length > 0)
+const canForward = computed(() => forwardHistory.value.length > 0)
 
 function navigateTo(path: string) {
-  if (!path) return
+  if (!path || path === currentPath.value) return
   history.value.push(currentPath.value)
+  forwardHistory.value = []
   currentPath.value = path
   selected.value = ''
 }
 
 function goBack() {
   if (!canBack.value) return
+  forwardHistory.value.push(currentPath.value)
   currentPath.value = history.value.pop()!
+}
+
+function goForward() {
+  if (!canForward.value) return
+  history.value.push(currentPath.value)
+  currentPath.value = forwardHistory.value.pop()!
 }
 
 function goUp() {
   const parts = currentPath.value.split('/')
   if (parts.length > 1) {
-    parts.pop()
-    navigateTo(parts.join('/'))
+    const parentPath = parts.slice(0, -1).join('/')
+    navigateTo(parentPath)
   }
 }
 
