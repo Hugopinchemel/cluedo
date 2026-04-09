@@ -7,6 +7,7 @@
         :style="windowStyle"
         class="win-window"
         role="dialog"
+        aria-modal="true"
         @mousedown="onFocus"
     >
       <!-- Title bar -->
