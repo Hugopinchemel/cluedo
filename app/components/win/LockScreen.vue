@@ -23,16 +23,16 @@
       </div>
     </div>
     <!-- Bottom status icons -->
-    <div class="lock-status" role="list" aria-label="État du système">
-      <span role="listitem" aria-label="Réseau connecté">
+    <ul class="lock-status" aria-label="État du système">
+      <li aria-label="Réseau connecté">
         <svg fill="white" height="16" viewBox="0 0 24 24" width="16" aria-hidden="true" focusable="false"><path
             d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
-      </span>
-      <span role="listitem" aria-label="Accessibilité">
+      </li>
+      <li aria-label="Accessibilité">
         <svg fill="white" height="16" viewBox="0 0 24 24" width="16" aria-hidden="true" focusable="false"><circle cx="12" cy="4" r="2"/><path
             d="M19 13v-2c0-1.1-.9-2-2-2h-2.93c-.48 0-.91.3-1.09.74l-1.16 2.91c-.1.26-.1.54 0 .8l1.14 2.86c.18.46.62.77 1.1.77H17c1.1 0 2-.9 2-2v-.08c.56-.26 1-.83 1-1.5v-1c0-.83-.67-1.5-1.5-1.5H17v-1h2zm-7 6.5c-.83 0-1.5-.67-1.5-1.5h-2c0 1.93 1.57 3.5 3.5 3.5s3.5-1.57 3.5-3.5h-2c0 .83-.67 1.5-1.5 1.5z"/></svg>
-      </span>
-    </div>
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -126,5 +126,8 @@ const date = computed(() =>
   display: flex;
   gap: 16px;
   opacity: 0.8;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 </style>
