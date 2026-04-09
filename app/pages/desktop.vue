@@ -7,6 +7,8 @@
       @click="closeMenus"
       @contextmenu.prevent="onRightClick"
   >
+    <a href="#main-content" class="sr-only focus-visible:not-sr-only skip-link">Aller au contenu principal</a>
+    <h1 class="sr-only">Bureau — Windows 10</h1>
     <!-- Desktop icons -->
     <ul aria-label="Icônes du bureau" class="desktop-icons">
       <li

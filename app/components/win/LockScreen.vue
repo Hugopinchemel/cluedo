@@ -9,6 +9,7 @@
       @keydown.enter="$emit('unlock')"
       @keydown.space.prevent="$emit('unlock')"
   >
+    <h1 class="sr-only">Écran de verrouillage — Windows 10</h1>
     <div class="lock-bg" aria-hidden="true"/>
     <div class="lock-content">
       <div class="lock-time" aria-hidden="true">{{ time }}</div>

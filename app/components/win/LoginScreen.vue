@@ -1,5 +1,6 @@
 <template>
   <div class="login-screen" role="dialog" aria-modal="true" aria-label="Connexion">
+    <h1 class="sr-only">Connexion — Windows 10</h1>
     <div class="login-bg" aria-hidden="true"/>
     <main class="login-box">
       <div class="avatar" aria-hidden="true">
