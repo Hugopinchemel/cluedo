@@ -236,7 +236,8 @@
               <div class="setting-name">Audio mono</div>
               <div class="setting-desc">Combiner les canaux audio gauche et droit en un seul</div>
             </div>
-            <div class="toggle">
+            <div :class="{ on: settings.monoAudio }" class="toggle"
+                 @click="updateSettings({ monoAudio: !settings.monoAudio })">
               <div class="toggle-knob"/>
             </div>
           </div>
