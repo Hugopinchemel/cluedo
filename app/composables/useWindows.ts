@@ -36,16 +36,6 @@ export interface WinInstance {
 }
 
 export const APPS: AppDef[] = [
-<<<<<<< Updated upstream
-  { id: 'explorer',    name: 'Explorateur de fichiers', icon: ICON_APP_EXPLORER,   defaultWidth: 860, defaultHeight: 540 },
-  { id: 'notepad',     name: 'Bloc-notes',              icon: ICON_APP_NOTEPAD,    defaultWidth: 640, defaultHeight: 420 },
-  { id: 'calculator',  name: 'Calculatrice',            icon: ICON_APP_CALCULATOR, defaultWidth: 310, defaultHeight: 490 },
-  { id: 'settings',    name: 'Paramètres',              icon: ICON_APP_SETTINGS,   defaultWidth: 860, defaultHeight: 580 },
-  { id: 'edge',        name: 'Microsoft Edge',          icon: ICON_APP_EDGE,       defaultWidth: 960, defaultHeight: 620 },
-  { id: 'photos',      name: 'Photos',                  icon: ICON_APP_PHOTOS,     defaultWidth: 820, defaultHeight: 560 },
-  { id: 'pdfviewer',   name: 'Lecteur PDF',             icon: ICON_APP_PDF,        defaultWidth: 820, defaultHeight: 680 },
-  { id: 'pdfviewer2',  name: 'Dossier_interne.pdf',     icon: ICON_APP_PDF,        defaultWidth: 820, defaultHeight: 680 },
-=======
     {id: 'explorer', name: 'Explorateur de fichiers', icon: ICON_APP_EXPLORER, defaultWidth: 860, defaultHeight: 540},
     {id: 'notepad', name: 'Bloc-notes', icon: ICON_APP_NOTEPAD, defaultWidth: 640, defaultHeight: 420},
     {id: 'calculator', name: 'Calculatrice', icon: ICON_APP_CALCULATOR, defaultWidth: 310, defaultHeight: 490},
@@ -53,7 +43,7 @@ export const APPS: AppDef[] = [
     {id: 'edge', name: 'Microsoft Edge', icon: ICON_APP_EDGE, defaultWidth: 960, defaultHeight: 620},
     {id: 'photos', name: 'Photos', icon: ICON_APP_PHOTOS, defaultWidth: 820, defaultHeight: 560},
     {id: 'pdfviewer', name: 'Lecteur PDF', icon: ICON_APP_PDF, defaultWidth: 820, defaultHeight: 680},
->>>>>>> Stashed changes
+    {id: 'pdfviewer2', name: "Rapport d'Autopsie", icon: ICON_APP_PDF, defaultWidth: 820, defaultHeight: 680},
 ]
 
 // Module-level singleton state

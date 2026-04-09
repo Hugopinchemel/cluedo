@@ -1,61 +1,77 @@
 <template>
-  <div class="login-screen">
-    <div class="login-bg"/>
-    <div class="login-box">
-      <div class="avatar">
-        <svg fill="white" height="60" viewBox="0 0 24 24" width="60">
+  <div class="login-screen" role="dialog" aria-modal="true" aria-label="Connexion">
+    <div class="login-bg" aria-hidden="true"/>
+    <main class="login-box">
+      <div class="avatar" aria-hidden="true">
+        <svg fill="white" height="60" viewBox="0 0 24 24" width="60" aria-hidden="true" focusable="false">
           <path
               d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm0 2c-3.33 0-10 1.67-10 5v2h20v-2c0-3.33-6.67-5-10-5z"/>
         </svg>
       </div>
-      <div class="username">{{ username }}</div>
+      <p class="username" aria-live="polite">{{ username }}</p>
       <div class="password-row">
+        <label for="login-password" class="sr-only">Mot de passe</label>
         <input
+            id="login-password"
             v-model="password"
             :type="showPwd ? 'text' : 'password'"
             autofocus
             class="password-input"
             placeholder="Mot de passe"
+            autocomplete="current-password"
+            :aria-describedby="error ? 'login-error' : undefined"
             @keydown.enter="login"
         />
-        <button class="reveal-btn" tabindex="-1" @click="showPwd = !showPwd">
-          <svg v-if="!showPwd" fill="currentColor" height="16" viewBox="0 0 24 24" width="16">
+        <button
+            class="reveal-btn"
+            :aria-label="showPwd ? 'Masquer le mot de passe' : 'Afficher le mot de passe'"
+            :aria-pressed="showPwd"
+            tabindex="0"
+            @click="showPwd = !showPwd"
+        >
+          <svg v-if="!showPwd" fill="currentColor" height="16" viewBox="0 0 24 24" width="16" aria-hidden="true" focusable="false">
             <path
                 d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
           </svg>
-          <svg v-else fill="currentColor" height="16" viewBox="0 0 24 24" width="16">
+          <svg v-else fill="currentColor" height="16" viewBox="0 0 24 24" width="16" aria-hidden="true" focusable="false">
             <path
                 d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>
           </svg>
         </button>
-        <button class="submit-btn" @click="login">
-          <svg fill="currentColor" height="16" viewBox="0 0 24 24" width="16">
+        <button class="submit-btn" aria-label="Se connecter" @click="login">
+          <svg fill="currentColor" height="16" viewBox="0 0 24 24" width="16" aria-hidden="true" focusable="false">
             <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
           </svg>
         </button>
       </div>
-      <div v-if="error" class="error-msg">{{ error }}</div>
+      <div
+          v-if="error"
+          id="login-error"
+          class="error-msg"
+          role="alert"
+          aria-live="assertive"
+      >{{ error }}</div>
       <div class="login-options">
         <button @click="$emit('back')">← Retour</button>
-        <span>·</span>
+        <span aria-hidden="true">·</span>
         <button>Options de connexion</button>
       </div>
-    </div>
+    </main>
     <div class="bottom-actions">
-      <button class="bottom-btn" title="Réseau">
-        <svg fill="white" height="20" viewBox="0 0 24 24" width="20">
+      <button class="bottom-btn" aria-label="Réseau">
+        <svg fill="white" height="20" viewBox="0 0 24 24" width="20" aria-hidden="true" focusable="false">
           <path
               d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/>
         </svg>
       </button>
-      <button class="bottom-btn" title="Facilité d'accès">
-        <svg fill="white" height="20" viewBox="0 0 24 24" width="20">
+      <button class="bottom-btn" aria-label="Facilité d'accès">
+        <svg fill="white" height="20" viewBox="0 0 24 24" width="20" aria-hidden="true" focusable="false">
           <circle cx="12" cy="4" r="2"/>
           <path d="M15.97 8.03L14 10h-4L8.03 8.03A1 1 0 007 9v5h2v6h6v-6h2V9a1 1 0 00-1.03-0.97z"/>
         </svg>
       </button>
-      <button class="bottom-btn" title="Arrêter">
-        <svg fill="white" height="20" viewBox="0 0 24 24" width="20">
+      <button class="bottom-btn" aria-label="Arrêter l'ordinateur">
+        <svg fill="white" height="20" viewBox="0 0 24 24" width="20" aria-hidden="true" focusable="false">
           <path
               d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/>
         </svg>

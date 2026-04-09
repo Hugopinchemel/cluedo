@@ -1,25 +1,31 @@
 <template>
   <div
       :style="{ background: settings.wallpaper }"
+      aria-label="Bureau Windows"
       class="desktop"
+      role="application"
       @click="closeMenus"
       @contextmenu.prevent="onRightClick"
   >
     <!-- Desktop icons -->
-    <div class="desktop-icons">
+    <div aria-label="Icônes du bureau" class="desktop-icons" role="list">
       <button
           v-for="icon in desktopIcons"
           :key="icon.id"
+          :aria-label="icon.label"
+          :aria-selected="selectedIcon === icon.id"
           :class="{ selected: selectedIcon === icon.id, dragging: draggingIcon === icon.id }"
           :style="{ position: 'absolute', left: icon.x + 'px', top: icon.y + 'px' }"
           class="desktop-icon"
+          role="listitem"
           @mousedown="onIconDragStart($event, icon)"
           @click.stop="selectedIcon = icon.id"
           @dblclick.stop="openApp(icon.appId)"
       >
-        <img v-if="icon.icon.startsWith('/')" :src="icon.icon" alt="" class="icon-glyph-img" height="48" width="48"/>
-        <Icon v-else :name="icon.icon" class="icon-glyph"/>
-        <span class="icon-label">{{ icon.label }}</span>
+        <img v-if="icon.icon.startsWith('/')" :src="icon.icon" alt="" aria-hidden="true" class="icon-glyph-img"
+             height="48" width="48"/>
+        <Icon v-else :name="icon.icon" aria-hidden="true" class="icon-glyph"/>
+        <span aria-hidden="true" class="icon-label">{{ icon.label }}</span>
       </button>
     </div>
 
@@ -72,12 +78,8 @@ import FileExplorer from '~/components/apps/FileExplorer.vue'
 import Settings from '~/components/apps/Settings.vue'
 import Photos from '~/components/apps/Photos.vue'
 import PdfViewer from '~/components/apps/PdfViewer.vue'
-<<<<<<< Updated upstream
 import PdfViewer2 from '~/components/apps/PdfViewer2.vue'
-
-=======
 import Edge from '~/components/apps/Edge.vue'
->>>>>>> Stashed changes
 
 import {
   ICON_DESKTOP_CALC,
@@ -108,14 +110,8 @@ const appComponents: Record<string, any> = {
   settings: Settings,
   photos: Photos,
   pdfviewer: PdfViewer,
-<<<<<<< Updated upstream
   pdfviewer2: PdfViewer2,
-
-  edge: { template: `<div class="edge-placeholder"><div class="edge-bar"><span><Icon :name="ICON_APP_EDGE_LOGO" /></span><div class="edge-url">https://www.bing.com</div></div><div class="edge-content"><h2>Microsoft Edge</h2><p>Navigateur simulé</p></div></div>`, styles: [] },
-
-=======
   edge: Edge,
->>>>>>> Stashed changes
 }
 
 const wallpaper = ref(
@@ -144,24 +140,14 @@ const focusedId = computed(() => {
 })
 
 const desktopIcons = ref([
-<<<<<<< Updated upstream
-  { id: 'trash', appId: 'explorer', icon: ICON_DESKTOP_TRASH, label: 'Corbeille', x: 0, y: 0 },
-  { id: 'thispc', appId: 'explorer', icon: ICON_DESKTOP_PC, label: 'Ce PC', x: 0, y: 5 },
-  { id: 'explorer', appId: 'explorer', icon: ICON_DESKTOP_DOCS, label: 'Documents', x: 0, y: 0 },
-  { id: 'notepad', appId: 'notepad', icon: ICON_DESKTOP_NOTEPAD, label: 'Bloc-notes', x: 0, y: 0 },
-  { id: 'calc', appId: 'calculator', icon: ICON_DESKTOP_CALC, label: 'Calculatrice', x: 0, y: 0 },
-  { id: 'photos', appId: 'photos', icon: ICON_DESKTOP_PHOTOS, label: 'Photos', x: 0, y: 0 },
-  { id: 'pdf', appId: 'pdfviewer', icon: ICON_DESKTOP_PDF, label: 'Dossiers.pdf', x: 0, y: 0 },
-  { id: 'pdf', appId: 'pdfviewer2', icon: ICON_DESKTOP_PDF, label: 'Rapport_d\'Autopsie.pdf', x: 0, y: 0 },
-=======
   {id: 'trash', appId: 'explorer', icon: ICON_DESKTOP_TRASH, label: 'Corbeille', x: 0, y: 0},
   {id: 'thispc', appId: 'explorer', icon: ICON_DESKTOP_PC, label: 'Ce PC', x: 0, y: 5},
   {id: 'explorer', appId: 'explorer', icon: ICON_DESKTOP_DOCS, label: 'Documents', x: 0, y: 0},
   {id: 'notepad', appId: 'notepad', icon: ICON_DESKTOP_NOTEPAD, label: 'Bloc-notes', x: 0, y: 0},
   {id: 'calc', appId: 'calculator', icon: ICON_DESKTOP_CALC, label: 'Calculatrice', x: 0, y: 0},
   {id: 'photos', appId: 'photos', icon: ICON_DESKTOP_PHOTOS, label: 'Photos', x: 0, y: 0},
-  {id: 'pdf', appId: 'pdfviewer', icon: ICON_DESKTOP_PDF, label: 'Dossier.pdf', x: 0, y: 0},
->>>>>>> Stashed changes
+  {id: 'pdf', appId: 'pdfviewer', icon: ICON_DESKTOP_PDF, label: 'Dossier_interne.pdf', x: 0, y: 0},
+  {id: 'pdf2', appId: 'pdfviewer2', icon: ICON_DESKTOP_PDF, label: "Rapport_d'Autopsie.pdf", x: 0, y: 0},
 ])
 
 function arrangeIcons() {
@@ -241,7 +227,7 @@ const ctxItems = computed(() => [
   {label: 'Nouveau', icon: ICON_FLUENT_NEW_DOC, action: () => openApp('notepad')},
   {separator: true},
   {label: 'Personnaliser', icon: ICON_FLUENT_PERSONALIZE, action: () => openApp('settings')},
-  {label: 'Paramètres d\'affichage', icon: ICON_FLUENT_DISPLAY, action: () => openApp('settings')},
+  {label: "Paramètres d'affichage", icon: ICON_FLUENT_DISPLAY, action: () => openApp('settings')},
 ])
 
 
@@ -349,42 +335,5 @@ function closeMenus() {
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
-}
-
-/* Edge placeholder */
-:deep(.edge-placeholder) {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  background: white;
-}
-
-:deep(.edge-bar) {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 12px;
-  background: #f3f3f3;
-  border-bottom: 1px solid #d0d0d0;
-}
-
-:deep(.edge-url) {
-  flex: 1;
-  padding: 4px 10px;
-  background: white;
-  border: 1px solid #c0c0c0;
-  border-radius: 12px;
-  font-size: 12px;
-  color: #333;
-}
-
-:deep(.edge-content) {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  color: #666;
 }
 </style>

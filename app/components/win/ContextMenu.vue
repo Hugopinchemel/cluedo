@@ -2,17 +2,29 @@
   <Teleport to="body">
     <div
         v-if="visible"
-        :style="{ left: x + 'px', top: y + 'px' }"
+        :style="{ left: adjusted.x + 'px', top: adjusted.y + 'px' }"
         class="ctx-menu"
+        role="menu"
+        aria-label="Menu contextuel"
         @click.stop
+        @keydown.escape="emit('close')"
+        @keydown.arrow-down.prevent="focusNext"
+        @keydown.arrow-up.prevent="focusPrev"
     >
       <div v-for="(item, i) in items" :key="i">
-        <div v-if="item.separator" class="separator"/>
-        <button v-else :disabled="item.disabled" class="ctx-item" @click="run(item)">
-          <Icon v-if="item.icon" :name="item.icon" class="ctx-icon"/>
-          <span v-else class="ctx-icon-placeholder"/>
+        <div v-if="item.separator" class="separator" role="separator" aria-hidden="true"/>
+        <button
+            v-else
+            :disabled="item.disabled"
+            :aria-disabled="item.disabled"
+            class="ctx-item"
+            role="menuitem"
+            @click="run(item)"
+        >
+          <Icon v-if="item.icon" :name="item.icon" class="ctx-icon" aria-hidden="true"/>
+          <span v-else class="ctx-icon-placeholder" aria-hidden="true"/>
           <span class="ctx-label">{{ item.label }}</span>
-          <span class="ctx-shortcut">{{ item.shortcut ?? '' }}</span>
+          <span v-if="item.shortcut" class="ctx-shortcut" aria-label="`Raccourci : ${item.shortcut}`">{{ item.shortcut }}</span>
         </button>
       </div>
     </div>
@@ -52,6 +64,25 @@ const adjusted = computed(() => {
     y: Math.min(props.y, window.innerHeight - menuH - 8),
   }
 })
+
+// Keyboard navigation between menu items
+function getMenuItems(): HTMLButtonElement[] {
+  return Array.from(document.querySelectorAll('.ctx-menu [role="menuitem"]:not([disabled])'))
+}
+
+function focusNext() {
+  const items = getMenuItems()
+  const idx = items.indexOf(document.activeElement as HTMLButtonElement)
+  const next = items[(idx + 1) % items.length]
+  next?.focus()
+}
+
+function focusPrev() {
+  const items = getMenuItems()
+  const idx = items.indexOf(document.activeElement as HTMLButtonElement)
+  const prev = items[(idx - 1 + items.length) % items.length]
+  prev?.focus()
+}
 </script>
 
 <style scoped>

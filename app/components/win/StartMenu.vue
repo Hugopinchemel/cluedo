@@ -1,72 +1,83 @@
 <template>
   <Transition name="start">
-    <div v-if="open" class="start-menu" @click.stop>
+    <div
+        v-if="open"
+        class="start-menu"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu Démarrer"
+        @click.stop
+        @keydown.escape="emit('close')"
+    >
       <!-- Left rail -->
-      <div class="left-rail">
-        <button class="rail-btn user-btn" title="Compte">
-          <div class="user-avatar">
-            <img v-if="ICON_START_USER.startsWith('/')" :src="ICON_START_USER" alt="User" height="28" width="28"/>
-            <Icon v-else :name="ICON_START_USER" size="28"/>
+      <nav class="left-rail" aria-label="Raccourcis rapides">
+        <button class="rail-btn user-btn" aria-label="Compte utilisateur : Utilisateur">
+          <div class="user-avatar" aria-hidden="true">
+            <img v-if="ICON_START_USER.startsWith('/')" :src="ICON_START_USER" alt="" height="28" width="28"/>
+            <Icon v-else :name="ICON_START_USER" size="28" aria-hidden="true"/>
           </div>
-          <span class="rail-label">Utilisateur</span>
+          <span class="rail-label" aria-hidden="true">Utilisateur</span>
         </button>
 
-        <button class="rail-btn" title="Documents" @click="openAndClose('explorer')">
-          <img v-if="ICON_START_DOCS.startsWith('/')" :src="ICON_START_DOCS" alt="Documents" height="20" width="20"/>
-          <Icon v-else :name="ICON_START_DOCS" size="20"/>
-          <span class="rail-label">Documents</span>
+        <button class="rail-btn" aria-label="Documents" @click="openAndClose('explorer')">
+          <img v-if="ICON_START_DOCS.startsWith('/')" :src="ICON_START_DOCS" alt="" aria-hidden="true" height="20" width="20"/>
+          <Icon v-else :name="ICON_START_DOCS" size="20" aria-hidden="true"/>
+          <span class="rail-label" aria-hidden="true">Documents</span>
         </button>
 
-        <button class="rail-btn" title="Images" @click="openAndClose('photos')">
-          <img v-if="ICON_START_IMAGES.startsWith('/')" :src="ICON_START_IMAGES" alt="Images" height="20" width="20"/>
-          <Icon v-else :name="ICON_START_IMAGES" size="20"/>
-          <span class="rail-label">Images</span>
+        <button class="rail-btn" aria-label="Images" @click="openAndClose('photos')">
+          <img v-if="ICON_START_IMAGES.startsWith('/')" :src="ICON_START_IMAGES" alt="" aria-hidden="true" height="20" width="20"/>
+          <Icon v-else :name="ICON_START_IMAGES" size="20" aria-hidden="true"/>
+          <span class="rail-label" aria-hidden="true">Images</span>
         </button>
 
-        <button class="rail-btn" title="Paramètres" @click="openAndClose('settings')">
-          <img v-if="ICON_START_SETTINGS.startsWith('/')" :src="ICON_START_SETTINGS" alt="Settings" height="20"
+        <button class="rail-btn" aria-label="Paramètres" @click="openAndClose('settings')">
+          <img v-if="ICON_START_SETTINGS.startsWith('/')" :src="ICON_START_SETTINGS" alt="" aria-hidden="true" height="20"
                width="20"/>
-          <Icon v-else :name="ICON_START_SETTINGS" size="20"/>
-          <span class="rail-label">Paramètres</span>
+          <Icon v-else :name="ICON_START_SETTINGS" size="20" aria-hidden="true"/>
+          <span class="rail-label" aria-hidden="true">Paramètres</span>
         </button>
 
-        <button class="rail-btn" title="Corbeille">
-          <img v-if="ICON_START_POWER.startsWith('/')" :src="ICON_START_POWER" alt="Corbeille" height="20" width="20"/>
-          <Icon v-else :name="ICON_START_POWER" size="20"/>
-          <span class="rail-label">Corbeille</span>
+        <button class="rail-btn" aria-label="Corbeille">
+          <img v-if="ICON_START_POWER.startsWith('/')" :src="ICON_START_POWER" alt="" aria-hidden="true" height="20" width="20"/>
+          <Icon v-else :name="ICON_START_POWER" size="20" aria-hidden="true"/>
+          <span class="rail-label" aria-hidden="true">Corbeille</span>
         </button>
-      </div>
+      </nav>
 
       <!-- Main area -->
       <div class="main-area">
         <!-- Épinglées -->
-        <div class="section-title">Épinglées</div>
-        <div class="app-grid">
-          <button
-              v-for="app in APPS"
-              :key="app.id"
-              class="app-tile"
-              @click="openAndClose(app.id)"
-          >
-            <img v-if="app.icon.startsWith('/')" :src="app.icon" alt="" class="tile-icon-img" height="24" width="24"/>
-            <Icon v-else :name="app.icon" class="tile-icon"/>
-            <span class="tile-name">{{ app.name }}</span>
-          </button>
-        </div>
+        <h2 class="section-title">Épinglées</h2>
+        <ul class="app-grid" role="list">
+          <li v-for="app in APPS" :key="app.id" role="listitem">
+            <button
+                class="app-tile"
+                :aria-label="app.name"
+                @click="openAndClose(app.id)"
+            >
+              <img v-if="app.icon.startsWith('/')" :src="app.icon" alt="" aria-hidden="true" class="tile-icon-img" height="24" width="24"/>
+              <Icon v-else :name="app.icon" class="tile-icon" aria-hidden="true"/>
+              <span class="tile-name" aria-hidden="true">{{ app.name }}</span>
+            </button>
+          </li>
+        </ul>
 
-        <!-- Récentes -->
-        <div class="section-title">Recommandées</div>
-        <div class="recent-list">
-          <button v-for="item in recentItems" :key="item.name" class="recent-item">
-            <img v-if="item.icon.startsWith('/')" :src="item.icon" alt="" class="recent-icon-img" height="20"
-                 width="20"/>
-            <Icon v-else :name="item.icon" class="recent-icon"/>
-            <div class="recent-info">
-              <div class="recent-name">{{ item.name }}</div>
-              <div class="recent-meta">{{ item.meta }}</div>
-            </div>
-          </button>
-        </div>
+        <!-- Recommandées -->
+        <h2 class="section-title">Recommandées</h2>
+        <ul class="recent-list" role="list">
+          <li v-for="item in recentItems" :key="item.name" role="listitem">
+            <button class="recent-item" :aria-label="`${item.name} – ${item.meta}`">
+              <img v-if="item.icon.startsWith('/')" :src="item.icon" alt="" aria-hidden="true" class="recent-icon-img" height="20"
+                   width="20"/>
+              <Icon v-else :name="item.icon" class="recent-icon" aria-hidden="true"/>
+              <div class="recent-info" aria-hidden="true">
+                <div class="recent-name">{{ item.name }}</div>
+                <div class="recent-meta">{{ item.meta }}</div>
+              </div>
+            </button>
+          </li>
+        </ul>
       </div>
     </div>
   </Transition>
@@ -207,12 +218,18 @@ const recentItems = [
   font-weight: 600;
   color: rgba(255, 255, 255, 0.9);
   margin-bottom: 4px;
+  /* Réinitialiser les styles de titre natifs */
+  font-family: inherit;
+  line-height: inherit;
 }
 
 .app-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 4px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .app-tile {
@@ -249,6 +266,9 @@ const recentItems = [
   display: flex;
   flex-direction: column;
   gap: 2px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .recent-item {

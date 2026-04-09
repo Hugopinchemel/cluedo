@@ -1,52 +1,74 @@
 <template>
   <Transition name="slide-up">
-    <div v-if="open" class="quick-settings" @click.stop>
-      <div class="qs-grid">
+    <div
+        v-if="open"
+        class="quick-settings"
+        role="region"
+        aria-label="Paramètres rapides"
+        @click.stop
+    >
+      <div class="qs-grid" role="group" aria-label="Actions rapides">
         <button
             v-for="qa in quickActions"
             :key="qa.label"
             :class="{ on: qa.on }"
             class="qa-btn"
+            :aria-pressed="qa.on"
+            :aria-label="`${qa.label} : ${qa.on ? 'activé' : 'désactivé'}`"
             @click="qa.on = !qa.on"
         >
-          <div class="qa-icon-wrapper">
-            <img v-if="qa.icon.startsWith('/')" :src="qa.icon" alt="" height="20" width="20"/>
-            <Icon v-else :name="qa.icon" size="20"/>
+          <div class="qa-icon-wrapper" aria-hidden="true">
+            <img v-if="qa.icon.startsWith('/')" :src="qa.icon" alt="" aria-hidden="true" height="20" width="20"/>
+            <Icon v-else :name="qa.icon" size="20" aria-hidden="true"/>
           </div>
-          <span class="qa-label">{{ qa.label }}</span>
+          <span class="qa-label" aria-hidden="true">{{ qa.label }}</span>
         </button>
       </div>
 
       <div class="qs-sliders">
         <div class="qs-slider-row">
-          <img v-if="ICON_QS_BRIGHTNESS.startsWith('/')" :src="ICON_QS_BRIGHTNESS" alt="" class="qs-slider-icon"
+          <label for="qs-brightness" class="sr-only">Luminosité</label>
+          <img v-if="ICON_QS_BRIGHTNESS.startsWith('/')" :src="ICON_QS_BRIGHTNESS" alt="" aria-hidden="true" class="qs-slider-icon"
                height="16" width="16"/>
-          <Icon v-else :name="ICON_QS_BRIGHTNESS" class="qs-slider-icon" size="16"/>
-          <input :value="settings.brightness" class="qs-range"
-                 max="100" min="0"
-                 type="range" @input="e => updateSettings({ brightness: parseInt((e.target as HTMLInputElement).value) })">
+          <Icon v-else :name="ICON_QS_BRIGHTNESS" class="qs-slider-icon" size="16" aria-hidden="true"/>
+          <input
+              id="qs-brightness"
+              :value="settings.brightness"
+              class="qs-range"
+              max="100" min="0"
+              type="range"
+              :aria-label="`Luminosité : ${settings.brightness}%`"
+              @input="e => updateSettings({ brightness: parseInt((e.target as HTMLInputElement).value) })"
+          >
         </div>
         <div class="qs-slider-row">
-          <img v-if="ICON_QS_VOLUME.startsWith('/')" :src="ICON_QS_VOLUME" alt="" class="qs-slider-icon" height="16"
+          <label for="qs-volume" class="sr-only">Volume</label>
+          <img v-if="ICON_QS_VOLUME.startsWith('/')" :src="ICON_QS_VOLUME" alt="" aria-hidden="true" class="qs-slider-icon" height="16"
                width="16"/>
-          <Icon v-else :name="ICON_QS_VOLUME" class="qs-slider-icon" size="16"/>
-          <input :value="settings.volume" class="qs-range"
-                 max="100" min="0"
-                 type="range" @input="e => updateSettings({ volume: parseInt((e.target as HTMLInputElement).value) })">
+          <Icon v-else :name="ICON_QS_VOLUME" class="qs-slider-icon" size="16" aria-hidden="true"/>
+          <input
+              id="qs-volume"
+              :value="settings.volume"
+              class="qs-range"
+              max="100" min="0"
+              type="range"
+              :aria-label="`Volume : ${settings.volume}%`"
+              @input="e => updateSettings({ volume: parseInt((e.target as HTMLInputElement).value) })"
+          >
         </div>
       </div>
 
       <div class="qs-footer">
-        <div class="qs-battery">
-          <img v-if="ICON_TRAY_BATTERY.startsWith('/')" :src="ICON_TRAY_BATTERY" alt="" class="qs-battery-icon"
+        <div class="qs-battery" aria-label="Batterie : 100%">
+          <img v-if="ICON_TRAY_BATTERY.startsWith('/')" :src="ICON_TRAY_BATTERY" alt="" aria-hidden="true" class="qs-battery-icon"
                height="16" width="16"/>
-          <Icon v-else :name="ICON_TRAY_BATTERY" class="qs-battery-icon" size="16"/>
-          <span>100%</span>
+          <Icon v-else :name="ICON_TRAY_BATTERY" class="qs-battery-icon" size="16" aria-hidden="true"/>
+          <span aria-hidden="true">100%</span>
         </div>
         <div class="qs-footer-right">
-          <button class="qs-settings-btn" @click="$emit('openSettings')">
-            <img v-if="ICON_APP_SETTINGS.startsWith('/')" :src="ICON_APP_SETTINGS" alt="" height="16" width="16"/>
-            <Icon v-else :name="ICON_APP_SETTINGS" size="16"/>
+          <button class="qs-settings-btn" aria-label="Ouvrir les paramètres" @click="$emit('openSettings')">
+            <img v-if="ICON_APP_SETTINGS.startsWith('/')" :src="ICON_APP_SETTINGS" alt="" aria-hidden="true" height="16" width="16"/>
+            <Icon v-else :name="ICON_APP_SETTINGS" size="16" aria-hidden="true"/>
           </button>
         </div>
       </div>

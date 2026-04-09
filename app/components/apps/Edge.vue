@@ -8,7 +8,7 @@ const urlInput = ref('https://www.bing.com')
 
 const favorites = [
   {name: 'Instagram', url: 'https://www.instagram.com', icon: 'skill-icons:instagram'},
-  {name: 'Airbnb', url: 'https://www.airbnb.com', icon: 'logos:airbnb-icon'}
+  {name: 'Airbnb', url: 'https://www.airbnb.com', icon: 'logos:airbnb-icon'},
   {name: 'Gmail', url: 'https://www.gmail.com', icon: 'logos:airbnb-icon'}
 
 ]

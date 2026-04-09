@@ -1,51 +1,79 @@
 <template>
   <Transition name="slide-right">
-    <div v-if="open" class="notif-center" @click.stop>
+    <div
+        v-if="open"
+        class="notif-center"
+        role="region"
+        aria-label="Centre de notifications"
+        @click.stop
+    >
       <!-- Notifications Section -->
-      <div class="notif-section">
+      <section class="notif-section" aria-label="Notifications">
         <div class="notif-header">
-          <span>Notifications</span>
-          <button v-if="notifications.length" @click="notifications = []">Effacer tout</button>
+          <h2 class="notif-heading">Notifications</h2>
+          <button
+              v-if="notifications.length"
+              aria-label="Effacer toutes les notifications"
+              @click="notifications = []"
+          >Effacer tout</button>
         </div>
 
-        <div v-if="!notifications.length" class="notif-empty">
-          <Icon :name="ICON_FLUENT_ALERT_OFF" size="48" style="color: rgba(255,255,255,0.2)"/>
+        <div v-if="!notifications.length" class="notif-empty" aria-live="polite">
+          <Icon :name="ICON_FLUENT_ALERT_OFF" size="48" style="color: rgba(255,255,255,0.2)" aria-hidden="true"/>
           <p>Pas de nouvelles notifications</p>
         </div>
 
-        <div class="notif-list">
-          <div v-for="(n, i) in notifications" :key="i" class="notif-item">
+        <ul class="notif-list" aria-live="polite" aria-relevant="additions removals">
+          <li v-for="(n, i) in notifications" :key="i" class="notif-item" role="article">
             <div class="notif-app-header">
-              <Icon :name="n.icon || ICON_FLUENT_ALERT" class="notif-app-icon"/>
+              <Icon :name="n.icon || ICON_FLUENT_ALERT" class="notif-app-icon" aria-hidden="true"/>
               <span class="notif-app-name">{{ n.app }}</span>
-              <button class="notif-close" @click="removeNotif(i)">✕</button>
+              <button
+                  class="notif-close"
+                  :aria-label="`Fermer la notification de ${n.app} : ${n.title}`"
+                  @click="removeNotif(i)"
+              >✕</button>
             </div>
             <div class="notif-content">
-              <div class="notif-title">{{ n.title }}</div>
-              <div class="notif-msg">{{ n.message }}</div>
+              <h3 class="notif-title">{{ n.title }}</h3>
+              <p class="notif-msg">{{ n.message }}</p>
             </div>
-          </div>
-        </div>
-      </div>
+          </li>
+        </ul>
+      </section>
 
       <!-- Calendar Section -->
-      <div class="calendar-section">
+      <section class="calendar-section" aria-label="Calendrier">
         <div class="cal-header">
-          <span class="cal-month">{{ currentMonth }}</span>
-          <div class="cal-controls">
-            <button>
-              <Icon :name="ICON_FLUENT_CHEVRON_UP" size="14"/>
+          <h2 class="cal-month">{{ currentMonth }}</h2>
+          <div class="cal-controls" role="group" :aria-label="`Navigation du mois : ${currentMonth}`">
+            <button aria-label="Mois précédent">
+              <Icon :name="ICON_FLUENT_CHEVRON_UP" size="14" aria-hidden="true"/>
             </button>
-            <button>
-              <Icon :name="ICON_FLUENT_CHEVRON_DOWN" size="14"/>
+            <button aria-label="Mois suivant">
+              <Icon :name="ICON_FLUENT_CHEVRON_DOWN" size="14" aria-hidden="true"/>
             </button>
           </div>
         </div>
-        <div class="cal-grid">
-          <div v-for="d in ['Lu', 'Ma', 'Me', 'Je', 'Ve', 'Sa', 'Di']" :key="d" class="cal-day-label">{{ d }}</div>
-          <div v-for="n in 31" :key="n" :class="{ today: n === today }" class="cal-day">{{ n }}</div>
+        <div class="cal-grid" role="grid" :aria-label="`Calendrier – ${currentMonth}`">
+          <div
+              v-for="d in ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']"
+              :key="d"
+              class="cal-day-label"
+              role="columnheader"
+              :aria-label="d"
+          >{{ d.slice(0, 2) }}</div>
+          <div
+              v-for="n in 31"
+              :key="n"
+              :class="{ today: n === today }"
+              class="cal-day"
+              role="gridcell"
+              :aria-label="n === today ? `${n} – aujourd'hui` : String(n)"
+              :aria-current="n === today ? 'date' : undefined"
+          >{{ n }}</div>
         </div>
-      </div>
+      </section>
     </div>
   </Transition>
 </template>
@@ -113,6 +141,14 @@ const currentMonth = now.toLocaleDateString('fr-FR', {month: 'long', year: 'nume
   overflow: hidden;
 }
 
+.notif-heading {
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  font-family: inherit;
+  line-height: inherit;
+}
+
 .notif-header {
   display: flex;
   justify-content: space-between;
@@ -151,6 +187,9 @@ const currentMonth = now.toLocaleDateString('fr-FR', {month: 'long', year: 'nume
   flex-direction: column;
   gap: 8px;
   overflow-y: auto;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .notif-item {
@@ -187,12 +226,15 @@ const currentMonth = now.toLocaleDateString('fr-FR', {month: 'long', year: 'nume
   font-weight: 600;
   color: white;
   margin-bottom: 2px;
+  font-family: inherit;
+  line-height: inherit;
 }
 
 .notif-msg {
   font-size: 12px;
   color: rgba(255, 255, 255, 0.8);
   line-height: 1.4;
+  margin: 0;
 }
 
 .calendar-section {
@@ -213,6 +255,8 @@ const currentMonth = now.toLocaleDateString('fr-FR', {month: 'long', year: 'nume
   font-weight: 600;
   color: white;
   text-transform: capitalize;
+  font-family: inherit;
+  line-height: inherit;
 }
 
 .cal-controls {
