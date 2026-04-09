@@ -31,6 +31,7 @@
         :style="{ fontFamily: fontFamily, fontSize: fontSize + 'px', wordWrap: wordWrap ? 'normal' : 'off' }"
         class="editor"
         spellcheck="false"
+        aria-label="Zone de texte du Bloc-notes"
         @keyup="updateCursor"
         @click="updateCursor"
         @input="updateCursor"
