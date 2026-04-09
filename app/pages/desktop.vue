@@ -9,40 +9,42 @@
   >
     <a href="#main-content" class="sr-only focus-visible:not-sr-only skip-link">Aller au contenu principal</a>
     <h1 class="sr-only">Bureau — Windows 10</h1>
-    <!-- Desktop icons -->
-    <ul aria-label="Icônes du bureau" class="desktop-icons">
-      <li
-          v-for="icon in desktopIcons"
-          :key="icon.id"
-          :style="{ position: 'absolute', left: icon.x + 'px', top: icon.y + 'px' }"
-          class="desktop-icon-item"
-      >
-        <button
-            :aria-label="icon.label"
-            :aria-selected="selectedIcon === icon.id"
-            :class="{ selected: selectedIcon === icon.id, dragging: draggingIcon === icon.id }"
-            class="desktop-icon"
-            @mousedown="onIconDragStart($event, icon)"
-            @click.stop="selectedIcon = icon.id"
-            @dblclick.stop="openApp(icon.appId)"
+    <main id="main-content">
+      <!-- Desktop icons -->
+      <ul aria-label="Icônes du bureau" class="desktop-icons">
+        <li
+            v-for="icon in desktopIcons"
+            :key="icon.id"
+            :style="{ position: 'absolute', left: icon.x + 'px', top: icon.y + 'px' }"
+            class="desktop-icon-item"
         >
-          <img v-if="icon.icon.startsWith('/')" :src="icon.icon" alt="" aria-hidden="true" class="icon-glyph-img"
-               height="48" width="48"/>
-          <Icon v-else :name="icon.icon" aria-hidden="true" class="icon-glyph"/>
-          <span aria-hidden="true" class="icon-label">{{ icon.label }}</span>
-        </button>
-      </li>
-    </ul>
+          <button
+              :aria-label="icon.label"
+              :aria-selected="selectedIcon === icon.id"
+              :class="{ selected: selectedIcon === icon.id, dragging: draggingIcon === icon.id }"
+              class="desktop-icon"
+              @mousedown="onIconDragStart($event, icon)"
+              @click.stop="selectedIcon = icon.id"
+              @dblclick.stop="openApp(icon.appId)"
+          >
+            <img v-if="icon.icon.startsWith('/')" :src="icon.icon" alt="" aria-hidden="true" class="icon-glyph-img"
+                 height="48" width="48"/>
+            <Icon v-else :name="icon.icon" aria-hidden="true" class="icon-glyph"/>
+            <span aria-hidden="true" class="icon-label">{{ icon.label }}</span>
+          </button>
+        </li>
+      </ul>
 
-    <!-- Open windows -->
-    <WinWindow
-        v-for="win in windows"
-        :key="win.id"
-        :focusedId="focusedId"
-        :win="win"
-    >
-      <component :is="appComponents[win.appId]" @changeBg="wallpaper = $event"/>
-    </WinWindow>
+      <!-- Open windows -->
+      <WinWindow
+          v-for="win in windows"
+          :key="win.id"
+          :focusedId="focusedId"
+          :win="win"
+      >
+        <component :is="appComponents[win.appId]" @changeBg="wallpaper = $event"/>
+      </WinWindow>
+    </main>
 
     <!-- Taskbar -->
     <WinTaskbar
@@ -277,6 +279,25 @@ function closeMenus() {
 </script>
 
 <style scoped>
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 99999;
+  background: white;
+  color: #000;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+main#main-content {
+  position: absolute;
+  inset: 0;
+}
+
 .desktop {
   position: fixed;
   inset: 0;
