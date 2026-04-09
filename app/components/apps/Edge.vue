@@ -1225,7 +1225,7 @@ function sendReply() {
             background-color: #f7f7f7;
             font-size: 14px;
             font-weight: 600;
-            background-image: url('/picture/airbnb/B67B4336-8F16-4E10-9F34-E6452743C5F8.jpg');
+            background-image: linear-gradient(0deg, rgba(144, 144, 144, 0.75) 0%, rgba(144, 144, 144, 0.75) 100%), url('/picture/airbnb/B67B4336-8F16-4E10-9F34-E6452743C5F8.jpg');
             background-size: cover;
             background-position: center;
             color: white;
