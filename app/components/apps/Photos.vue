@@ -59,12 +59,12 @@
         </div>
         <button class="lb-close" @click="selected = null">✕</button>
         <div class="lb-nav">
-          <button>
+          <button @click="prevPhoto">
             <svg fill="white" height="24" viewBox="0 0 24 24" width="24">
               <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
             </svg>
           </button>
-          <button>
+          <button @click="nextPhoto">
             <svg fill="white" height="24" viewBox="0 0 24 24" width="24">
               <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
             </svg>
@@ -90,17 +90,29 @@ const colors = [
 const photoGroups = [
   {
     date: 'Aujourd\'hui · 1 avril 2026',
-    photos: Array.from({length: 4}, (_, i) => ({color: colors[i]})),
+    photos: Array.from({length: 4}, (_, i) => ({id: i, color: colors[i]})),
   },
   {
     date: 'Hier · 31 mars 2026',
-    photos: Array.from({length: 6}, (_, i) => ({color: colors[i + 4]})),
+    photos: Array.from({length: 6}, (_, i) => ({id: i + 4, color: colors[i + 4]})),
   },
   {
     date: 'Ce mois-ci · Mars 2026',
-    photos: Array.from({length: 8}, (_, i) => ({color: colors[i % colors.length]})),
+    photos: Array.from({length: 8}, (_, i) => ({id: i + 10, color: colors[i % colors.length]})),
   },
 ]
+
+const allPhotos = computed(() => photoGroups.flatMap(g => g.photos))
+
+function prevPhoto() {
+  const idx = allPhotos.value.findIndex(p => p.id === selected.value?.id)
+  if (idx > 0) selected.value = allPhotos.value[idx - 1]
+}
+
+function nextPhoto() {
+  const idx = allPhotos.value.findIndex(p => p.id === selected.value?.id)
+  if (idx < allPhotos.value.length - 1) selected.value = allPhotos.value[idx + 1]
+}
 </script>
 
 <style scoped>
