@@ -9,6 +9,8 @@ const urlInput = ref('https://www.bing.com')
 const favorites = [
   {name: 'Instagram', url: 'https://www.instagram.com', icon: 'skill-icons:instagram'},
   {name: 'Airbnb', url: 'https://www.airbnb.com', icon: 'logos:airbnb-icon'}
+  {name: 'Gmail', url: 'https://www.gmail.com', icon: 'logos:airbnb-icon'}
+
 ]
 
 function navigate() {
@@ -47,6 +49,8 @@ function goForward() {
 
 const isInstagram = computed(() => currentUrl.value.includes('instagram.com'))
 const isAirbnb = computed(() => currentUrl.value.includes('airbnb.com'))
+const isGmail = computed(() => currentUrl.value.includes('gmail.com'))
+
 
 // Instagram State
 const activeChat = ref(0)
@@ -272,6 +276,10 @@ const airbnbListing = {
             </div>
           </div>
         </main>
+      </div>
+
+      <div v-if="isGmail" class="instagram-ui">
+
       </div>
 
       <!-- DEFAULT BING / HOME -->
