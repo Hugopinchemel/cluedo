@@ -19,7 +19,7 @@
           <path
               d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
         </svg>
-        <input placeholder="Paramètres de recherche"/>
+        <input placeholder="Paramètres de recherche" aria-label="Rechercher dans les paramètres"/>
       </div>
       <nav class="settings-menu">
         <button
@@ -50,6 +50,7 @@
             </div>
             <input :value="settings.brightness" class="setting-slider" max="100" min="0"
                    type="range"
+                   aria-label="Luminosité"
                    @input="e => updateSettings({ brightness: parseInt((e.target as HTMLInputElement).value) })"/>
           </div>
           <div class="setting-row">
@@ -57,7 +58,7 @@
               <div class="setting-name">Résolution d'affichage</div>
               <div class="setting-desc">1920 × 1080 (Recommandé)</div>
             </div>
-            <select class="setting-select">
+            <select class="setting-select" aria-label="Résolution d'affichage">
               <option>1920 × 1080 (Recommandé)</option>
               <option>2560 × 1440</option>
               <option>1280 × 720</option>
@@ -68,7 +69,7 @@
               <div class="setting-name">Fréquence de rafraîchissement</div>
               <div class="setting-desc">144 Hz</div>
             </div>
-            <select class="setting-select">
+            <select class="setting-select" aria-label="Fréquence de rafraîchissement">
               <option>144 Hz</option>
               <option>60 Hz</option>
             </select>
@@ -83,6 +84,7 @@
             </div>
             <input :value="settings.volume" class="setting-slider" max="100" min="0"
                    type="range"
+                   aria-label="Volume principal"
                    @input="e => updateSettings({ volume: parseInt((e.target as HTMLInputElement).value) })"/>
           </div>
         </div>
@@ -93,7 +95,7 @@
             <div class="setting-info">
               <div class="setting-name">Mettre l'écran en veille après</div>
             </div>
-            <select class="setting-select">
+            <select class="setting-select" aria-label="Mettre l'écran en veille après">
               <option>5 minutes</option>
               <option>10 minutes</option>
               <option>15 minutes</option>
@@ -191,6 +193,7 @@
             </div>
             <input :value="settings.textSize" class="setting-slider" max="200" min="80" step="10"
                    type="range"
+                   aria-label="Taille du texte"
                    @input="e => updateSettings({ textSize: parseInt((e.target as HTMLInputElement).value) })"/>
           </div>
 
