@@ -147,7 +147,6 @@ function shouldShowDate(messages: any[], index: number): boolean {
   return messages[index].date !== messages[index - 1].date
 }
 
-//Gmail State
 // Gmail State
 const gmailOpen = ref(false)
 const selectedMail = ref(0)
@@ -159,44 +158,76 @@ const notifVisible = ref(true)
 const mails = [
   {
     id: 0, unread: true,
-    from: 'Prof. Moriarty', email: 'prof.moriarty@univ.fr',
-    subject: 'Rapport de laboratoire — URGENT',
-    preview: 'Vous devez me remettre le rapport du labo avant vendredi...',
+    from: 'Chef de police', email: 'Chef.police@police.fr',
+    subject: 'Dossier N°097 — URGENT',
+    preview: 'Vous devez me remettre le coupable avant aujourd\'hui 18h00.',
     date: '10:42',
-    body: `Bonjour,<br><br>Je vous rappelle que vous devez me remettre le rapport de laboratoire <strong>avant vendredi 12 avril</strong> à 18h00.<br><br>Merci de le déposer sur la plateforme Moodle dans la section "Rendus TP".<br><br>Sans retour de votre part, une pénalité sera appliquée.<br><br>Cordialement,<br><strong>Professeur Moriarty</strong><br><span style="color:#888;font-size:12px">Département de Sciences — Bureau 214</span>`
-  },
-  {
-    id: 1, unread: true,
-    from: 'Mme. Leblanc', email: 'm.leblanc@univ.fr',
-    subject: 'Invitation — Réunion projet Cluedo',
-    preview: 'Bonjour, je vous invite à la réunion de présentation du projet...',
-    date: 'Hier',
-    body: `Bonjour,<br><br>Je vous invite à la réunion de présentation du projet Cluedo qui aura lieu <strong>jeudi 10 avril à 14h</strong> en salle B203.<br><br>Merci de confirmer votre présence par retour de mail.<br><br>Cordialement,<br><strong>Mme. Leblanc</strong>`
-  },
-  {
-    id: 2, unread: true,
-    from: 'Secrétariat', email: 'secretariat@univ.fr',
-    subject: 'Rappel — Inscription examens',
-    preview: 'N\'oubliez pas de vous inscrire aux examens du second semestre...',
-    date: 'Lun.',
-    body: `Bonjour,<br><br>N'oubliez pas de vous inscrire aux examens du second semestre avant le <strong>15 avril 2026</strong>.<br><br>La procédure d'inscription est disponible sur le portail étudiant.<br><br>Le Secrétariat`
+    body: `Bonjour,<br><br>Je vous rappelle que vous devez me remettre le rapport de laboratoire <strong>avant vendredi 12 avril</strong> à 18h00.<br><br>Merci de m'envoyer le nom du coupable par mail.<br><br>Sans retour de votre part, une pénalité sera appliquée.<br><br>Cordialement,<br><strong>Directeur de police</strong><br><span style="color:#888;font-size:12px">Département de Police — Bureau 214</span>`,
+    suspects: [   // ← c'est ça qui manquait !
+      {
+        name: 'Clément',
+        email: `Monsieur le Chef de Police,\n\nAprès analyse de tous les indices, je pense que le coupable est Clément.\n\nCordialement,\nClara Moreau`,
+        response: `Merci pour votre réponse. Nous avons interrogé Clément mais les preuves ne sont pas suffisantes. Il a un alibi solide. Continuez vos investigations...\n\nChef de Police Dubois`,
+        correct: false,
+      },
+      {
+        name: 'Arthur',
+        email: `Monsieur le Chef de Police,\n\nAprès analyse de tous les indices, je pense que le coupable est Arthur.\n\nCordialement,\nClara Moreau`,
+        response: `Merci pour votre réponse. Nous avons interrogé Arthur mais les preuves ne sont pas suffisantes. Revenez vers nous avec plus d'éléments.\n\nChef de Police Dubois`,
+        correct: false,
+      },
+      {
+        name: 'Mathieu',
+        email: `Monsieur le Chef de Police,\n\nAprès analyse de tous les indices, je pense que le coupable est Mathieu.\n\nCordialement,\nClara Moreau`,
+        response: `Bravo, bien joué, c'était ça ! Mathieu a avoué lors de l'interrogatoire. Regardez la vidéo de l'entretien qu'on a passé avec le tueur.`,
+        correct: true,
+      },
+      {
+        name: 'Daphné',
+        email: `Monsieur le Chef de Police,\n\nAprès analyse de tous les indices, je pense que la coupable est Daphné.\n\nCordialement,\nClara Moreau`,
+        response: `Merci pour votre réponse. Nous avons interrogé Daphné mais elle a pu prouver qu'elle n'était pas sur les lieux.\n\nChef de Police Dubois`,
+        correct: false,
+      },
+    ]
   }
 ]
 
 const unreadCount = computed(() => mails.filter(m => m.unread).length)
+const selectedSuspect = ref<any>(null)
+const sentResponse = ref('')
+const sentCorrect = ref(false)
 
+function selectSuspect(suspect: any) {
+  selectedSuspect.value = suspect
+}
+
+function sendReply() {
+  const mail = mails[selectedMail.value]
+
+  if (mail.suspects && selectedSuspect.value) {
+    sentResponse.value = selectedSuspect.value.response
+    sentCorrect.value = selectedSuspect.value.correct
+  } else {
+    if (!replyText.value.trim()) return
+    sentResponse.value = ''
+    sentCorrect.value = false
+  }
+
+  replySent.value = true
+  replyOpen.value = false
+  selectedSuspect.value = null
+}
+
+// Reset quand on change de mail
 function selectMail(id: number) {
   selectedMail.value = id
   mails[id].unread = false
   replyOpen.value = false
   replySent.value = false
   replyText.value = ''
-}
-
-function sendReply() {
-  if (!replyText.value.trim()) return
-  replySent.value = true
-  replyOpen.value = false
+  sentResponse.value = ''
+  sentCorrect.value = false
+  selectedSuspect.value = null
 }
 
 </script>
@@ -395,17 +426,6 @@ function sendReply() {
       <!-- FAKE GMAIL -->
       <div v-else-if="isGmail" class="gmail-ui">
 
-        <!-- Notification pop-up -->
-        <div v-if="notifVisible" class="gmail-notif" @click="notifVisible = false">
-          <div class="notif-icon">✉</div>
-          <div class="notif-content">
-            <div class="notif-app">Courrier</div>
-            <div class="notif-title">Prof. Moriarty</div>
-            <div class="notif-body">Vous devez me remettre le rapport du labo...</div>
-          </div>
-          <button class="notif-close" @click.stop="notifVisible = false">✕</button>
-        </div>
-
         <!-- Sidebar -->
         <div class="gmail-sidebar">
           <div class="gmail-sidebar-label">Dossiers</div>
@@ -445,7 +465,7 @@ function sendReply() {
             <div class="gmail-reader-subject">{{ mails[selectedMail].subject }}</div>
             <div class="gmail-reader-meta">
               <span>De : <strong>{{ mails[selectedMail].email }}</strong></span>
-              <span>À : clara.moreau@univ.fr</span>
+              <span>À : agent.police@police.fr</span>
             </div>
           </div>
           <div class="gmail-reader-actions">
@@ -457,14 +477,60 @@ function sendReply() {
 
           <!-- Zone de réponse -->
           <div v-if="replyOpen" class="gmail-reply">
-            <div class="gmail-reply-to">À : {{ mails[selectedMail].email }}</div>
-            <textarea v-model="replyText" placeholder="Écrivez votre réponse..."></textarea>
-            <div class="gmail-reply-actions">
-              <button class="reply-btn secondary" @click="replyOpen = false">Annuler</button>
-              <button class="reply-btn primary" @click="sendReply">Envoyer ✓</button>
+
+            <!-- Si le mail a des suspects → choix multiple -->
+            <template v-if="mails[selectedMail].suspects">
+              <div class="suspects-title">👮 Désignez votre suspect :</div>
+              <div class="suspects-grid">
+                <button
+                  v-for="suspect in mails[selectedMail].suspects"
+                  :key="suspect.name"
+                  class="suspect-btn"
+                  :class="{ selected: selectedSuspect?.name === suspect.name }"
+                  @click="selectSuspect(suspect)"
+                >
+                  {{ suspect.name }}
+                </button>
+              </div>
+
+              <!-- Aperçu de l'email préfait -->
+              <div v-if="selectedSuspect" class="suspect-preview">
+                <div class="gmail-reply-to">À : {{ mails[selectedMail].email }}</div>
+                <textarea :value="selectedSuspect.email" readonly class="prefilled"></textarea>
+                <div class="gmail-reply-actions">
+                  <button class="reply-btn secondary" @click="replyOpen = false">Annuler</button>
+                  <button class="reply-btn primary" @click="sendReply">Envoyer ✓</button>
+                </div>
+              </div>
+            </template>
+
+            <!-- Sinon → zone texte libre classique -->
+            <template v-else>
+              <div class="gmail-reply-to">À : {{ mails[selectedMail].email }}</div>
+              <textarea v-model="replyText" placeholder="Écrivez votre réponse..."></textarea>
+              <div class="gmail-reply-actions">
+                <button class="reply-btn secondary" @click="replyOpen = false">Annuler</button>
+                <button class="reply-btn primary" @click="sendReply">Envoyer ✓</button>
+              </div>
+            </template>
+
+          </div>
+
+          <!-- Mail de retour après envoi -->
+          <div v-if="replySent && sentResponse" class="reply-response">
+            <div class="reply-response-header">
+              <strong>{{ mails[selectedMail].from }}</strong> a répondu :
+            </div>
+            <div class="reply-response-body">{{ sentResponse }}</div>
+
+            <!-- Vidéo si bonne réponse -->
+            <div v-if="sentCorrect" class="reply-video">
+              <p>🎬 Vidéo de l'entretien :</p>
+              <video controls width="100%">
+                <source src="/videos/video1.mp4" type="video/mp4"/>
+              </video>
             </div>
           </div>
-          <div v-if="replySent" class="reply-sent">✓ Email envoyé avec succès !</div>
         </div>
 
       </div>
@@ -488,52 +554,82 @@ function sendReply() {
 
 <style lang="scss" scoped>
 
+.suspects-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.suspects-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+
+  .suspect-btn {
+    padding: 10px;
+    border: 1.5px solid #c8c8c8;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.15s;
+
+    &:hover { background: #f0f0f0; border-color: #0078d4; }
+    &.selected { background: #deecf9; border-color: #0078d4; color: #0078d4; font-weight: 700; }
+  }
+}
+
+.suspect-preview {
+  .prefilled {
+    width: 100%;
+    height: 100px;
+    padding: 8px 12px;
+    border: 0.5px solid #c8c8c8;
+    border-radius: 4px;
+    font-size: 13px;
+    resize: none;
+    background: #f9f9f9;
+    color: #444;
+    margin: 8px 0;
+  }
+}
+
+.reply-response {
+  margin: 12px 20px;
+  padding: 14px 16px;
+  background: #f0f7ff;
+  border: 0.5px solid #0078d4;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #333;
+
+  .reply-response-header {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 8px;
+  }
+
+  .reply-response-body {
+    white-space: pre-line;
+    line-height: 1.6;
+  }
+
+  .reply-video {
+    margin-top: 16px;
+    p { font-weight: 600; margin-bottom: 8px; }
+    video { border-radius: 6px; }
+  }
+}
+
 /* GMAIL UI */
 .gmail-ui {
   display: flex;
   height: 100%;
   background: #f3f3f3;
   position: relative;
-
-  .gmail-notif {
-    position: absolute;
-    bottom: 16px;
-    right: 16px;
-    background: rgba(20, 20, 40, 0.92);
-    border: 0.5px solid rgba(255,255,255,0.2);
-    border-radius: 8px;
-    padding: 12px 16px;
-    color: white;
-    width: 280px;
-    cursor: pointer;
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
-    z-index: 100;
-    animation: slideIn 0.3s ease;
-
-    @keyframes slideIn {
-      from { transform: translateX(120%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-
-    .notif-icon {
-      width: 32px; height: 32px;
-      background: #0078d4;
-      border-radius: 6px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-    .notif-content { flex: 1; }
-    .notif-app { font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 2px; }
-    .notif-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
-    .notif-body { font-size: 12px; color: rgba(255,255,255,0.7); }
-    .notif-close {
-      background: none; border: none; color: rgba(255,255,255,0.4);
-      cursor: pointer; font-size: 14px;
-      &:hover { color: white; }
-    }
-  }
 
   .gmail-sidebar {
     width: 200px;

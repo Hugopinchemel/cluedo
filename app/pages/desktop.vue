@@ -42,9 +42,24 @@
           :focusedId="focusedId"
           :win="win"
       >
-        <component :is="appComponents[win.appId]" @changeBg="wallpaper = $event"/>
-      </WinWindow>
+  <component 
+    :is="appComponents[win.appId]" 
+    :initialUrl="win.appId === 'edge' ? win.initialUrl : undefined"
+    @changeBg="wallpaper = $event"
+  />      
+    </WinWindow>
     </main>
+
+    <!-- Notification pop-up -->
+        <div v-if="notifVisible" class="gmail-notif" @click="openApp('edge', 'https://www.gmail.com'); notifVisible = false">
+          <div class="notif-icon">✉</div>
+          <div class="notif-content">
+            <div class="notif-app">Courrier</div>
+            <div class="notif-title">Prof. Moriarty</div>
+            <div class="notif-body">Vous devez me remettre le rapport du labo...</div>
+          </div>
+          <button class="notif-close" @click.stop="notifVisible = false">✕</button>
+        </div>
 
     <!-- Taskbar -->
     <WinTaskbar
@@ -82,6 +97,8 @@
     <div aria-live="polite" class="sr-only" role="status">
       {{ announcement }}
     </div>
+
+    
 
     <!-- Context menu -->
     <WinContextMenu
@@ -176,6 +193,7 @@ const ctxVisible = ref(false)
 const ctxX = ref(0)
 const ctxY = ref(0)
 const announcement = ref('')
+const notifVisible = ref(true)
 
 // Watch windows to announce open/close
 watch(() => windows.value.length, (newCount, oldCount) => {
@@ -332,6 +350,46 @@ function closeMenus() {
 </script>
 
 <style scoped>
+.gmail-notif {
+    position: absolute;
+    bottom: 8%;
+    right: 16px;
+    background: rgba(20, 20, 40, 0.92);
+    border: 0.5px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: white;
+    width: 280px;
+    cursor: pointer;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    z-index: 100;
+    animation: slideIn 0.3s ease;
+
+    @keyframes slideIn {
+      from { transform: translateX(120%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .notif-icon {
+      width: 32px; height: 32px;
+      background: #0078d4;
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .notif-content { flex: 1; }
+    .notif-app { font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 2px; }
+    .notif-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+    .notif-body { font-size: 12px; color: rgba(255,255,255,0.7); }
+    .notif-close {
+      background: none; border: none; color: rgba(255,255,255,0.4);
+      cursor: pointer; font-size: 14px;
+      &:hover { color: white; }
+    }
+  }
+
 main#main-content {
   position: absolute;
   inset: 0;
