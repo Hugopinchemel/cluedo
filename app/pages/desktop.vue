@@ -13,7 +13,7 @@
       <!-- Desktop icons -->
       <ul aria-label="Icônes du bureau" class="desktop-icons">
         <li
-            v-for="icon in desktopIcons"
+            v-for="icon in visibleDesktopIcons"
             :key="icon.id"
             :style="{ position: 'absolute', left: icon.x + 'px', top: icon.y + 'px' }"
             class="desktop-icon-item"
@@ -25,7 +25,7 @@
               class="desktop-icon"
               @mousedown="onIconDragStart($event, icon)"
               @click.stop="selectedIcon = icon.id"
-              @dblclick.stop="openApp(icon.appId)"
+              @dblclick.stop="openAppWrapper(icon.appId)"
           >
             <img v-if="icon.icon.startsWith('/')" :src="icon.icon" alt="" aria-hidden="true" class="icon-glyph-img"
                  height="48" width="48"/>
@@ -46,14 +46,15 @@
             :is="appComponents[win.appId]"
             :initialUrl="win.appId === 'edge' ? win.initialUrl : undefined"
             @changeBg="wallpaper = $event"
+            @gmailUnlocked="onGmailUnlocked"
         />
       </WinWindow>
     </main>
 
     <!-- Notification pop-up -->
     <Transition name="slide-notif">
-      <div v-if="notifVisible" class="gmail-notif"
-           @click="openApp('edge', 'https://www.gmail.com'); notifVisible = false">
+      <div v-if="notifVisible && gmailUnlockedInEdge" class="gmail-notif"
+           @click="openAppWrapper('edge', 'https://www.gmail.com'); notifVisible = false">
         <div class="notif-header">
           <div class="notif-icon">✉</div>
           <div class="notif-app">Courrier</div>
@@ -96,7 +97,7 @@
     <WinNotificationCenter :open="notifOpen"/>
 
     <!-- Quick Actions Panel -->
-    <WinQuickSettings :open="qsOpen" @openSettings="openApp('settings')"/>
+    <WinQuickSettings :open="qsOpen" @openSettings="openAppWrapper('settings')"/>
 
     <!-- Screen reader announcements -->
     <div aria-live="polite" class="sr-only" role="status">
@@ -243,6 +244,8 @@ const wallpaper = ref(
 const selectedIcon = ref('')
 const shutdownActive = ref(false)
 const bootActive = ref(false)
+const unlockedStage = ref(0) // 0 = locked, 1 = consignes opened, 2 = rapport opened (full unlock)
+const gmailUnlockedInEdge = ref(false)
 
 function onShutdown() {
   closeMenus()
@@ -261,6 +264,10 @@ function onWakeUp() {
 
 function onBootDone() {
   bootActive.value = false
+}
+
+function onGmailUnlocked() {
+  gmailUnlockedInEdge.value = true
 }
 
 const draggingIcon = ref('')
@@ -296,23 +303,32 @@ const focusedId = computed(() => {
 })
 
 const desktopIcons = ref([
-  {id: 'trash', appId: 'explorer', icon: ICON_DESKTOP_TRASH, label: 'Corbeille', x: 0, y: 0},
   {id: 'thispc', appId: 'explorer', icon: ICON_DESKTOP_PC, label: 'Ce PC', x: 0, y: 5},
-  {id: 'explorer', appId: 'explorer', icon: ICON_DESKTOP_DOCS, label: 'Documents', x: 0, y: 0},
-  {id: 'notepad', appId: 'notepad', icon: ICON_DESKTOP_NOTEPAD, label: 'Bloc-notes', x: 0, y: 0},
-  {id: 'calc', appId: 'calculator', icon: ICON_DESKTOP_CALC, label: 'Calculatrice', x: 0, y: 0},
   {id: 'photos', appId: 'photos', icon: ICON_DESKTOP_PHOTOS, label: 'Photos', x: 0, y: 0},
-  {id: 'pdf', appId: 'pdfviewer', icon: ICON_DESKTOP_PDF, label: 'Rapport-Autopsie.pdf', x: 0, y: 0},
+  {id: 'pdf', appId: 'pdfviewer', icon: ICON_DESKTOP_PDF, label: 'Consignes.pdf', x: 0, y: 0},
   {id: 'pdf2', appId: 'pdfviewer2', icon: ICON_DESKTOP_PDF, label: "Rapport_Autopsie.pdf", x: 0, y: 0},
   {id: 'edge', appId: 'edge', icon: ICON_DESKTOP_EDGE, label: 'Microsoft Edge', x: 0, y: 0},
 ])
+
+// Computed icons: progressive unlocking
+// Stage 0: Only Consignes.pdf
+// Stage 1: Consignes.pdf AND Rapport_Autopsie.pdf
+// Stage 2: All applications
+const visibleDesktopIcons = computed(() => {
+  if (unlockedStage.value === 0) {
+    return desktopIcons.value.filter(icon => icon.id === 'pdf')
+  } else if (unlockedStage.value === 1) {
+    return desktopIcons.value.filter(icon => icon.id === 'pdf' || icon.id === 'pdf2')
+  }
+  return desktopIcons.value
+})
 
 function arrangeIcons() {
   const h = window.innerHeight - 60 // Taskbar + margin
   let currentX = GRID_OFFSET_X
   let currentY = GRID_OFFSET_Y
 
-  desktopIcons.value.forEach(icon => {
+  visibleDesktopIcons.value.forEach(icon => {
     if (currentY + GRID_H > h) {
       currentX += GRID_W
       currentY = GRID_OFFSET_Y
@@ -321,6 +337,37 @@ function arrangeIcons() {
     icon.y = currentY
     currentY += GRID_H
   })
+}
+
+function openAppWrapper(appId: string, initialUrl?: string) {
+  // Stage 0: Only allow opening Consignes.pdf
+  if (unlockedStage.value === 0 && appId !== 'pdfviewer') {
+    return
+  }
+
+  // Stage 1: Allow opening both PDFs
+  if (unlockedStage.value === 1 && appId !== 'pdfviewer' && appId !== 'pdfviewer2') {
+    return
+  }
+
+  // Open the app
+  openApp(appId, initialUrl)
+
+  // If opening Consignes PDF and not already in stage 1, move to stage 1 (show both PDFs)
+  if (appId === 'pdfviewer' && unlockedStage.value === 0) {
+    setTimeout(() => {
+      unlockedStage.value = 1
+      arrangeIcons()
+    }, 500)
+  }
+
+  // If opening Rapport_Autopsie PDF and not already in stage 2, move to stage 2 (full unlock)
+  if (appId === 'pdfviewer2' && unlockedStage.value === 1) {
+    setTimeout(() => {
+      unlockedStage.value = 2
+      arrangeIcons()
+    }, 500)
+  }
 }
 
 function onIconDragStart(e: MouseEvent, icon: any) {
@@ -372,10 +419,10 @@ const ctxItems = computed(() => [
     }
   },
   {separator: true},
-  {label: 'Nouveau', icon: ICON_FLUENT_NEW_DOC, action: () => openApp('notepad')},
+  {label: 'Nouveau', icon: ICON_FLUENT_NEW_DOC, action: () => openAppWrapper('notepad')},
   {separator: true},
-  {label: 'Personnaliser', icon: ICON_FLUENT_PERSONALIZE, action: () => openApp('settings')},
-  {label: "Paramètres d'affichage", icon: ICON_FLUENT_DISPLAY, action: () => openApp('settings')},
+  {label: 'Personnaliser', icon: ICON_FLUENT_PERSONALIZE, action: () => openAppWrapper('settings')},
+  {label: "Paramètres d'affichage", icon: ICON_FLUENT_DISPLAY, action: () => openAppWrapper('settings')},
 ])
 
 

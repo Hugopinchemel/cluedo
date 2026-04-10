@@ -2,16 +2,33 @@
 import {computed, onMounted, onUnmounted, ref} from 'vue'
 import {useWindows} from '~/composables/useWindows'
 
+const emit = defineEmits<{
+  gmailUnlocked: []
+}>()
+
 const currentUrl = ref('https://www.bing.com')
 const history = ref(['https://www.bing.com'])
 const historyIndex = ref(0)
 const urlInput = ref('https://www.bing.com')
+
+// Gmail unlock system
+const gmailUnlocked = ref(false)
+const instagramVisited = ref(false)
+const airbnbVisited = ref(false)
 
 const favorites = [
   {name: 'Instagram', url: 'https://www.instagram.com', icon: 'skill-icons:instagram'},
   {name: 'Airbnb', url: 'https://www.airbnb.com', icon: 'logos:airbnb-icon'},
   {name: 'Gmail', url: 'https://www.gmail.com', icon: 'logos:google-gmail'}
 ]
+
+// Computed: visible favorites based on unlock state
+const visibleFavorites = computed(() => {
+  if (gmailUnlocked.value) {
+    return favorites
+  }
+  return favorites.filter(f => f.name !== 'Gmail')
+})
 
 function navigate() {
   let url = urlInput.value.trim()
@@ -29,6 +46,20 @@ function goToUrl(url: string) {
   }
   history.value.push(url)
   historyIndex.value = history.value.length - 1
+
+  // Track visited sites for Gmail unlock
+  if (url.includes('instagram.com')) {
+    instagramVisited.value = true
+  }
+  if (url.includes('airbnb.com')) {
+    airbnbVisited.value = true
+  }
+
+  // Unlock Gmail when both Instagram and Airbnb have been visited
+  if (instagramVisited.value && airbnbVisited.value && !gmailUnlocked.value) {
+    gmailUnlocked.value = true
+    emit('gmailUnlocked')
+  }
 }
 
 function goBack() {
@@ -370,7 +401,7 @@ function shouldShowDate(messages: any[], index: number): boolean {
     <!-- Favorites Bar -->
     <div class="favorites-bar">
       <button
-          v-for="fav in favorites"
+          v-for="fav in visibleFavorites"
           :key="fav.url"
           class="fav-item"
           @click="goToUrl(fav.url)"
@@ -635,7 +666,7 @@ function shouldShowDate(messages: any[], index: number): boolean {
                 </div>
                 <div v-if="sentCorrect" class="video-bonus">
                   <video controls width="100%" style="border-radius: 6px; margin-top: 8px;">
-                    <source src="/videos/video1.mp4" type="video/mp4"/>
+                    <source src="/videos/Rush_explication.mp4" type="video/mp4"/>
                   </video>
                 </div>
               </div>
