@@ -218,28 +218,29 @@ const dateShort = computed(() =>
 }
 
 .search-bar {
-  height: 28px;
-  width: 220px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 14px;
+  height: 32px;
+  width: 240px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 0 12px;
+  gap: 12px;
+  padding: 0 16px;
   cursor: text;
   flex-shrink: 0;
-  transition: background 0.15s;
+  transition: all 0.15s;
 
   span {
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.5);
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
     white-space: nowrap;
     overflow: hidden;
   }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
   }
 }
 
@@ -265,7 +266,7 @@ const dateShort = computed(() =>
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  border-radius: 0;
   transition: background 0.15s;
   gap: 2px;
 

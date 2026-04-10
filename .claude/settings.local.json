@@ -13,7 +13,9 @@
       "Bash(cp /c/Users/Nebula/WebstormProjects/cluedo/app/assets/logo-windows/scalable/actions/system-shutdown-symbolic.svg /c/Users/Nebula/WebstormProjects/cluedo/public/icons/system-shutdown-symbolic.svg)",
       "Bash(cp /c/Users/Nebula/WebstormProjects/cluedo/app/assets/logo-windows/256x256/apps/multimedia-photo-manager.png /c/Users/Nebula/WebstormProjects/cluedo/public/icons/multimedia-photo-manager.png)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "mcp__claude_ai_Gmail__gmail_search_messages",
+      "mcp__claude_ai_Gmail__gmail_create_draft"
     ]
   }
 }

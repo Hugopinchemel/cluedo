@@ -28,7 +28,7 @@
           <div
               v-for="(photo, j) in group.photos"
               :key="j"
-              :style="{ backgroundImage: `url(${photo.url}&w=400&h=400&fit=crop)` }"
+              :style="{ backgroundImage: `url(${photo.url})` }"
               class="photo-tile"
               @click="selected = photo"
           >
@@ -44,7 +44,7 @@
     <Transition name="fade">
       <div v-if="selected" class="lightbox" @click.self="selected = null">
         <div class="lightbox-content">
-          <img :src="`${selected.url}&w=1200&h=800&fit=max`" alt="Photo"/>
+          <img :src="selected.url" alt="Photo"/>
         </div>
         <button class="lb-close" @click="selected = null">✕</button>
         <div class="lb-nav">
@@ -66,18 +66,17 @@ const activeTab = ref('Collection')
 const selected = ref<any>(null)
 
 const photoUrls = [
-  'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format',
-  'https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format',
-  'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format',
-  'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format',
-  'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format',
-  'https://images.unsplash.com/photo-1433086966358-54859d0ed716?auto=format',
-  'https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format',
-  'https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?auto=format',
-  'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format',
-  'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format',
-  'https://images.unsplash.com/photo-1500673922987-e212871fec22?auto=format',
-  'https://images.unsplash.com/photo-1518098268026-4e89f1a2cd8e?auto=format',
+  '/picture/img/1CA54070-43EC-4933-A9BE-CE04E2D31157.jpg',
+  '/picture/img/2528495E-005E-4A10-BA06-D698E57A2301.jpg',
+  '/picture/img/404E6095-706A-48AB-8850-0D559B4D00A7.jpg',
+  '/picture/img/44AEFE4A-689B-4E05-B4B0-6DAF8006FA99.jpg',
+  '/picture/img/50D8E143-9E28-448C-A0B4-11CC5CD007E0_4_5005_c.jpeg',
+  '/picture/img/925ADEB4-037C-47F3-BC8E-F2D48FEF17B8.jpg',
+  '/picture/img/95E64136-A643-4B01-8CA8-06DED143E648.jpg',
+  '/picture/img/BD5EC050-9BEA-4563-83CA-65EA1DC7F402_4_5005_c.jpeg',
+  '/picture/img/CE52A319-5B8F-4BDA-BB2B-CA6CA1DE8329.jpg',
+  '/picture/img/EC7BCC0F-2DC4-450D-869D-DE6B6ABA5450.jpg',
+  '/picture/img/F097F4B9-722F-4DA7-9A5B-E15A02650B3B.jpg',
 ]
 
 const photoGroups = [
@@ -91,7 +90,7 @@ const photoGroups = [
   },
   {
     date: 'Ce mois-ci · Mars 2026',
-    photos: Array.from({length: 4}, (_, i) => ({id: i + 8, url: photoUrls[i + 8]})),
+    photos: Array.from({length: 3}, (_, i) => ({id: i + 8, url: photoUrls[i + 8]})),
   },
 ]
 

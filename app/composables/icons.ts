@@ -7,6 +7,7 @@ export const ICON_APP_EDGE = '/icons/epiphany.png'
 export const ICON_APP_PHOTOS = '/icons/folder-icons/folder-picture.ico'
 export const ICON_APP_PDF = '/icons/app-type/app-pdf.png'
 export const ICON_APP_TERMINAL = '/icons/powershell.ico'
+export const ICON_APP_PAINT = '/icons/app-type/app-pdf.png' // Fallback for Paint
 export const ICON_APP_TRASH = '/icons/trash-empty.ico'
 export const ICON_APP_EDGE_LOGO = 'logos:microsoft-edge'
 
@@ -62,6 +63,7 @@ export const ICON_DESKTOP_SETTINGS = '/icons/epiphany.png'
 export const ICON_DESKTOP_PHOTOS = '/icons/folder-icons/folder-picture.ico'
 export const ICON_DESKTOP_PDF = '/icons/app-type/app-pdf.png'
 export const ICON_DESKTOP_TRASH = '/icons/trash-empty.ico'
+export const ICON_DESKTOP_EDGE = '/icons/epiphany.png'
 
 // ─── Paramètres Rapides (Quick Settings) ──────────────────────────────────────
 export const ICON_QS_WIFI = '/icons/wifi-full.ico'

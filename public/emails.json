@@ -1,0 +1,90 @@
+[
+  {
+    "id": 0,
+    "sender": "Chef de police",
+    "subject": "Dossier N°097 — URGENT",
+    "content": "Bonjour,<br><br>Je vous rappelle que vous devez me remettre le rapport de laboratoire <strong>avant vendredi 12 avril</strong> à 18h00.<br><br>Merci de m'envoyer le nom du coupable par mail.<br><br>Sans retour de votre part, une pénalité sera appliquée.<br><br>Cordialement,<br><strong>Directeur de police</strong><br><span style=\"color:#888;font-size:12px\">Département de Police — Bureau 214</span>",
+    "date": "10 Avril",
+    "folder": "inbox",
+    "unread": true,
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Police",
+    "suspects": [
+      {
+        "name": "Clément",
+        "email": "Monsieur le Chef de Police,\n\nAprès analyse de tous les indices, je pense que le coupable est Clément.\n\nCordialement,\nClara Moreau",
+        "response": "Merci pour votre réponse. Nous avons interrogé Clément mais les preuves ne sont pas suffisantes. Il a un alibi solide. Continuez vos investigations...\n\nChef de Police Dubois",
+        "correct": false
+      },
+      {
+        "name": "Arthur",
+        "email": "Monsieur le Chef de Police,\n\nAprès analyse de tous les indices, je pense que le coupable est Arthur.\n\nCordialement,\nClara Moreau",
+        "response": "Merci pour votre réponse. Nous avons interrogé Arthur mais les preuves ne sont pas suffisantes. Revenez vers nous avec plus d'éléments.\n\nChef de Police Dubois",
+        "correct": false
+      },
+      {
+        "name": "Mathieu",
+        "email": "Monsieur le Chef de Police,\n\nAprès analyse de tous les indices, je pense que le coupable est Mathieu.\n\nCordialement,\nClara Moreau",
+        "response": "Bravo, bien joué, c'était ça ! Mathieu a avoué lors de l'interrogatoire. Regardez la vidéo de l'entretien qu'on a passé avec le tueur.",
+        "correct": true
+      },
+      {
+        "name": "Daphné",
+        "email": "Monsieur le Chef de Police,\n\nAprès analyse de tous les indices, je pense que la coupable est Daphné.\n\nCordialement,\nClara Moreau",
+        "response": "Merci pour votre réponse. Nous avons interrogé Daphné mais elle a pu prouver qu'elle n'était pas sur les lieux.\n\nChef de Police Dubois",
+        "correct": false
+      }
+    ]
+  },
+  {
+    "id": 1,
+    "sender": "Service RH - Cluedo Corp",
+    "subject": "Note de service : Sécurité du bâtiment",
+    "content": "Bonjour à tous, suite aux récents incidents, nous vous rappelons que l'accès au bureau du Dr. Lenoir est strictement réservé au personnel autorisé après 18h.",
+    "date": "10 Avril",
+    "folder": "inbox",
+    "unread": true,
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=RH"
+  },
+  {
+    "id": 2,
+    "sender": "Colonel Moutarde",
+    "subject": "Le dîner de ce soir",
+    "content": "J'espère que le menu sera à la hauteur. J'ai apporté ma propre collection de couteaux, juste au cas où la viande serait trop dure...",
+    "date": "10 Avril",
+    "folder": "inbox",
+    "unread": false,
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Moutarde"
+  },
+  {
+    "id": 3,
+    "sender": "X-HACKER-X",
+    "subject": "I KNOW WHAT YOU DID",
+    "content": "You think you're safe? Click here to see your system logs: <button class='glitch-trigger'>CHECK LOGS</button>",
+    "date": "09 Avril",
+    "folder": "spam",
+    "unread": true,
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Hacker",
+    "type": "hacker"
+  },
+  {
+    "id": 4,
+    "sender": "Microsoft Windows Support",
+    "subject": "CRITICAL UPDATE REQUIRED",
+    "content": "Your Windows version is obsolete. Please click below to update now or your computer will restart automatically.\n\n<button class='bsod-trigger'>UPDATE NOW</button>",
+    "date": "08 Avril",
+    "folder": "spam",
+    "unread": true,
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Windows",
+    "type": "bsod"
+  },
+  {
+    "id": 5,
+    "sender": "McDonald's France",
+    "subject": "Confirmation de votre commande #42069",
+    "content": "Merci pour votre commande ! \n- 45 Nuggets \n- 12 Big Mac \n- 1 Salade (pour la forme) \n\nVotre livreur est en route. Il semble un peu perdu dans le manoir, il tourne en rond dans la bibliothèque.",
+    "date": "07 Avril",
+    "folder": "trash",
+    "unread": false,
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Mcdo"
+  }
+]

@@ -309,6 +309,7 @@ const backgrounds = [
   {name: 'teal', css: 'linear-gradient(135deg, #008080, #00b4b4)'},
   {name: 'dark', css: 'linear-gradient(135deg, #1a1a1a, #333)'},
   {name: 'sunset', css: 'linear-gradient(135deg, #ff6b35, #f7c59f, #efefd0)'},
+  {name: 'xp', css: 'linear-gradient(180deg, #3a6bc5 0%, #5a8fd4 30%, #87ceeb 50%, #4a9e3f 50%, #6ab848 65%, #3d8b37 80%, #2d6b27 100%)'},
 ]
 
 const accentColors = [

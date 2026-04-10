@@ -85,6 +85,22 @@ function op(o: string) {
 }
 
 function equals() {
+  // Easter egg: date du crime
+  if (display.value === '31415') {
+    expression.value = 'CODE ACCEPTÉ'
+    display.value = 'RDV 16/08'
+    currentOp = ''
+    newInput = true
+    return
+  }
+  if (display.value === '0804') {
+    expression.value = '???'
+    display.value = 'MATHIEU'
+    currentOp = ''
+    newInput = true
+    return
+  }
+
   const cur = parseFloat(display.value.replace(',', '.'))
   let result = cur
   if (currentOp === '+') result = prevValue + cur

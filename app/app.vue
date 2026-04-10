@@ -1,13 +1,29 @@
 <template>
-  <NuxtLayout>
-    <NuxtPage/>
-    <WinResponsiveGuard/>
-  </NuxtLayout>
+  <div :class="{ 'global-glitch': isGlobalGlitch }">
+    <NuxtLayout>
+      <NuxtPage/>
+      <WinResponsiveGuard/>
+    </NuxtLayout>
+    <WinBsodScreen v-if="isBsodActive"/>
+
+    <!-- Filtre SVG pour l'effet de fonte -->
+    <svg style="position: absolute; width: 0; height: 0; pointer-events: none;">
+      <filter id="melt-filter">
+        <feTurbulence baseFrequency="0.05 0.01" numOctaves="2" result="warp" type="fractalNoise"/>
+        <feColorMatrix in="warp" result="warpVertical" type="matrix"
+                       values="0 0 0 0 0.5 0 1 0 0 0 0 0 0 0 0.5 0 0 0 0 1"/>
+        <feDisplacementMap in="SourceGraphic" in2="warpVertical" scale="80" xChannelSelector="R" yChannelSelector="G"/>
+      </filter>
+    </svg>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import WinResponsiveGuard from '~/components/win/ResponsiveGuard.vue'
+import WinBsodScreen from '~/components/win/BsodScreen.vue'
+import {useWindows} from '~/composables/useWindows'
 
+const {isBsodActive, isGlobalGlitch} = useWindows()
 const hasInteracted = ref(false)
 
 const triggerFullscreen = () => {
@@ -66,3 +82,40 @@ useHead({
   ]
 })
 </script>
+
+<style lang="scss">
+:root {
+  background: black;
+}
+
+.global-glitch {
+  filter: url(#melt-filter);
+  animation: melt-animation 4.5s cubic-bezier(.47, .01, .63, .99) forwards;
+  pointer-events: none;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  background: black;
+  position: relative;
+  z-index: 999999;
+}
+
+@keyframes melt-animation {
+  0% {
+    transform: translateY(0);
+    filter: url(#melt-filter) blur(0px);
+  }
+  20% {
+    transform: translateY(100px);
+    filter: url(#melt-filter) blur(2px);
+  }
+  45% {
+    transform: translateY(400px);
+    filter: url(#melt-filter) blur(4px);
+  }
+  100% {
+    transform: translateY(120vh);
+    filter: url(#melt-filter) blur(10px);
+  }
+}
+</style>

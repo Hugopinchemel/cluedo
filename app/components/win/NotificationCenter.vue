@@ -122,14 +122,14 @@ const currentMonth = now.toLocaleDateString('fr-FR', {month: 'long', year: 'nume
 <style scoped>
 .notif-center {
   position: fixed;
-  right: 12px;
-  top: 12px;
-  bottom: calc(var(--taskbar-height) + 12px);
+  right: 0;
+  top: 0;
+  bottom: var(--taskbar-height);
   width: 360px;
-  background: rgba(30, 30, 30, 0.85);
+  background: rgba(30, 30, 30, 0.95);
   backdrop-filter: blur(30px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0;
   z-index: 7500;
   display: flex;
   flex-direction: column;
@@ -199,7 +199,7 @@ const currentMonth = now.toLocaleDateString('fr-FR', {month: 'long', year: 'nume
 .notif-item {
   padding: 12px;
   background: rgba(255, 255, 255, 0.06);
-  border-radius: 8px;
+  border-radius: 0;
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -294,7 +294,7 @@ const currentMonth = now.toLocaleDateString('fr-FR', {month: 'long', year: 'nume
   font-size: 12px;
   padding: 8px 0;
   color: rgba(255, 255, 255, 0.9);
-  border-radius: 50%;
+  border-radius: 0;
   cursor: default;
   aspect-ratio: 1;
   display: flex;
@@ -317,7 +317,7 @@ const currentMonth = now.toLocaleDateString('fr-FR', {month: 'long', year: 'nume
 }
 
 .slide-right-enter-from, .slide-right-leave-to {
-  transform: translateX(20px);
+  transform: translateX(360px);
   opacity: 0;
 }
 </style>

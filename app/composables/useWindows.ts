@@ -4,9 +4,11 @@ import {
     ICON_APP_EDGE,
     ICON_APP_EXPLORER,
     ICON_APP_NOTEPAD,
+    ICON_APP_PAINT,
     ICON_APP_PDF,
     ICON_APP_PHOTOS,
     ICON_APP_SETTINGS,
+    ICON_APP_TERMINAL,
 } from '~/composables/icons'
 
 export interface AppDef {
@@ -45,13 +47,31 @@ export const APPS: AppDef[] = [
     {id: 'photos', name: 'Photos', icon: ICON_APP_PHOTOS, defaultWidth: 820, defaultHeight: 560},
     {id: 'pdfviewer', name: 'Lecteur PDF', icon: ICON_APP_PDF, defaultWidth: 820, defaultHeight: 680},
     {id: 'pdfviewer2', name: "Rapport d'Autopsie", icon: ICON_APP_PDF, defaultWidth: 820, defaultHeight: 680},
+    {id: 'terminal', name: 'Windows PowerShell', icon: ICON_APP_TERMINAL, defaultWidth: 780, defaultHeight: 480},
+    {id: 'paint', name: 'Paint', icon: ICON_APP_PAINT, defaultWidth: 900, defaultHeight: 620},
 ]
 
 // Module-level singleton state
 const windows = ref<WinInstance[]>([])
+const isBsodActive = ref(false)
+const isGlobalGlitch = ref(false)
 let _z = 100
 
 export function useWindows() {
+    function triggerBsod() {
+        isBsodActive.value = true
+    }
+
+    function stopBsod() {
+        isBsodActive.value = false
+    }
+
+    function triggerGlobalGlitch(duration = 4500, delay = 1000) {
+        setTimeout(() => {
+            isGlobalGlitch.value = true
+            setTimeout(() => isGlobalGlitch.value = false, duration)
+        }, delay)
+    }
     function focusWindow(id: string) {
         const w = windows.value.find(w => w.id === id)
         if (w) {
@@ -150,6 +170,11 @@ export function useWindows() {
         windows,
         activeWindows,
         taskbarWindows,
+        isBsodActive,
+        isGlobalGlitch,
+        triggerBsod,
+        stopBsod,
+        triggerGlobalGlitch,
         openApp,
         closeWindow,
         minimizeWindow,

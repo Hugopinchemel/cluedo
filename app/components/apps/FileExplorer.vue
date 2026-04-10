@@ -128,7 +128,7 @@
               :class="{ selected: selected === item.name }"
               class="file-tile"
               @click="selected = item.name"
-              @dblclick="item.type === 'folder-icons' ? navigateTo(item.path ?? '') : null"
+              @dblclick="onItemDblClick(item)"
           >
             <img v-if="item.icon.startsWith('/')" :src="item.icon" alt="" class="file-icon-img" height="40" width="40"/>
             <Icon v-else :name="item.icon" class="file-icon"/>
@@ -148,7 +148,7 @@
               :class="{ selected: selected === item.name }"
               class="list-row"
               @click="selected = item.name"
-              @dblclick="item.type === 'folder-icons' ? navigateTo(item.path ?? '') : null"
+              @dblclick="onItemDblClick(item)"
           >
             <span class="col-name">
               <img v-if="item.icon.startsWith('/')" :src="item.icon" alt="" class="row-icon-img" height="16"
@@ -215,7 +215,11 @@ interface FsItem {
   date: string
   typeName: string
   size: string
+  openWith?: string
+  openUrl?: string
 }
+
+const {openApp} = useWindows()
 
 const activeTab = ref('Accueil')
 const viewMode = ref<'grid' | 'list'>('grid')
@@ -265,7 +269,8 @@ const filesystem: Record<string, FsItem[]> = {
       type: 'file',
       date: '01/04/2026 09:30',
       typeName: 'Fichier texte',
-      size: '2 Ko'
+      size: '2 Ko',
+      openWith: 'notepad',
     },
     {
       name: 'Projet.docx',
@@ -273,7 +278,8 @@ const filesystem: Record<string, FsItem[]> = {
       type: 'file',
       date: '31/03/2026 18:00',
       typeName: 'Document Word',
-      size: '45 Ko'
+      size: '45 Ko',
+      openWith: 'notepad',
     },
   ],
   'quick/downloads': [
@@ -283,7 +289,7 @@ const filesystem: Record<string, FsItem[]> = {
       type: 'file',
       date: '30/03/2026 14:00',
       typeName: 'Application',
-      size: '58 Mo'
+      size: '58 Mo',
     },
     {
       name: 'archive.zip',
@@ -291,7 +297,7 @@ const filesystem: Record<string, FsItem[]> = {
       type: 'file',
       date: '29/03/2026 11:30',
       typeName: 'Archive ZIP',
-      size: '120 Mo'
+      size: '120 Mo',
     },
     {
       name: 'photo.jpg',
@@ -299,7 +305,8 @@ const filesystem: Record<string, FsItem[]> = {
       type: 'file',
       date: '28/03/2026',
       typeName: 'Image JPEG',
-      size: '3,2 Mo'
+      size: '3,2 Mo',
+      openWith: 'photos',
     },
   ],
   'quick/documents': [
@@ -321,7 +328,15 @@ const filesystem: Record<string, FsItem[]> = {
       typeName: 'Dossier de fichiers',
       size: ''
     },
-    {name: 'CV.docx', icon: ICON_FILE_DOC, type: 'file', date: '15/03/2026', typeName: 'Document Word', size: '42 Ko'},
+    {
+      name: 'CV.docx',
+      icon: ICON_FILE_DOC,
+      type: 'file',
+      date: '15/03/2026',
+      typeName: 'Document Word',
+      size: '42 Ko',
+      openWith: 'notepad'
+    },
   ],
   'quick/pictures': [
     {
@@ -339,7 +354,8 @@ const filesystem: Record<string, FsItem[]> = {
       type: 'file',
       date: '01/01/2026',
       typeName: 'Image JPEG',
-      size: '8,4 Mo'
+      size: '8,4 Mo',
+      openWith: 'photos',
     },
     {
       name: 'photo_profil.png',
@@ -347,7 +363,8 @@ const filesystem: Record<string, FsItem[]> = {
       type: 'file',
       date: '15/02/2026',
       typeName: 'Image PNG',
-      size: '2,1 Mo'
+      size: '2,1 Mo',
+      openWith: 'photos',
     },
   ],
   'drive/c': [
@@ -387,6 +404,266 @@ const filesystem: Record<string, FsItem[]> = {
       typeName: 'Dossier de fichiers',
       size: ''
     },
+  ],
+  'quick/music': [
+    {
+      name: 'playlist.mp3',
+      icon: ICON_FILE_TEXT,
+      type: 'file',
+      date: '10/02/2026',
+      typeName: 'Fichier audio',
+      size: '4,5 Mo'
+    },
+    {
+      name: 'podcast.mp3',
+      icon: ICON_FILE_TEXT,
+      type: 'file',
+      date: '05/03/2026',
+      typeName: 'Fichier audio',
+      size: '12 Mo'
+    },
+  ],
+  'quick/videos': [
+    {
+      name: 'vacances.mp4',
+      icon: ICON_FILE_TEXT,
+      type: 'file',
+      date: '15/09/2025',
+      typeName: 'Fichier vidéo',
+      size: '250 Mo'
+    },
+    {
+      name: 'tuto_vue.mp4',
+      icon: ICON_FILE_TEXT,
+      type: 'file',
+      date: '20/03/2026',
+      typeName: 'Fichier vidéo',
+      size: '180 Mo'
+    },
+  ],
+  'quick/documents/travail': [
+    {
+      name: 'rapport_mensuel.docx',
+      icon: ICON_FILE_DOC,
+      type: 'file',
+      date: '01/04/2026',
+      typeName: 'Document Word',
+      size: '38 Ko',
+      openWith: 'notepad'
+    },
+    {
+      name: 'notes_reunion.txt',
+      icon: ICON_FILE_TEXT,
+      type: 'file',
+      date: '28/03/2026',
+      typeName: 'Fichier texte',
+      size: '5 Ko',
+      openWith: 'notepad'
+    },
+    {
+      name: 'budget_2026.docx',
+      icon: ICON_FILE_DOC,
+      type: 'file',
+      date: '15/03/2026',
+      typeName: 'Document Word',
+      size: '22 Ko',
+      openWith: 'notepad'
+    },
+  ],
+  'quick/documents/perso': [
+    {
+      name: 'liste_courses.txt',
+      icon: ICON_FILE_TEXT,
+      type: 'file',
+      date: '05/04/2026',
+      typeName: 'Fichier texte',
+      size: '1 Ko',
+      openWith: 'notepad'
+    },
+    {
+      name: 'idees_vacances.docx',
+      icon: ICON_FILE_DOC,
+      type: 'file',
+      date: '20/03/2026',
+      typeName: 'Document Word',
+      size: '15 Ko',
+      openWith: 'notepad'
+    },
+  ],
+  'quick/pictures/vacances': [
+    {
+      name: 'plage_sunset.jpg',
+      icon: ICON_FOLDER_PICTURES,
+      type: 'file',
+      date: '08/09/2025',
+      typeName: 'Image JPEG',
+      size: '5,2 Mo',
+      openWith: 'photos'
+    },
+    {
+      name: 'groupe.jpg',
+      icon: ICON_FOLDER_PICTURES,
+      type: 'file',
+      date: '09/09/2025',
+      typeName: 'Image JPEG',
+      size: '3,8 Mo',
+      openWith: 'photos'
+    },
+    {
+      name: 'panorama.png',
+      icon: ICON_FOLDER_PICTURES,
+      type: 'file',
+      date: '10/09/2025',
+      typeName: 'Image PNG',
+      size: '12 Mo',
+      openWith: 'photos'
+    },
+  ],
+  'drive/c/users': [
+    {
+      name: 'Hugo',
+      icon: ICON_FOLDER_GENERIC,
+      type: 'folder-icons',
+      path: 'quick/desktop',
+      date: '01/04/2026',
+      typeName: 'Dossier de fichiers',
+      size: ''
+    },
+    {
+      name: 'Public',
+      icon: ICON_FOLDER_GENERIC,
+      type: 'folder-icons',
+      path: 'drive/c/users/public',
+      date: '01/04/2026',
+      typeName: 'Dossier de fichiers',
+      size: ''
+    },
+  ],
+  'drive/c/users/public': [
+    {
+      name: 'Documents',
+      icon: ICON_FOLDER_DOCUMENTS,
+      type: 'folder-icons',
+      path: 'quick/documents',
+      date: '01/04/2026',
+      typeName: 'Dossier de fichiers',
+      size: ''
+    },
+  ],
+  'drive/c/windows': [
+    {
+      name: 'System32',
+      icon: ICON_FOLDER_GENERIC,
+      type: 'folder-icons',
+      path: 'drive/c/windows/sys32',
+      date: '01/04/2026',
+      typeName: 'Dossier de fichiers',
+      size: ''
+    },
+    {
+      name: 'Fonts',
+      icon: ICON_FOLDER_GENERIC,
+      type: 'folder-icons',
+      path: 'drive/c/windows/fonts',
+      date: '01/04/2026',
+      typeName: 'Dossier de fichiers',
+      size: ''
+    },
+  ],
+  'drive/c/windows/sys32': [
+    {name: 'cmd.exe', icon: ICON_FILE_EXE, type: 'file', date: '01/04/2026', typeName: 'Application', size: '289 Ko'},
+    {name: 'notepad.exe', icon: ICON_FILE_EXE, type: 'file', date: '01/04/2026', typeName: 'Application', size: '201 Ko'},
+    {name: 'ne_lis_pas.txt', icon: ICON_FILE_TEXT, type: 'file', date: '01/04/2026 03:14', typeName: 'Fichier texte', size: '1 Ko', openWith: 'edge', openUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'},
+  ],
+  'drive/c/windows/fonts': [
+    {
+      name: 'Arial.ttf',
+      icon: ICON_FILE_TEXT,
+      type: 'file',
+      date: '01/04/2026',
+      typeName: 'Fichier de police',
+      size: '764 Ko'
+    },
+    {
+      name: 'Segoe UI.ttf',
+      icon: ICON_FILE_TEXT,
+      type: 'file',
+      date: '01/04/2026',
+      typeName: 'Fichier de police',
+      size: '1,2 Mo'
+    },
+  ],
+  'drive/c/pf': [
+    {
+      name: 'Microsoft Edge',
+      icon: ICON_FOLDER_GENERIC,
+      type: 'folder-icons',
+      path: 'drive/c/pf/edge',
+      date: '01/04/2026',
+      typeName: 'Dossier de fichiers',
+      size: ''
+    },
+    {
+      name: 'Windows Defender',
+      icon: ICON_FOLDER_GENERIC,
+      type: 'folder-icons',
+      path: 'drive/c/pf/defender',
+      date: '01/04/2026',
+      typeName: 'Dossier de fichiers',
+      size: ''
+    },
+  ],
+  'drive/c/pf/edge': [
+    {
+      name: 'msedge.exe',
+      icon: ICON_FILE_EXE,
+      type: 'file',
+      date: '01/04/2026',
+      typeName: 'Application',
+      size: '3,4 Mo',
+      openWith: 'edge'
+    },
+  ],
+  'drive/c/pf/defender': [
+    {
+      name: 'MsMpEng.exe',
+      icon: ICON_FILE_EXE,
+      type: 'file',
+      date: '01/04/2026',
+      typeName: 'Application',
+      size: '12 Mo'
+    },
+  ],
+  'drive/c/pf86': [
+    {
+      name: 'Common Files',
+      icon: ICON_FOLDER_GENERIC,
+      type: 'folder-icons',
+      path: 'drive/c/pf86/common',
+      date: '01/04/2026',
+      typeName: 'Dossier de fichiers',
+      size: ''
+    },
+  ],
+  'drive/c/pf86/common': [
+    {
+      name: 'readme.txt',
+      icon: ICON_FILE_TEXT,
+      type: 'file',
+      date: '01/04/2026',
+      typeName: 'Fichier texte',
+      size: '1 Ko',
+      openWith: 'notepad'
+    },
+  ],
+  'drive/d': [
+    {name: 'Aucun disque inséré', icon: ICON_FILE_TEXT, type: 'file', date: '', typeName: '', size: ''},
+  ],
+  'trash': [
+    {name: 'conversation_supprimee.txt', icon: ICON_FILE_TEXT, type: 'file', date: '31/03/2026 23:58', typeName: 'Fichier texte', size: '4 Ko', openWith: 'notepad'},
+    {name: 'ancien_projet.docx', icon: ICON_FILE_DOC, type: 'file', date: '20/03/2026', typeName: 'Document Word', size: '33 Ko', openWith: 'notepad'},
+    {name: 'recu_pharmacie.pdf', icon: ICON_FILE_DOC, type: 'file', date: '29/03/2026', typeName: 'Document PDF', size: '156 Ko'},
+    {name: 'screenshot_old.png', icon: ICON_FOLDER_PICTURES, type: 'file', date: '15/03/2026', typeName: 'Image PNG', size: '1,5 Mo', openWith: 'photos'},
   ],
   'default': [],
 }
@@ -441,6 +718,14 @@ function goUp() {
   if (parts.length > 1) {
     const parentPath = parts.slice(0, -1).join('/')
     navigateTo(parentPath)
+  }
+}
+
+function onItemDblClick(item: FsItem) {
+  if (item.type === 'folder-icons' && item.path) {
+    navigateTo(item.path)
+  } else if (item.type === 'file' && item.openWith) {
+    openApp(item.openWith, item.openUrl)
   }
 }
 

@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import {computed, ref} from 'vue'
+import {computed, onMounted, onUnmounted, ref} from 'vue'
+import {useWindows} from '~/composables/useWindows'
 
 const currentUrl = ref('https://www.bing.com')
 const history = ref(['https://www.bing.com'])
@@ -50,8 +51,85 @@ const isInstagram = computed(() => currentUrl.value.includes('instagram.com'))
 const isAirbnb = computed(() => currentUrl.value.includes('airbnb.com'))
 const isGmail = computed(() => currentUrl.value.includes('gmail.com'))
 
+const {triggerBsod, triggerGlobalGlitch} = useWindows()
 
-// Instagram State
+// Gmail State
+const gmailEmails = ref([])
+const activeGmailFolder = ref('inbox')
+const selectedEmail = ref(null)
+const isRetroMode = ref(false)
+
+const replyOpen = ref(false)
+const replySent = ref(false)
+const selectedSuspect = ref<any>(null)
+const sentResponse = ref('')
+const sentCorrect = ref(false)
+
+async function fetchEmails() {
+  try {
+    const res = await fetch('/emails.json')
+    gmailEmails.value = await res.json()
+  } catch (e) {
+    console.error('Failed to fetch emails', e)
+  }
+}
+
+fetchEmails()
+
+const filteredEmails = computed(() => {
+  return gmailEmails.value.filter(e => e.folder === activeGmailFolder.value)
+})
+
+function openEmail(email) {
+  selectedEmail.value = email
+  email.unread = false
+  replyOpen.value = false
+  replySent.value = false
+  selectedSuspect.value = null
+  sentResponse.value = ''
+  sentCorrect.value = false
+}
+
+function selectSuspect(suspect: any) {
+  selectedSuspect.value = suspect
+}
+
+function sendReply() {
+  if (selectedEmail.value.suspects && selectedSuspect.value) {
+    sentResponse.value = selectedSuspect.value.response
+    sentCorrect.value = selectedSuspect.value.correct
+    replySent.value = true
+    replyOpen.value = false
+  }
+}
+
+function handleEmailClick(e: MouseEvent) {
+  const target = e.target as HTMLElement
+  if (target.classList.contains('glitch-trigger')) {
+    triggerGlobalGlitch()
+  } else if (target.classList.contains('bsod-trigger')) {
+    triggerBsod()
+  }
+}
+
+// Konami Code
+const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a']
+let konamiIndex = 0
+
+function handleKeydown(e) {
+  if (e.key === konamiCode[konamiIndex]) {
+    konamiIndex++
+    if (konamiIndex === konamiCode.length) {
+      isRetroMode.value = !isRetroMode.value
+      konamiIndex = 0
+    }
+  } else {
+    konamiIndex = 0
+  }
+}
+
+onMounted(() => window.addEventListener('keydown', handleKeydown))
+onUnmounted(() => window.removeEventListener('keydown', handleKeydown))
 const activeChat = ref(0)
 const instagramChats = [
   {
@@ -59,28 +137,72 @@ const instagramChats = [
     user: 'Clément',
     avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah',
     messages: [
-      { text: 'Hey Salut Clara ! Tu vas bien ?', me: false, date: '14 avril' },
-      { text: 'Salut Clément ! Ça va super et toi ?', me: true, date: '14 avril' },
-      { text: 'Ça va ! Dis, j\'ai une place de ciné en trop pour ce week-end, ça te dirait ? ', me: false, date: '14 avril' },
-      { text: 'Carrément ! On se dit quelle heure ?', me: true, date: '14 avril' },
-      { text: 'Go pour 19h !', me: false, date: '14 avril' },
-      { text: 'C’était top ce soir ! Ça te dit de se refaire une sortie demain ? Genre boire un verre en ville ?', me: false, date: '19 avril' },
-      { text: 'Ah demain je peux pas, j\'ai déjà un truc de prévu ! Une prochaine !', me: true, date: '19 avril' },
-      { text: 'Pas de souci ! Bonne soirée alors ❤️', me: false, date: '19 avril' },
-      { text: 'Hey Clara ! Dispo pour se voir aujourd’hui ? Je suis pas loin de chez toi là', me: false, date: '26 avril' },
-      { text: 'Salut Clem ! Désolée je suis pas mal occupée en ce moment, je sors pas trop.', me: true, date: '26 avril' },
-      { text: 'Salut Clara, faut que je te demande un truc... J\'ai l\'impression que tu m\'évites depuis le ciné ?', me: false, date: '1 mai' },
-      { text: 'C\'est pas que je t\'évite Clem, c\'est juste que je préfère qu\'on reste sur des sorties en groupe.', me: true, date: '1 mai' },
-      { text: 'Pourquoi ? J\'ai fait un truc de travers ?', me: false, date: '1 mai' },
-      { text: 'Mais non ! C’est juste que je sens que c’est un peu ambigu entre nous et je veux pas qu’il y ait de malentendu.', me: true, date: '1 mai' },
-      { text: 'Clément, je t’adore, mais c’est purement amical de mon côté. Je veux pas te faire de faux espoirs.', me: true, date: '1 mai' },
-      { text: 'Ah... d\'accord. Je pensais pas que c\'était si flagrant.', me: false, date: '1 mai' },
-      { text: 'Je sais pas trop quoi dire là... Je vais digérer le truc.', me: false, date: '1 mai' },
-      { text: 'Désolé !', me: true, date: '1 mai' },
-      { text: 'Je n\'arrête pas de relire nos derniers messages... J\'arrive pas à croire que c\'est fini comme ça.', me: false, date: '25 août' },
-      { text: 'Je m\'en veux d\'avoir été lourd avec toi, de ne pas avoir juste profité du moment sans rien attendre en retour.', me: false, date: '25 août' },
-      { text: 'T\'étais la personne la plus vraie de ce groupe. Mimizan n\'aura plus aucun sens maintenant.', me: false, date: '25 août' },
-      { text: 'Tu vas me manquer Clara. Vraiment. ❤️', me: false, date: '25 août' },
+      {text: 'Hey Salut Clara ! Tu vas bien ?', me: false, date: '14 avril'},
+      {text: 'Salut Clément ! Ça va super et toi ?', me: true, date: '14 avril'},
+      {
+        text: 'Ça va ! Dis, j\'ai une place de ciné en trop pour ce week-end, ça te dirait ? ',
+        me: false,
+        date: '14 avril'
+      },
+      {text: 'Carrément ! On se dit quelle heure ?', me: true, date: '14 avril'},
+      {text: 'Go pour 19h !', me: false, date: '14 avril'},
+      {
+        text: 'C’était top ce soir ! Ça te dit de se refaire une sortie demain ? Genre boire un verre en ville ?',
+        me: false,
+        date: '19 avril'
+      },
+      {text: 'Ah demain je peux pas, j\'ai déjà un truc de prévu ! Une prochaine !', me: true, date: '19 avril'},
+      {text: 'Pas de souci ! Bonne soirée alors ❤️', me: false, date: '19 avril'},
+      {
+        text: 'Hey Clara ! Dispo pour se voir aujourd’hui ? Je suis pas loin de chez toi là',
+        me: false,
+        date: '26 avril'
+      },
+      {
+        text: 'Salut Clem ! Désolée je suis pas mal occupée en ce moment, je sors pas trop.',
+        me: true,
+        date: '26 avril'
+      },
+      {
+        text: 'Salut Clara, faut que je te demande un truc... J\'ai l\'impression que tu m\'évites depuis le ciné ?',
+        me: false,
+        date: '1 mai'
+      },
+      {
+        text: 'C\'est pas que je t\'évite Clem, c\'est juste que je préfère qu\'on reste sur des sorties en groupe.',
+        me: true,
+        date: '1 mai'
+      },
+      {text: 'Pourquoi ? J\'ai fait un truc de travers ?', me: false, date: '1 mai'},
+      {
+        text: 'Mais non ! C’est juste que je sens que c’est un peu ambigu entre nous et je veux pas qu’il y ait de malentendu.',
+        me: true,
+        date: '1 mai'
+      },
+      {
+        text: 'Clément, je t’adore, mais c’est purement amical de mon côté. Je veux pas te faire de faux espoirs.',
+        me: true,
+        date: '1 mai'
+      },
+      {text: 'Ah... d\'accord. Je pensais pas que c\'était si flagrant.', me: false, date: '1 mai'},
+      {text: 'Je sais pas trop quoi dire là... Je vais digérer le truc.', me: false, date: '1 mai'},
+      {text: 'Désolé !', me: true, date: '1 mai'},
+      {
+        text: 'Je n\'arrête pas de relire nos derniers messages... J\'arrive pas à croire que c\'est fini comme ça.',
+        me: false,
+        date: '25 août'
+      },
+      {
+        text: 'Je m\'en veux d\'avoir été lourd avec toi, de ne pas avoir juste profité du moment sans rien attendre en retour.',
+        me: false,
+        date: '25 août'
+      },
+      {
+        text: 'T\'étais la personne la plus vraie de ce groupe. Mimizan n\'aura plus aucun sens maintenant.',
+        me: false,
+        date: '25 août'
+      },
+      {text: 'Tu vas me manquer Clara. Vraiment. ❤️', me: false, date: '25 août'},
     ]
   },
   {
@@ -88,43 +210,87 @@ const instagramChats = [
     user: 'Daphné',
     avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex',
     messages: [
-      { text: 'Clara, j\'ai besoin de te parler de quelque chose...', me: false, date: '12 avril' },
-      { text: 'Oui ! Qu\'est-ce qu\'il y a ?', me: true, date: '12 avril' },
-      { text: 'Hier j\'étais en soirée avec Mathieu... et on s\'est embrassé...', me: false, date: '12 avril' },
-      { text: 'Mais Daphné, tu me fais une blague ?', me: true, date: '12 avril' },
-      { text: 'Écoute, je te jure, j\'étais complètement bourré et je regrette vraiment ce que j\'ai fait...', me: false, date: '12 avril' },
-      { text: 'Arthur est au courant de ça ?', me: true, date: '12 avril' },
-      { text: 'Non, je sais pas comment abordé ça avec lui..', me: false, date: '12 avril' },
-      { text: 'Tu dois lui en parler et au plus vite Daph !', me: true, date: '12 avril' },
-      { text: 'Je lui en parlerai oui promis !', me: false, date: '12 avril' },
-      { text: 'Je te fais confiance !', me: true, date: '12 avril' },
-      { text: 'Clara, faut que je te dise un truc !', me: false, date: '26 avril' },
-      { text: 'Dis moi ? T\'as enfin décider d\'en parler à Arthur ?', me: true, date: '26 avril' },
-      { text: 'Ah non...' , me: false, date: '26 avril' },
-      { text: 'Pour être tout à fait honnête, j\'ai revu mathieu et il m\'a invité chez lui.' , me: false, date: '26 avril' },
-      { text: 'J\'ai passé la soirée là-bas et on a ...' , me: false, date: '26 avril' },
-      { text: 'Tu te fou de moi ?? ' , me: true, date: '26 avril' },
-      { text: 'T\'es pas sérieuse ? ' , me: true, date: '26 avril' },
-      { text: 'Je plaisante pas Clara, mais s\'il te plaît comprends moi ! ' , me: false, date: '26 avril' },
-      { text: 'Comprendre quoi ??? Que t\'as trompé ton mec ? ' , me: true, date: '26 avril' },
-      { text: 'Et puis j\'imagine que Arthur ne sait toujours rien ?' , me: true, date: '26 avril' },
-      { text: '...' , me: false, date: '26 avril' },
-      { text: 'Tu me déçois énormément Daphné.' , me: true, date: '26 avril' },
-      { text: 'Clara.. je sais que tu m\'en veux toujours, mais tu me manques trop. On peut pas rester comme ça pour une erreur que j\'ai faite.' , me: false, date: '10 mai' },
-      { text: 'C\'est pas "une erreur", Daph, c\'est la situation entière qui est nase. Mais bon... tu me manques aussi, j\'avoue.' , me: true, date: '10 mai' },
-      { text: 'Je te jure que je vais régler ça. On peut se voir ? Juste nous deux ?' , me: false, date: '10 mai' },
-      { text: 'Ok. On se voit, mais on parle pas de Mathieu, j\'ai besoin de décompresser.' , me: true, date: '10 mai' },
-      { text: 'Trop hâte de la soirée de demain ! Arthur m\'a demandé si tu venais avec Clément.' , me: false, date: '18 mai' },
-      { text: 'Oui on sera là. Par contre, il m\'a posé des questions sur tes "retards" au boulot l\'autre jour... J\'ai dû inventer un truc pour te couvrir.' , me: true, date: '18 mai' },
-      { text: 'Merci Clara, t\'es la meilleure, je te revaudrai ça ! ❤️' , me: false, date: '18 mai' },
-      { text: 'Me remercie pas, je me sens super mal de lui mentir en plein visage. Fais en sorte que ça n\'arrive plus. ️' , me: true, date: '18 mai' },
-      { text: 'Salut Daphné ! Avec Clément et Mathieu on voulait organiser une soirée pour se revoir tous ensemble' , me: true, date: '6 Août' },
-      { text: 'Ce serait pour un airbnb à Mimizan le 16 au 23 août ? Vous seriez dispo ?' , me: true, date: '6 Août' },
-      { text: 'Salut Clara !! Ouii avec plaisir !! Ça fait super longtemps qu\'on s\'est pas vu en plus !  ' , me: false, date: '6 Août' },
-      { text: 'Super !! Je réserve ça alors ! Je pense que ce serait bien aussi que tu te décides d\'agir ! Mon quota de mensonges pour Arthur est épuisé. ' , me: true, date: '6 Août' },
-      { text: 'Je sais Clara... j\'y pense tout le temps je te jure. Mais là c\'est pas le bon moment, il est tendu avec le boulot... Je lui dirai juste après le séjour, promis ! On en profite une dernière fois tous ensemble ? ' , me: false, date: '6 Août' },
-      { text: 'Tu disais déjà ça les mois derniers Daphné... Bref, on en reparlera.' , me: true, date: '6 Août' },
-      { text: 'Ce weekend soit tu lui dis, soit c\'est moi qui le fait..' , me: true, date: '16 Août' },
+      {text: 'Clara, j\'ai besoin de te parler de quelque chose...', me: false, date: '12 avril'},
+      {text: 'Oui ! Qu\'est-ce qu\'il y a ?', me: true, date: '12 avril'},
+      {text: 'Hier j\'étais en soirée avec Mathieu... et on s\'est embrassé...', me: false, date: '12 avril'},
+      {text: 'Mais Daphné, tu me fais une blague ?', me: true, date: '12 avril'},
+      {
+        text: 'Écoute, je te jure, j\'étais complètement bourré et je regrette vraiment ce que j\'ai fait...',
+        me: false,
+        date: '12 avril'
+      },
+      {text: 'Arthur est au courant de ça ?', me: true, date: '12 avril'},
+      {text: 'Non, je sais pas comment abordé ça avec lui..', me: false, date: '12 avril'},
+      {text: 'Tu dois lui en parler et au plus vite Daph !', me: true, date: '12 avril'},
+      {text: 'Je lui en parlerai oui promis !', me: false, date: '12 avril'},
+      {text: 'Je te fais confiance !', me: true, date: '12 avril'},
+      {text: 'Clara, faut que je te dise un truc !', me: false, date: '26 avril'},
+      {text: 'Dis moi ? T\'as enfin décider d\'en parler à Arthur ?', me: true, date: '26 avril'},
+      {text: 'Ah non...', me: false, date: '26 avril'},
+      {
+        text: 'Pour être tout à fait honnête, j\'ai revu mathieu et il m\'a invité chez lui.',
+        me: false,
+        date: '26 avril'
+      },
+      {text: 'J\'ai passé la soirée là-bas et on a ...', me: false, date: '26 avril'},
+      {text: 'Tu te fou de moi ?? ', me: true, date: '26 avril'},
+      {text: 'T\'es pas sérieuse ? ', me: true, date: '26 avril'},
+      {text: 'Je plaisante pas Clara, mais s\'il te plaît comprends moi ! ', me: false, date: '26 avril'},
+      {text: 'Comprendre quoi ??? Que t\'as trompé ton mec ? ', me: true, date: '26 avril'},
+      {text: 'Et puis j\'imagine que Arthur ne sait toujours rien ?', me: true, date: '26 avril'},
+      {text: '...', me: false, date: '26 avril'},
+      {text: 'Tu me déçois énormément Daphné.', me: true, date: '26 avril'},
+      {
+        text: 'Clara.. je sais que tu m\'en veux toujours, mais tu me manques trop. On peut pas rester comme ça pour une erreur que j\'ai faite.',
+        me: false,
+        date: '10 mai'
+      },
+      {
+        text: 'C\'est pas "une erreur", Daph, c\'est la situation entière qui est nase. Mais bon... tu me manques aussi, j\'avoue.',
+        me: true,
+        date: '10 mai'
+      },
+      {text: 'Je te jure que je vais régler ça. On peut se voir ? Juste nous deux ?', me: false, date: '10 mai'},
+      {text: 'Ok. On se voit, mais on parle pas de Mathieu, j\'ai besoin de décompresser.', me: true, date: '10 mai'},
+      {
+        text: 'Trop hâte de la soirée de demain ! Arthur m\'a demandé si tu venais avec Clément.',
+        me: false,
+        date: '18 mai'
+      },
+      {
+        text: 'Oui on sera là. Par contre, il m\'a posé des questions sur tes "retards" au boulot l\'autre jour... J\'ai dû inventer un truc pour te couvrir.',
+        me: true,
+        date: '18 mai'
+      },
+      {text: 'Merci Clara, t\'es la meilleure, je te revaudrai ça ! ❤️', me: false, date: '18 mai'},
+      {
+        text: 'Me remercie pas, je me sens super mal de lui mentir en plein visage. Fais en sorte que ça n\'arrive plus. ️',
+        me: true,
+        date: '18 mai'
+      },
+      {
+        text: 'Salut Daphné ! Avec Clément et Mathieu on voulait organiser une soirée pour se revoir tous ensemble',
+        me: true,
+        date: '6 Août'
+      },
+      {text: 'Ce serait pour un airbnb à Mimizan le 16 au 23 août ? Vous seriez dispo ?', me: true, date: '6 Août'},
+      {
+        text: 'Salut Clara !! Ouii avec plaisir !! Ça fait super longtemps qu\'on s\'est pas vu en plus !  ',
+        me: false,
+        date: '6 Août'
+      },
+      {
+        text: 'Super !! Je réserve ça alors ! Je pense que ce serait bien aussi que tu te décides d\'agir ! Mon quota de mensonges pour Arthur est épuisé. ',
+        me: true,
+        date: '6 Août'
+      },
+      {
+        text: 'Je sais Clara... j\'y pense tout le temps je te jure. Mais là c\'est pas le bon moment, il est tendu avec le boulot... Je lui dirai juste après le séjour, promis ! On en profite une dernière fois tous ensemble ? ',
+        me: false,
+        date: '6 Août'
+      },
+      {text: 'Tu disais déjà ça les mois derniers Daphné... Bref, on en reparlera.', me: true, date: '6 Août'},
+      {text: 'Ce weekend soit tu lui dis, soit c\'est moi qui le fait..', me: true, date: '16 Août'},
 
     ]
   }
@@ -142,93 +308,12 @@ const airbnbListing = {
   ],
   description: 'Une villa spacieuse avec 3 chambres, un grand salon, une cuisine ouverte sur le salon. Idéal pour les soirées en famille.'
 }
+
 function shouldShowDate(messages: any[], index: number): boolean {
   if (index === 0) return true
   return messages[index].date !== messages[index - 1].date
 }
 
-// Gmail State
-const gmailOpen = ref(false)
-const selectedMail = ref(0)
-const replyOpen = ref(false)
-const replySent = ref(false)
-const replyText = ref('')
-const notifVisible = ref(true)
-
-const mails = [
-  {
-    id: 0, unread: true,
-    from: 'Chef de police', email: 'Chef.police@police.fr',
-    subject: 'Dossier N°097 — URGENT',
-    preview: 'Vous devez me remettre le coupable avant aujourd\'hui 18h00.',
-    date: '10:42',
-    body: `Bonjour,<br><br>Je vous rappelle que vous devez me remettre le rapport de laboratoire <strong>avant vendredi 12 avril</strong> à 18h00.<br><br>Merci de m'envoyer le nom du coupable par mail.<br><br>Sans retour de votre part, une pénalité sera appliquée.<br><br>Cordialement,<br><strong>Directeur de police</strong><br><span style="color:#888;font-size:12px">Département de Police — Bureau 214</span>`,
-    suspects: [   // ← c'est ça qui manquait !
-      {
-        name: 'Clément',
-        email: `Monsieur le Chef de Police,\n\nAprès analyse de tous les indices, je pense que le coupable est Clément.\n\nCordialement,\nClara Moreau`,
-        response: `Merci pour votre réponse. Nous avons interrogé Clément mais les preuves ne sont pas suffisantes. Il a un alibi solide. Continuez vos investigations...\n\nChef de Police Dubois`,
-        correct: false,
-      },
-      {
-        name: 'Arthur',
-        email: `Monsieur le Chef de Police,\n\nAprès analyse de tous les indices, je pense que le coupable est Arthur.\n\nCordialement,\nClara Moreau`,
-        response: `Merci pour votre réponse. Nous avons interrogé Arthur mais les preuves ne sont pas suffisantes. Revenez vers nous avec plus d'éléments.\n\nChef de Police Dubois`,
-        correct: false,
-      },
-      {
-        name: 'Mathieu',
-        email: `Monsieur le Chef de Police,\n\nAprès analyse de tous les indices, je pense que le coupable est Mathieu.\n\nCordialement,\nClara Moreau`,
-        response: `Bravo, bien joué, c'était ça ! Mathieu a avoué lors de l'interrogatoire. Regardez la vidéo de l'entretien qu'on a passé avec le tueur.`,
-        correct: true,
-      },
-      {
-        name: 'Daphné',
-        email: `Monsieur le Chef de Police,\n\nAprès analyse de tous les indices, je pense que la coupable est Daphné.\n\nCordialement,\nClara Moreau`,
-        response: `Merci pour votre réponse. Nous avons interrogé Daphné mais elle a pu prouver qu'elle n'était pas sur les lieux.\n\nChef de Police Dubois`,
-        correct: false,
-      },
-    ]
-  }
-]
-
-const unreadCount = computed(() => mails.filter(m => m.unread).length)
-const selectedSuspect = ref<any>(null)
-const sentResponse = ref('')
-const sentCorrect = ref(false)
-
-function selectSuspect(suspect: any) {
-  selectedSuspect.value = suspect
-}
-
-function sendReply() {
-  const mail = mails[selectedMail.value]
-
-  if (mail.suspects && selectedSuspect.value) {
-    sentResponse.value = selectedSuspect.value.response
-    sentCorrect.value = selectedSuspect.value.correct
-  } else {
-    if (!replyText.value.trim()) return
-    sentResponse.value = ''
-    sentCorrect.value = false
-  }
-
-  replySent.value = true
-  replyOpen.value = false
-  selectedSuspect.value = null
-}
-
-// Reset quand on change de mail
-function selectMail(id: number) {
-  selectedMail.value = id
-  mails[id].unread = false
-  replyOpen.value = false
-  replySent.value = false
-  replyText.value = ''
-  sentResponse.value = ''
-  sentCorrect.value = false
-  selectedSuspect.value = null
-}
 
 </script>
 
@@ -424,116 +509,127 @@ function selectMail(id: number) {
         </main>
       </div>
       <!-- FAKE GMAIL -->
-      <div v-else-if="isGmail" class="gmail-ui">
+      <div v-else-if="isGmail" :class="{ 'retro-mode': isRetroMode }" class="gmail-ui">
 
         <!-- Sidebar -->
         <div class="gmail-sidebar">
-          <div class="gmail-sidebar-label">Dossiers</div>
-          <div class="gmail-sidebar-item active">
-            📥 Boîte de réception
-            <span v-if="unreadCount > 0" class="gmail-badge">{{ unreadCount }}</span>
+          <button class="gmail-compose">
+            <Icon name="fluent:compose-24-regular"/>
+            <span>Nouveau message</span>
+          </button>
+          <div class="gmail-nav">
+            <div
+                v-for="folder in ['inbox', 'sent', 'drafts', 'spam', 'trash']"
+                :key="folder"
+                :class="{ active: activeGmailFolder === folder }"
+                class="gmail-nav-item"
+                @click="activeGmailFolder = folder; selectedEmail = null"
+            >
+              <Icon
+                  :name="folder === 'inbox' ? 'fluent:mail-24-regular' : folder === 'spam' ? 'fluent:warning-24-regular' : folder === 'trash' ? 'fluent:delete-24-regular' : 'fluent:folder-24-regular'"/>
+              <span class="folder-name">{{ folder.charAt(0).toUpperCase() + folder.slice(1) }}</span>
+            </div>
           </div>
-          <div class="gmail-sidebar-item">📤 Envoyés</div>
-          <div class="gmail-sidebar-item">📝 Brouillons</div>
-          <div class="gmail-sidebar-item">🗑 Corbeille</div>
         </div>
 
-        <!-- Liste des mails -->
-        <div class="gmail-list">
-          <div class="gmail-list-header">{{ unreadCount }} messages non lus</div>
+        <!-- Email List -->
+        <div v-if="!selectedEmail" class="gmail-list">
+          <div class="gmail-list-toolbar">
+            <Icon name="fluent:checkbox-unchecked-24-regular"/>
+            <Icon name="fluent:arrow-clockwise-24-regular"/>
+            <Icon name="fluent:more-horizontal-24-regular"/>
+          </div>
           <div
-              v-for="mail in mails" :key="mail.id"
-              :class="{ unread: mail.unread, selected: selectedMail === mail.id }"
-              class="gmail-item"
-              @click="selectMail(mail.id)"
+              v-for="email in filteredEmails"
+              :key="email.id"
+              :class="{ unread: email.unread }"
+              class="gmail-email-item"
+              @click="openEmail(email)"
           >
-            <div class="gmail-item-sender">
-              {{ mail.from }}
-              <div class="gmail-item-right">
-                <span class="gmail-time">{{ mail.date }}</span>
-                <span v-if="mail.unread" class="unread-dot"></span>
-              </div>
+            <div class="email-check">
+              <Icon name="fluent:star-24-regular"/>
             </div>
-            <div class="gmail-item-subject">{{ mail.subject }}</div>
-            <div class="gmail-item-preview">{{ mail.preview }}</div>
+            <div class="email-sender">{{ email.sender }}</div>
+            <div class="email-content">
+              <span class="email-subject">{{ email.subject }}</span>
+              <span class="email-preview"> - {{ email.content.replace(/<[^>]*>?/gm, '') }}</span>
+            </div>
+            <div class="email-date">{{ email.date }}</div>
+          </div>
+          <div v-if="filteredEmails.length === 0" class="empty-folder">
+            Aucun message dans ce dossier.
           </div>
         </div>
 
-        <!-- Lecteur de mail -->
-        <div class="gmail-reader">
-          <div class="gmail-reader-header">
-            <div class="gmail-reader-subject">{{ mails[selectedMail].subject }}</div>
-            <div class="gmail-reader-meta">
-              <span>De : <strong>{{ mails[selectedMail].email }}</strong></span>
-              <span>À : agent.police@police.fr</span>
+        <!-- Email Reader -->
+        <div v-else class="gmail-reader">
+          <div class="gmail-reader-toolbar">
+            <button @click="selectedEmail = null">
+              <Icon name="fluent:arrow-left-24-regular"/>
+            </button>
+            <Icon name="fluent:archive-24-regular"/>
+            <Icon name="fluent:warning-24-regular"/>
+            <Icon name="fluent:delete-24-regular"/>
+          </div>
+          <div class="gmail-email-header">
+            <h2>{{ selectedEmail.subject }}</h2>
+            <div class="sender-info">
+              <img :src="selectedEmail.avatar" class="avatar"/>
+              <div class="sender-details">
+                <div class="sender-name"><b>{{ selectedEmail.sender }}</b></div>
+                <div class="to-me">À moi</div>
+              </div>
+              <div class="email-time">{{ selectedEmail.date }}</div>
             </div>
           </div>
-          <div class="gmail-reader-actions">
-            <button class="action-btn primary-action" @click="replyOpen = !replyOpen">↩ Répondre</button>
-            <button class="action-btn">↪ Transférer</button>
-            <button class="action-btn">🗑 Supprimer</button>
-          </div>
-          <div class="gmail-reader-body" v-html="mails[selectedMail].body"></div>
-
-          <!-- Zone de réponse -->
-          <div v-if="replyOpen" class="gmail-reply">
-
-            <!-- Si le mail a des suspects → choix multiple -->
-            <template v-if="mails[selectedMail].suspects">
-              <div class="suspects-title">👮 Désignez votre suspect :</div>
-              <div class="suspects-grid">
-                <button
-                  v-for="suspect in mails[selectedMail].suspects"
-                  :key="suspect.name"
-                  class="suspect-btn"
-                  :class="{ selected: selectedSuspect?.name === suspect.name }"
-                  @click="selectSuspect(suspect)"
-                >
-                  {{ suspect.name }}
-                </button>
-              </div>
-
-              <!-- Aperçu de l'email préfait -->
-              <div v-if="selectedSuspect" class="suspect-preview">
-                <div class="gmail-reply-to">À : {{ mails[selectedMail].email }}</div>
-                <textarea :value="selectedSuspect.email" readonly class="prefilled"></textarea>
-                <div class="gmail-reply-actions">
-                  <button class="reply-btn secondary" @click="replyOpen = false">Annuler</button>
-                  <button class="reply-btn primary" @click="sendReply">Envoyer ✓</button>
+          <div class="gmail-email-body">
+            <div v-html="selectedEmail.content" @click="handleEmailClick"></div>
+            
+            <!-- Pre-drafted Replies (Suspects) -->
+            <div v-if="selectedEmail.suspects" class="gmail-replies">
+              <div v-if="!replySent" class="reply-compose">
+                <div class="reply-header">
+                  <Icon name="fluent:reply-24-regular"/>
+                  <span>Répondre au Chef de Police</span>
+                </div>
+                <div class="suspects-grid">
+                  <button
+                      v-for="suspect in selectedEmail.suspects"
+                      :key="suspect.name"
+                      :class="{ selected: selectedSuspect?.name === suspect.name }"
+                      class="suspect-btn"
+                      @click="selectSuspect(suspect)"
+                  >
+                    {{ suspect.name }}
+                  </button>
+                </div>
+                <div v-if="selectedSuspect" class="suspect-preview">
+                  <textarea :value="selectedSuspect.email" class="prefilled" readonly></textarea>
+                  <button class="gmail-send" @click="sendReply">Envoyer</button>
                 </div>
               </div>
-            </template>
 
-            <!-- Sinon → zone texte libre classique -->
-            <template v-else>
-              <div class="gmail-reply-to">À : {{ mails[selectedMail].email }}</div>
-              <textarea v-model="replyText" placeholder="Écrivez votre réponse..."></textarea>
-              <div class="gmail-reply-actions">
-                <button class="reply-btn secondary" @click="replyOpen = false">Annuler</button>
-                <button class="reply-btn primary" @click="sendReply">Envoyer ✓</button>
+              <!-- Sent Response -->
+              <div v-else :class="{ success: sentCorrect }" class="reply-response">
+                <div class="reply-response-header">
+                  <Icon name="fluent:mail-check-24-regular"/>
+                  <span>Réponse envoyée</span>
+                </div>
+                <div class="reply-response-body">
+                  {{ sentResponse }}
+                </div>
+                <div v-if="sentCorrect" class="video-bonus">
+                  <button class="btn-video">
+                    <Icon name="fluent:video-24-regular"/>
+                    Voir l'aveu de Mathieu
+                  </button>
+                </div>
               </div>
-            </template>
-
-          </div>
-
-          <!-- Mail de retour après envoi -->
-          <div v-if="replySent && sentResponse" class="reply-response">
-            <div class="reply-response-header">
-              <strong>{{ mails[selectedMail].from }}</strong> a répondu :
-            </div>
-            <div class="reply-response-body">{{ sentResponse }}</div>
-
-            <!-- Vidéo si bonne réponse -->
-            <div v-if="sentCorrect" class="reply-video">
-              <p>🎬 Vidéo de l'entretien :</p>
-              <video controls width="100%">
-                <source src="/videos/video1.mp4" type="video/mp4"/>
-              </video>
             </div>
           </div>
         </div>
-
       </div>
+
 
       <!-- DEFAULT BING / HOME -->
       <div v-else class="bing-ui">
@@ -554,6 +650,44 @@ function selectMail(id: number) {
 
 <style lang="scss" scoped>
 
+.gmail-replies {
+  margin-top: 24px;
+  border-top: 1px solid #e5e5e5;
+  padding-top: 20px;
+
+  .reply-compose {
+    background: #fff;
+    border: 1px solid #c8c8c8;
+    border-radius: 0;
+    padding: 16px;
+
+    .reply-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 16px;
+    }
+  }
+
+  .gmail-send {
+    background: #0b57d0;
+    color: white;
+    border: none;
+    padding: 8px 24px;
+    border-radius: 2px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 12px;
+
+    &:hover {
+      background: #0842a0;
+    }
+  }
+}
+
 .suspects-title {
   font-size: 13px;
   font-weight: 600;
@@ -570,15 +704,24 @@ function selectMail(id: number) {
   .suspect-btn {
     padding: 10px;
     border: 1.5px solid #c8c8c8;
-    border-radius: 8px;
+    border-radius: 0;
     background: white;
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
     transition: all 0.15s;
 
-    &:hover { background: #f0f0f0; border-color: #0078d4; }
-    &.selected { background: #deecf9; border-color: #0078d4; color: #0078d4; font-weight: 700; }
+    &:hover {
+      background: #f0f0f0;
+      border-color: #0078d4;
+    }
+
+    &.selected {
+      background: #deecf9;
+      border-color: #0078d4;
+      color: #0078d4;
+      font-weight: 700;
+    }
   }
 }
 
@@ -590,6 +733,7 @@ function selectMail(id: number) {
     border: 0.5px solid #c8c8c8;
     border-radius: 4px;
     font-size: 13px;
+    font-family: inherit;
     resize: none;
     background: #f9f9f9;
     color: #444;
@@ -598,29 +742,58 @@ function selectMail(id: number) {
 }
 
 .reply-response {
-  margin: 12px 20px;
-  padding: 14px 16px;
-  background: #f0f7ff;
-  border: 0.5px solid #0078d4;
-  border-radius: 8px;
-  font-size: 13px;
-  color: #333;
+  margin-top: 20px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-left: 4px solid #0b57d0;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #3c4043;
+
+  &.success {
+    background: #e6f4ea;
+    border-left-color: #1e8e3e;
+  }
 
   .reply-response-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     font-size: 12px;
-    color: #666;
-    margin-bottom: 8px;
+    color: #5f6368;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+    font-weight: 600;
   }
 
   .reply-response-body {
-    white-space: pre-line;
-    line-height: 1.6;
+    white-space: pre-wrap;
   }
 
-  .reply-video {
-    margin-top: 16px;
-    p { font-weight: 600; margin-bottom: 8px; }
-    video { border-radius: 6px; }
+  .video-bonus {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+
+    .btn-video {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #d93025;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+
+      &:hover {
+        background: #b21f16;
+      }
+    }
   }
 }
 
@@ -655,8 +828,16 @@ function selectMail(id: number) {
       gap: 8px;
       border-left: 3px solid transparent;
 
-      &:hover { background: #e8e8e8; }
-      &.active { background: #deecf9; border-left-color: #0078d4; color: #0078d4; font-weight: 500; }
+      &:hover {
+        background: #e8e8e8;
+      }
+
+      &.active {
+        background: #deecf9;
+        border-left-color: #0078d4;
+        color: #0078d4;
+        font-weight: 500;
+      }
     }
 
     .gmail-badge {
@@ -691,9 +872,17 @@ function selectMail(id: number) {
       border-bottom: 0.5px solid #f0f0f0;
       cursor: pointer;
 
-      &:hover { background: #f5f5f5; }
-      &.selected { background: #deecf9; }
-      &.unread .gmail-item-sender { font-weight: 700; }
+      &:hover {
+        background: #f5f5f5;
+      }
+
+      &.selected {
+        background: #deecf9;
+      }
+
+      &.unread .gmail-item-sender {
+        font-weight: 700;
+      }
 
       .gmail-item-sender {
         font-size: 13px;
@@ -710,10 +899,14 @@ function selectMail(id: number) {
         }
       }
 
-      .gmail-time { font-size: 11px; color: #999; }
+      .gmail-time {
+        font-size: 11px;
+        color: #999;
+      }
 
       .unread-dot {
-        width: 8px; height: 8px;
+        width: 8px;
+        height: 8px;
         background: #0078d4;
         border-radius: 50%;
       }
@@ -777,8 +970,20 @@ function selectMail(id: number) {
         color: #333;
         font-size: 12px;
         cursor: pointer;
-        &:hover { background: #f0f0f0; }
-        &.primary-action { background: #0078d4; color: white; border-color: #0078d4; &:hover { background: #106ebe; } }
+
+        &:hover {
+          background: #f0f0f0;
+        }
+
+        &.primary-action {
+          background: #0078d4;
+          color: white;
+          border-color: #0078d4;
+
+          &:hover {
+            background: #106ebe;
+          }
+        }
       }
     }
 
@@ -810,7 +1015,11 @@ function selectMail(id: number) {
         font-size: 13px;
         resize: none;
         outline: none;
-        &:focus { border-color: #0078d4; box-shadow: 0 0 0 2px rgba(0,120,212,0.15); }
+
+        &:focus {
+          border-color: #0078d4;
+          box-shadow: 0 0 0 2px rgba(0, 120, 212, 0.15);
+        }
       }
 
       .gmail-reply-actions {
@@ -825,8 +1034,25 @@ function selectMail(id: number) {
           font-size: 13px;
           cursor: pointer;
           border: none;
-          &.primary { background: #0078d4; color: white; &:hover { background: #106ebe; } }
-          &.secondary { background: white; color: #333; border: 0.5px solid #c8c8c8; &:hover { background: #f0f0f0; } }
+
+          &.primary {
+            background: #0078d4;
+            color: white;
+
+            &:hover {
+              background: #106ebe;
+            }
+          }
+
+          &.secondary {
+            background: white;
+            color: #333;
+            border: 0.5px solid #c8c8c8;
+
+            &:hover {
+              background: #f0f0f0;
+            }
+          }
         }
       }
     }
@@ -896,12 +1122,11 @@ function selectMail(id: number) {
     padding: 4px 12px;
     background: white;
     border: 1px solid #c0c0c0;
-    border-radius: 16px;
+    border-radius: 0;
     font-size: 13px;
 
     &:focus-within {
       border-color: #0078d4;
-      box-shadow: 0 0 0 1px #0078d4;
     }
 
     input {
@@ -1111,11 +1336,11 @@ function selectMail(id: number) {
         gap: 8px;
         overflow-y: auto;
 
-        .date-separator {        // ← ajoute ce bloc
+        .date-separator { // ← ajoute ce bloc
           display: flex;
           align-items: center;
           gap: 12px;
-          align-self: stretch;   // ← prend toute la largeur
+          align-self: stretch; // ← prend toute la largeur
           margin: 8px 0;
 
           &::before, &::after {
@@ -1127,7 +1352,7 @@ function selectMail(id: number) {
 
           span {
             font-size: 12px;
-            color: #737373;      // ← gris, change en #ffffff pour blanc
+            color: #737373; // ← gris, change en #ffffff pour blanc
             white-space: nowrap;
           }
         }
@@ -1431,6 +1656,249 @@ function selectMail(id: number) {
           color: #717171;
         }
       }
+    }
+  }
+}
+
+/* GMAIL STYLES */
+.gmail-ui {
+  display: flex;
+  height: 100%;
+  background: #fff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  &.retro-mode {
+    background: #c0c0c0;
+    font-family: 'Courier New', Courier, monospace;
+
+    * {
+      border-radius: 0 !important;
+    }
+
+    .gmail-sidebar {
+      background: #c0c0c0;
+      border-right: 2px solid #808080;
+    }
+
+    .gmail-compose {
+      background: #c0c0c0;
+      border: 2px outset #fff;
+      color: #000;
+    }
+  }
+
+  .gmail-sidebar {
+    width: 250px;
+    padding: 16px 8px;
+    background: #f6f8fc;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .gmail-compose {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 24px;
+      background: #c2e7ff;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      width: fit-content;
+
+      &:hover {
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    .gmail-nav {
+      .gmail-nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 4px 24px;
+        height: 32px;
+        border-radius: 0 16px 16px 0;
+        cursor: pointer;
+        font-size: 14px;
+        color: #444;
+
+        &:hover {
+          background: #eaeef3;
+        }
+
+        &.active {
+          background: #d3e3fd;
+          font-weight: bold;
+          color: #001d35;
+        }
+      }
+    }
+  }
+
+  .gmail-list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 16px 16px 0 0;
+    margin-right: 16px;
+    margin-top: 8px;
+    border: 1px solid #f1f3f4;
+
+    .gmail-list-toolbar {
+      padding: 8px 16px;
+      display: flex;
+      gap: 20px;
+      color: #5f6368;
+      border-bottom: 1px solid #f1f3f4;
+    }
+
+    .gmail-email-item {
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      height: 40px;
+      border-bottom: 1px solid #f1f3f4;
+      cursor: pointer;
+      font-size: 14px;
+      gap: 12px;
+
+      &:hover {
+        box-shadow: inset 1px 0 0 #dadce0, inset -1px 0 0 #dadce0, 0 1px 2px 0 rgba(60, 64, 67, .3), 0 1px 3px 1px rgba(60, 64, 67, .15);
+        z-index: 1;
+      }
+
+      &.unread {
+        font-weight: bold;
+        background: #f2f6fc;
+      }
+
+      .email-sender {
+        width: 200px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .email-content {
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .email-subject {
+        color: #202124;
+      }
+
+      .email-preview {
+        color: #5f6368;
+        font-weight: normal;
+      }
+
+      .email-date {
+        width: 80px;
+        text-align: right;
+        color: #5f6368;
+        font-size: 12px;
+      }
+    }
+
+    .empty-folder {
+      padding: 40px;
+      text-align: center;
+      color: #5f6368;
+    }
+  }
+
+  .gmail-reader {
+    flex: 1;
+    background: #fff;
+    margin-top: 8px;
+    margin-right: 16px;
+    border-radius: 16px 16px 0 0;
+    display: flex;
+    flex-direction: column;
+
+    .gmail-reader-toolbar {
+      padding: 8px 16px;
+      display: flex;
+      gap: 24px;
+      color: #5f6368;
+      border-bottom: 1px solid #f1f3f4;
+
+      button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: inherit;
+        font-size: 18px;
+      }
+    }
+
+    .gmail-email-header {
+      padding: 20px 24px;
+
+      h2 {
+        font-size: 22px;
+        font-weight: 400;
+        margin-bottom: 20px;
+      }
+
+      .sender-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .avatar {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+        }
+
+        .sender-details {
+          flex: 1;
+
+          .sender-name {
+            font-size: 14px;
+          }
+
+          .to-me {
+            font-size: 12px;
+            color: #5f6368;
+          }
+        }
+
+        .email-time {
+          font-size: 12px;
+          color: #5f6368;
+        }
+      }
+    }
+
+    .gmail-email-body {
+      padding: 0 72px 40px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #202124;
+      white-space: pre-wrap;
+
+      button.glitch-trigger, button.bsod-trigger {
+        margin: 16px 0;
+        padding: 8px 24px;
+        border-radius: 4px;
+        border: 1px solid #dadce0;
+        background: #fff;
+        color: #1a73e8;
+        font-weight: 500;
+        cursor: pointer;
+        display: block;
+        &:hover { background: #f8f9fa; border-color: #1a73e8; }
+      }
+      button.bsod-trigger { color: #d93025; &:hover { border-color: #d93025; } }
     }
   }
 }

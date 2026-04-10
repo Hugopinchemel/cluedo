@@ -210,7 +210,7 @@ function onResizeStart(e: MouseEvent, dir: string) {
   background: var(--window-bg);
   border: 1px solid #4B4B4B;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 6px;
+  border-radius: 0;
   overflow: hidden;
   min-width: 200px;
   min-height: 120px;
@@ -288,8 +288,7 @@ function onResizeStart(e: MouseEvent, dir: string) {
 .btn-close:hover {
   background: #e81123 !important;
   color: white !important;
-  border-radius: 0 6px 0 0;
-
+  border-radius: 0;
 }
 
 .win-content {

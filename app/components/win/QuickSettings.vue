@@ -114,10 +114,10 @@ const quickActions = ref([
   right: 12px;
   bottom: calc(var(--taskbar-height) + 12px);
   width: 360px;
-  background: rgba(30, 30, 30, 0.85);
+  background: rgba(30, 30, 30, 0.95);
   backdrop-filter: blur(30px);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
+  border-radius: 0;
   padding: 24px;
   z-index: 7000;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
@@ -145,7 +145,7 @@ const quickActions = ref([
   align-items: center;
   justify-content: center;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 4px;
+  border-radius: 0;
   font-size: 20px;
 }
 

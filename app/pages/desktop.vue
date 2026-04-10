@@ -42,24 +42,25 @@
           :focusedId="focusedId"
           :win="win"
       >
-  <component 
-    :is="appComponents[win.appId]" 
-    :initialUrl="win.appId === 'edge' ? win.initialUrl : undefined"
-    @changeBg="wallpaper = $event"
-  />      
-    </WinWindow>
+        <component
+            :is="appComponents[win.appId]"
+            :initialUrl="win.appId === 'edge' ? win.initialUrl : undefined"
+            @changeBg="wallpaper = $event"
+        />
+      </WinWindow>
     </main>
 
     <!-- Notification pop-up -->
-        <div v-if="notifVisible" class="gmail-notif" @click="openApp('edge', 'https://www.gmail.com'); notifVisible = false">
-          <div class="notif-icon">✉</div>
-          <div class="notif-content">
-            <div class="notif-app">Courrier</div>
-            <div class="notif-title">Prof. Moriarty</div>
-            <div class="notif-body">Vous devez me remettre le rapport du labo...</div>
-          </div>
-          <button class="notif-close" @click.stop="notifVisible = false">✕</button>
-        </div>
+    <div v-if="notifVisible" class="gmail-notif"
+         @click="openApp('edge', 'https://www.gmail.com'); notifVisible = false">
+      <div class="notif-icon">✉</div>
+      <div class="notif-content">
+        <div class="notif-app">Courrier</div>
+        <div class="notif-title">Prof. Moriarty</div>
+        <div class="notif-body">Vous devez me remettre le rapport du labo...</div>
+      </div>
+      <button class="notif-close" @click.stop="notifVisible = false">✕</button>
+    </div>
 
     <!-- Taskbar -->
     <WinTaskbar
@@ -98,7 +99,6 @@
       {{ announcement }}
     </div>
 
-    
 
     <!-- Context menu -->
     <WinContextMenu
@@ -108,6 +108,73 @@
         :y="ctxY"
         @close="ctxVisible = false"
     />
+
+    <!-- BSOD Easter Egg -->
+    <Transition name="fade">
+      <div v-if="bsodActive" class="bsod" @click="bsodActive = false">
+        <div class="bsod-content">
+          <div class="bsod-sad">:(</div>
+          <h1>Your PC ran into a problem and needs to restart.</h1>
+          <p>We're just collecting some error info, and then we'll restart for you.</p>
+          <p class="bsod-pct">{{ bsodPct }}% complete</p>
+          <div class="bsod-stop">
+            <p>Stop code: MURDER_UNSOLVED_EXCEPTION</p>
+            <p>If you'd like to know more, search online for: WHO_IS_THE_KILLER</p>
+          </div>
+          <p class="bsod-hint">(cliquez pour fermer)</p>
+        </div>
+      </div>
+    </Transition>
+
+    <!-- Konami confetti -->
+    <Transition name="fade">
+      <div v-if="konamiActive" class="konami-overlay" @click="konamiActive = false">
+        <div class="konami-text">
+          <div class="konami-title">KONAMI CODE ACTIVATED</div>
+          <div class="konami-sub">God Mode: ON</div>
+          <div class="konami-hint">Tous les indices ont été débloqués... ou pas.</div>
+        </div>
+        <div class="confetti-container">
+          <div v-for="i in 50" :key="i" :style="confettiStyle(i)" class="confetti"/>
+        </div>
+      </div>
+    </Transition>
+
+    <!-- Clippy Easter Egg -->
+    <Transition name="clippy-slide">
+      <div v-if="clippyVisible" class="clippy" @click="dismissClippy">
+        <div class="clippy-body">
+          <div class="clippy-icon">📎</div>
+          <div class="clippy-bubble">
+            <div class="clippy-text">{{ clippyMessage }}</div>
+            <button class="clippy-close" @click.stop="dismissClippy">✕</button>
+          </div>
+        </div>
+      </div>
+    </Transition>
+
+    <!-- Ghost notification -->
+    <Transition name="slide-notif">
+      <div v-if="ghostNotifVisible" class="gmail-notif ghost-notif" @click="ghostNotifVisible = false">
+        <div class="notif-icon" style="background: #e74856">💀</div>
+        <div class="notif-content">
+          <div class="notif-app">WhatsApp</div>
+          <div class="notif-title">Numéro inconnu</div>
+          <div class="notif-body">Supprime tout. Maintenant.</div>
+        </div>
+        <button class="notif-close" @click.stop="ghostNotifVisible = false">✕</button>
+      </div>
+    </Transition>
+
+    <!-- Screensaver -->
+    <Transition name="fade">
+      <div v-if="screensaverActive" class="screensaver" @click="screensaverActive = false"
+           @keydown="screensaverActive = false" @mousemove="screensaverActive = false">
+        <div :style="{ left: ssX + 'px', top: ssY + 'px' }" class="screensaver-text">
+          35mm
+        </div>
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -120,10 +187,13 @@ import Photos from '~/components/apps/Photos.vue'
 import PdfViewer from '~/components/apps/PdfViewer.vue'
 import PdfViewer2 from '~/components/apps/PdfViewer2.vue'
 import Edge from '~/components/apps/Edge.vue'
+import Terminal from '~/components/apps/Terminal.vue'
+import Paint from '~/components/apps/Paint.vue'
 
 import {
   ICON_DESKTOP_CALC,
   ICON_DESKTOP_DOCS,
+  ICON_DESKTOP_EDGE,
   ICON_DESKTOP_NOTEPAD,
   ICON_DESKTOP_PC,
   ICON_DESKTOP_PDF,
@@ -156,6 +226,8 @@ const appComponents: Record<string, any> = {
   pdfviewer: PdfViewer,
   pdfviewer2: PdfViewer2,
   edge: Edge,
+  terminal: Terminal,
+  paint: Paint,
 }
 
 const wallpaper = ref(
@@ -226,6 +298,7 @@ const desktopIcons = ref([
   {id: 'photos', appId: 'photos', icon: ICON_DESKTOP_PHOTOS, label: 'Photos', x: 0, y: 0},
   {id: 'pdf', appId: 'pdfviewer', icon: ICON_DESKTOP_PDF, label: 'Dossier_interne.pdf', x: 0, y: 0},
   {id: 'pdf2', appId: 'pdfviewer2', icon: ICON_DESKTOP_PDF, label: "Rapport_d'Autopsie.pdf", x: 0, y: 0},
+  {id: 'edge', appId: 'edge', icon: ICON_DESKTOP_EDGE, label: 'Microsoft Edge', x: 0, y: 0},
 ])
 
 function arrangeIcons() {
@@ -243,15 +316,6 @@ function arrangeIcons() {
     currentY += GRID_H
   })
 }
-
-onMounted(() => {
-  arrangeIcons()
-  window.addEventListener('resize', arrangeIcons)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('resize', arrangeIcons)
-})
 
 function onIconDragStart(e: MouseEvent, icon: any) {
   if (e.button !== 0) return // Only left click
@@ -347,48 +411,228 @@ function closeMenus() {
   ctxVisible.value = false
   selectedIcon.value = ''
 }
+
+// ─── EASTER EGGS ─────────────────────────────────────────────────────────────
+
+// 1. BSOD (Ctrl+Shift+B)
+const bsodActive = ref(false)
+const bsodPct = ref(0)
+
+function triggerBsod() {
+  bsodActive.value = true
+  bsodPct.value = 0
+  const interval = setInterval(() => {
+    bsodPct.value += Math.floor(Math.random() * 15) + 5
+    if (bsodPct.value >= 100) {
+      bsodPct.value = 100
+      clearInterval(interval)
+    }
+  }, 800)
+}
+
+// 2. Konami Code
+const konamiActive = ref(false)
+const konamiSeq = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a']
+let konamiIdx = 0
+
+function confettiStyle(i: number) {
+  const colors = ['#ff0', '#f0f', '#0ff', '#f00', '#0f0', '#00f', '#ff6600', '#ff3399']
+  return {
+    left: `${Math.random() * 100}%`,
+    animationDelay: `${Math.random() * 2}s`,
+    animationDuration: `${2 + Math.random() * 3}s`,
+    background: colors[i % colors.length],
+  }
+}
+
+// 3. Clippy
+const clippyVisible = ref(false)
+const clippyMessage = ref('')
+const clippyMessages = [
+  'Il semblerait que vous essayez de résoudre un meurtre. Besoin d\'aide ?',
+  'Avez-vous pensé à vérifier la corbeille ? Les suspects suppriment souvent des preuves...',
+  'Conseil : la calculatrice cache parfois des secrets. Essayez un code !',
+  'Psst... avez-vous regardé dans C:\\Windows\\System32 ?',
+  'N\'oubliez pas de lire les conversations Instagram dans Edge !',
+]
+let clippyDismissed = false
+
+function showClippy() {
+  if (clippyDismissed) return
+  clippyMessage.value = clippyMessages[Math.floor(Math.random() * clippyMessages.length)]
+  clippyVisible.value = true
+}
+
+function dismissClippy() {
+  clippyVisible.value = false
+  clippyDismissed = true
+}
+
+// 4. Ghost notification
+const ghostNotifVisible = ref(false)
+
+// 5. Screensaver
+const screensaverActive = ref(false)
+const ssX = ref(100)
+const ssY = ref(100)
+let ssIntervalId: ReturnType<typeof setInterval> | null = null
+let inactivityTimer: ReturnType<typeof setTimeout> | null = null
+let ssDx = 2
+let ssDy = 1.5
+
+function resetInactivity() {
+  if (screensaverActive.value) return
+  if (inactivityTimer) clearTimeout(inactivityTimer)
+  inactivityTimer = setTimeout(() => {
+    screensaverActive.value = true
+    startScreensaverAnimation()
+  }, 60000) // 60 seconds
+}
+
+function startScreensaverAnimation() {
+  ssX.value = Math.random() * (window.innerWidth - 200)
+  ssY.value = Math.random() * (window.innerHeight - 60)
+  ssIntervalId = setInterval(() => {
+    ssX.value += ssDx
+    ssY.value += ssDy
+    if (ssX.value <= 0 || ssX.value >= window.innerWidth - 200) ssDx = -ssDx
+    if (ssY.value <= 0 || ssY.value >= window.innerHeight - 60) ssDy = -ssDy
+  }, 16)
+}
+
+watch(screensaverActive, (val) => {
+  if (!val && ssIntervalId) {
+    clearInterval(ssIntervalId)
+    ssIntervalId = null
+    resetInactivity()
+  }
+})
+
+// Keyboard listener for BSOD + Konami
+function onGlobalKeydown(e: KeyboardEvent) {
+  resetInactivity()
+
+  // BSOD: Ctrl+Shift+B
+  if (e.ctrlKey && e.shiftKey && e.key === 'B') {
+    e.preventDefault()
+    triggerBsod()
+    return
+  }
+
+  // Konami code
+  if (e.key === konamiSeq[konamiIdx]) {
+    konamiIdx++
+    if (konamiIdx === konamiSeq.length) {
+      konamiActive.value = true
+      konamiIdx = 0
+      setTimeout(() => konamiActive.value = false, 5000)
+    }
+  } else {
+    konamiIdx = 0
+  }
+}
+
+onMounted(() => {
+  arrangeIcons()
+  window.addEventListener('resize', arrangeIcons)
+  window.addEventListener('keydown', onGlobalKeydown)
+  window.addEventListener('mousemove', resetInactivity)
+  window.addEventListener('click', resetInactivity)
+  resetInactivity()
+
+  // Clippy appears after 45 seconds
+  setTimeout(() => showClippy(), 45000)
+
+  // Ghost notification after 2 minutes
+  setTimeout(() => {
+    ghostNotifVisible.value = true
+    setTimeout(() => ghostNotifVisible.value = false, 8000)
+  }, 120000)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', arrangeIcons)
+  window.removeEventListener('keydown', onGlobalKeydown)
+  window.removeEventListener('mousemove', resetInactivity)
+  window.removeEventListener('click', resetInactivity)
+  if (inactivityTimer) clearTimeout(inactivityTimer)
+  if (ssIntervalId) clearInterval(ssIntervalId)
+})
 </script>
 
 <style scoped>
 .gmail-notif {
-    position: absolute;
-    bottom: 8%;
-    right: 16px;
-    background: rgba(20, 20, 40, 0.92);
-    border: 0.5px solid rgba(255,255,255,0.2);
-    border-radius: 8px;
-    padding: 12px 16px;
-    color: white;
-    width: 280px;
-    cursor: pointer;
-    display: flex;
-    gap: 12px;
-    align-items: flex-start;
-    z-index: 100;
-    animation: slideIn 0.3s ease;
+  position: absolute;
+  bottom: 8%;
+  right: 16px;
+  background: rgba(20, 20, 40, 0.92);
+  border: 0.5px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: white;
+  width: 280px;
+  cursor: pointer;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  z-index: 100;
+  animation: slideIn 0.3s ease;
 
-    @keyframes slideIn {
-      from { transform: translateX(120%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
+  @keyframes slideIn {
+    from {
+      transform: translateX(120%);
+      opacity: 0;
     }
-
-    .notif-icon {
-      width: 32px; height: 32px;
-      background: #0078d4;
-      border-radius: 6px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-    .notif-content { flex: 1; }
-    .notif-app { font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 2px; }
-    .notif-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
-    .notif-body { font-size: 12px; color: rgba(255,255,255,0.7); }
-    .notif-close {
-      background: none; border: none; color: rgba(255,255,255,0.4);
-      cursor: pointer; font-size: 14px;
-      &:hover { color: white; }
+    to {
+      transform: translateX(0);
+      opacity: 1;
     }
   }
+
+  .notif-icon {
+    width: 32px;
+    height: 32px;
+    background: #0078d4;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .notif-content {
+    flex: 1;
+  }
+
+  .notif-app {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 2px;
+  }
+
+  .notif-title {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .notif-body {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .notif-close {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    font-size: 14px;
+
+    &:hover {
+      color: white;
+    }
+  }
+}
 
 main#main-content {
   position: absolute;
@@ -496,5 +740,264 @@ main#main-content {
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
+}
+
+/* ─── BSOD ─────────────────────────────────────────────────── */
+.bsod {
+  position: fixed;
+  inset: 0;
+  background: #0078d7;
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.bsod-content {
+  color: white;
+  max-width: 600px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.bsod-sad {
+  font-size: 120px;
+  font-weight: 100;
+  margin-bottom: 20px;
+}
+
+.bsod-content h1 {
+  font-size: 24px;
+  font-weight: 300;
+  margin-bottom: 12px;
+}
+
+.bsod-content p {
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+.bsod-pct {
+  margin-top: 24px;
+}
+
+.bsod-stop {
+  margin-top: 40px;
+  font-size: 12px !important;
+  opacity: 0.8;
+}
+
+.bsod-stop p {
+  font-size: 12px;
+}
+
+.bsod-hint {
+  margin-top: 24px;
+  font-size: 11px !important;
+  opacity: 0.5;
+}
+
+/* ─── Konami ───────────────────────────────────────────────── */
+.konami-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 999998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.konami-text {
+  text-align: center;
+  z-index: 2;
+}
+
+.konami-title {
+  font-size: 48px;
+  font-weight: 800;
+  color: #ff0;
+  text-shadow: 0 0 30px rgba(255, 255, 0, 0.5);
+  animation: pulse 0.5s ease infinite alternate;
+}
+
+.konami-sub {
+  font-size: 24px;
+  color: #0f0;
+  margin-top: 12px;
+}
+
+.konami-hint {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 20px;
+}
+
+@keyframes pulse {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.05);
+  }
+}
+
+.confetti-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.confetti {
+  position: absolute;
+  top: -10px;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  animation: confettiFall linear forwards;
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translateY(-10px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* ─── Clippy ───────────────────────────────────────────────── */
+.clippy {
+  position: fixed;
+  bottom: 70px;
+  right: 20px;
+  z-index: 10000;
+  cursor: pointer;
+}
+
+.clippy-body {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.clippy-icon {
+  font-size: 48px;
+  animation: clippyBounce 1s ease infinite;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+}
+
+@keyframes clippyBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.clippy-bubble {
+  background: #fffde0;
+  border: 1px solid #d4c85e;
+  border-radius: 8px;
+  padding: 12px 16px;
+  max-width: 280px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.clippy-text {
+  font-size: 13px;
+  color: #333;
+  line-height: 1.4;
+}
+
+.clippy-close {
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: #999;
+  cursor: pointer;
+
+  &:hover {
+    color: #333;
+  }
+}
+
+.clippy-slide-enter-active {
+  transition: all 0.4s ease;
+}
+
+.clippy-slide-leave-active {
+  transition: all 0.3s ease;
+}
+
+.clippy-slide-enter-from {
+  transform: translateX(100px) translateY(50px);
+  opacity: 0;
+}
+
+.clippy-slide-leave-to {
+  transform: translateY(50px);
+  opacity: 0;
+}
+
+/* ─── Ghost notification ──────────────────────────────────── */
+.ghost-notif {
+  animation: slideIn 0.3s ease !important;
+}
+
+.slide-notif-enter-active {
+  transition: all 0.3s ease;
+}
+
+.slide-notif-leave-active {
+  transition: all 0.3s ease;
+}
+
+.slide-notif-enter-from {
+  transform: translateX(120%);
+  opacity: 0;
+}
+
+.slide-notif-leave-to {
+  transform: translateX(120%);
+  opacity: 0;
+}
+
+/* ─── Screensaver ─────────────────────────────────────────── */
+.screensaver {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 99998;
+  cursor: none;
+}
+
+.screensaver-text {
+  position: absolute;
+  font-size: 42px;
+  font-weight: 700;
+  color: #0078d4;
+  text-shadow: 0 0 20px rgba(0, 120, 212, 0.5);
+  white-space: nowrap;
+  transition: none;
+}
+
+/* ─── Shared transitions ──────────────────────────────────── */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
 }
 </style>
