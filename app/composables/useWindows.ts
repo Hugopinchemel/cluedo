@@ -81,39 +81,37 @@ export function useWindows() {
     }
 
     function openApp(appId: string, initialUrl?: string) {
-    const app = APPS.find(a => a.id === appId)
-    if (!app) return
+        const app = APPS.find(a => a.id === appId)
+        if (!app) return
 
-    const minimized = windows.value.find(w => w.appId === appId && w.minimized)
-    if (minimized) {
-        minimized.minimized = false
-        focusWindow(minimized.id)
-        return
+        const minimized = windows.value.find(w => w.appId === appId && w.minimized)
+        if (minimized) {
+            minimized.minimized = false
+            if (initialUrl) minimized.initialUrl = initialUrl
+            focusWindow(minimized.id)
+            return
+        }
+
+        const existing = windows.value.find(w => w.appId === appId && !w.minimized)
+        if (existing) {
+            if (initialUrl) existing.initialUrl = initialUrl
+            focusWindow(existing.id)
+            return
+        }
+
+        const offset = windows.value.length * 24
+        _z++
+        const id = `w-${Date.now()}`
+        windows.value.push({
+            id, appId,
+            title: app.name,
+            x: 80 + offset, y: 50 + offset,
+            width: app.defaultWidth, height: app.defaultHeight,
+            minimized: false, maximized: false,
+            zIndex: _z,
+            initialUrl,
+        })
     }
-
-    const existing = windows.value.find(w => w.appId === appId && !w.minimized)
-    if (existing) {
-        focusWindow(existing.id)
-        return
-    }
-
-    const offset = windows.value.length * 24
-    _z++
-    const id = `w-${Date.now()}`
-    windows.value.push({
-        id,
-        appId,
-        title: app.name,
-        x: 80 + offset,
-        y: 50 + offset,
-        width: app.defaultWidth,
-        height: app.defaultHeight,
-        minimized: false,
-        maximized: false,
-        zIndex: _z,
-        initialUrl, 
-    })
-}
 
     function closeWindow(id: string) {
         const idx = windows.value.findIndex(w => w.id === id)

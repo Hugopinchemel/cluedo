@@ -303,7 +303,7 @@ const desktopIcons = ref([
   {id: 'calc', appId: 'calculator', icon: ICON_DESKTOP_CALC, label: 'Calculatrice', x: 0, y: 0},
   {id: 'photos', appId: 'photos', icon: ICON_DESKTOP_PHOTOS, label: 'Photos', x: 0, y: 0},
   {id: 'pdf', appId: 'pdfviewer', icon: ICON_DESKTOP_PDF, label: 'Dossier_interne.pdf', x: 0, y: 0},
-  {id: 'pdf2', appId: 'pdfviewer2', icon: ICON_DESKTOP_PDF, label: "Rapport_d'Autopsie.pdf", x: 0, y: 0},
+  {id: 'pdf2', appId: 'pdfviewer2', icon: ICON_DESKTOP_PDF, label: "Consignes.pdf", x: 0, y: 0},
   {id: 'edge', appId: 'edge', icon: ICON_DESKTOP_EDGE, label: 'Microsoft Edge', x: 0, y: 0},
 ])
 

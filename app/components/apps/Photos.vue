@@ -67,30 +67,26 @@ const selected = ref<any>(null)
 
 const photoUrls = [
   '/picture/img/1CA54070-43EC-4933-A9BE-CE04E2D31157.jpg',
-  '/picture/img/2528495E-005E-4A10-BA06-D698E57A2301.jpg',
   '/picture/img/404E6095-706A-48AB-8850-0D559B4D00A7.jpg',
-  '/picture/img/44AEFE4A-689B-4E05-B4B0-6DAF8006FA99.jpg',
   '/picture/img/50D8E143-9E28-448C-A0B4-11CC5CD007E0_4_5005_c.jpeg',
-  '/picture/img/925ADEB4-037C-47F3-BC8E-F2D48FEF17B8.jpg',
-  '/picture/img/95E64136-A643-4B01-8CA8-06DED143E648.jpg',
   '/picture/img/BD5EC050-9BEA-4563-83CA-65EA1DC7F402_4_5005_c.jpeg',
-  '/picture/img/CE52A319-5B8F-4BDA-BB2B-CA6CA1DE8329.jpg',
-  '/picture/img/EC7BCC0F-2DC4-450D-869D-DE6B6ABA5450.jpg',
   '/picture/img/F097F4B9-722F-4DA7-9A5B-E15A02650B3B.jpg',
+  '/picture/img/925ADEB4-037C-47F3-BC8E-F2D48FEF17B8.jpg',
+  '/picture/img/EC7BCC0F-2DC4-450D-869D-DE6B6ABA5450.jpg',
 ]
 
 const photoGroups = [
   {
     date: 'L\'année dernière · 23 Août 2025',
-    photos: Array.from({length: 4}, (_, i) => ({id: i, url: photoUrls[i]})),
+    photos: Array.from({length: 3}, (_, i) => ({id: i, url: photoUrls[i]})),
   },
   {
     date: 'L\'année dernière · 19 Août 2025',
-    photos: Array.from({length: 4}, (_, i) => ({id: i + 4, url: photoUrls[i + 4]})),
+    photos: Array.from({length: 2}, (_, i) => ({id: i + 3, url: photoUrls[i + 3]})),
   },
   {
     date: 'L\'année dernière · 16 Août 2025',
-    photos: Array.from({length: 3}, (_, i) => ({id: i + 8, url: photoUrls[i + 8]})),
+    photos: Array.from({length: 2}, (_, i) => ({id: i + 5, url: photoUrls[i + 5]})),
   },
 ]
 

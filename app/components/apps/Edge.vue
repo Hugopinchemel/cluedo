@@ -130,6 +130,21 @@ function handleKeydown(e) {
 
 onMounted(() => window.addEventListener('keydown', handleKeydown))
 onUnmounted(() => window.removeEventListener('keydown', handleKeydown))
+const props = defineProps<{
+  initialUrl?: string
+}>()
+
+onMounted(() => {
+  if (props.initialUrl) {
+    goToUrl(props.initialUrl)
+  }
+})
+
+watch(() => props.initialUrl, (url) => {
+  if (url) {
+    goToUrl(url)
+  }
+})
 const activeChat = ref(0)
 const instagramChats = [
   {
@@ -584,7 +599,7 @@ function shouldShowDate(messages: any[], index: number): boolean {
           </div>
           <div class="gmail-email-body">
             <div v-html="selectedEmail.content" @click="handleEmailClick"></div>
-            
+
             <!-- Pre-drafted Replies (Suspects) -->
             <div v-if="selectedEmail.suspects" class="gmail-replies">
               <div v-if="!replySent" class="reply-compose">
