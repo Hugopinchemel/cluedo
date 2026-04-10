@@ -115,3 +115,176 @@ input, textarea {
     scroll-behavior: auto !important;
   }
 }
+
+/* ── Paramètre : Animations désactivées ─────────────────────────────── */
+.no-animations *, .no-animations *::before, .no-animations *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* ── Paramètre : Transparence désactivée ────────────────────────────── */
+/* Les styles scoped sont overridés via !important sur les noms de classe globaux */
+.no-transparency .taskbar {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: rgb(20, 20, 20) !important;
+}
+
+.no-transparency .start-menu {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: #2c2c2c !important;
+}
+
+.no-transparency .quick-settings {
+  backdrop-filter: none !important;
+  background: #2c2c2c !important;
+}
+
+/* NotificationCenter et ContextMenu */
+.no-transparency .notif-center {
+  backdrop-filter: none !important;
+  background: #1e1e1e !important;
+}
+
+.no-transparency .ctx-menu {
+  backdrop-filter: none !important;
+  background: #2c2c2c !important;
+}
+
+/* ── Paramètre : Mode sombre ────────────────────────────────────────── */
+.dark-mode {
+  --window-bg: #202020;
+  --border-color: #444;
+}
+
+.dark-mode .settings,
+.dark-mode .settings-nav,
+.dark-mode .settings-content,
+.dark-mode .content-panel {
+  background: #202020 !important;
+  color: #e0e0e0 !important;
+}
+
+.dark-mode .settings-nav {
+  background: #1a1a1a !important;
+  border-right-color: #444 !important;
+}
+
+.dark-mode .settings-section h2 {
+  color: #ccc !important;
+  border-bottom-color: #444 !important;
+}
+
+.dark-mode .setting-name { color: #e0e0e0 !important; }
+.dark-mode .setting-desc { color: #999 !important; }
+.dark-mode .settings-username { color: #e0e0e0 !important; }
+
+.dark-mode .settings-nav-item {
+  color: #ccc !important;
+}
+.dark-mode .settings-nav-item:hover { background: rgba(255,255,255,0.07) !important; }
+.dark-mode .settings-nav-item.active { background: #2d2d2d !important; color: var(--accent) !important; }
+
+.dark-mode .setting-select {
+  background: #2d2d2d !important;
+  color: #e0e0e0 !important;
+  border-color: #555 !important;
+}
+
+.dark-mode .btn-uninstall {
+  background: #2d2d2d !important;
+  color: #ccc !important;
+  border-color: #555 !important;
+}
+
+.dark-mode .settings-search {
+  background: #2d2d2d !important;
+  border-color: #555 !important;
+}
+
+.dark-mode .settings-search input { color: #e0e0e0 !important; }
+
+/* ── Paramètre : Contraste élevé ────────────────────────────────────── */
+.high-contrast {
+  --window-bg: #000;
+  --border-color: #fff;
+  --accent: #ffff00;
+  --taskbar-bg: #000;
+}
+
+.high-contrast * {
+  text-shadow: none !important;
+  box-shadow: none !important;
+}
+
+.high-contrast .taskbar {
+  background: #000 !important;
+  border-top: 2px solid #fff !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Fenêtres : titlebar et body */
+.high-contrast .titlebar {
+  background: #000 !important;
+  color: #fff !important;
+  border-bottom: 2px solid #fff !important;
+}
+
+.high-contrast .win-content,
+.high-contrast .settings,
+.high-contrast .settings-nav,
+.high-contrast .settings-content,
+.high-contrast .content-panel {
+  background: #000 !important;
+  color: #fff !important;
+}
+
+.high-contrast .settings-nav {
+  border-right-color: #fff !important;
+}
+
+.high-contrast .settings-section h2 {
+  color: #fff !important;
+  border-bottom-color: #fff !important;
+}
+
+.high-contrast .settings-nav-item { color: #fff !important; }
+.high-contrast .settings-nav-item:hover { background: #333 !important; }
+.high-contrast .settings-nav-item.active {
+  background: #000 !important;
+  color: #ffff00 !important;
+  border-right-color: #ffff00 !important;
+}
+
+.high-contrast .setting-name { color: #fff !important; }
+.high-contrast .setting-desc { color: #ccc !important; }
+
+.high-contrast input,
+.high-contrast select,
+.high-contrast textarea {
+  background: #000 !important;
+  color: #fff !important;
+  border: 2px solid #fff !important;
+}
+
+.high-contrast .toggle { background: #fff !important; }
+.high-contrast .toggle.on { background: #ffff00 !important; }
+.high-contrast .toggle-knob { background: #000 !important; }
+
+.high-contrast .bg-thumb { border: 2px solid #fff !important; }
+.high-contrast .bg-thumb.selected { border-color: #ffff00 !important; }
+.high-contrast .color-swatch { border: 2px solid #fff !important; }
+.high-contrast .color-swatch.selected { border-color: #ffff00 !important; }
+
+.high-contrast .start-menu,
+.high-contrast .notif-center,
+.high-contrast .ctx-menu,
+.high-contrast .quick-settings {
+  background: #000 !important;
+  border: 2px solid #fff !important;
+  backdrop-filter: none !important;
+}

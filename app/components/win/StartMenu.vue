@@ -13,25 +13,22 @@
       <nav aria-label="Raccourcis rapides" class="left-rail">
         <div class="left-rail-top">
           <button aria-label="Compte utilisateur : Utilisateur" class="rail-btn user-btn">
-            <div aria-hidden="true" class="user-avatar">
+            <div aria-hidden="true" class="user-avatar" style="border-radius: 50%; overflow: hidden; display: flex; align-items: center; justify-content: center;">
               <img v-if="ICON_START_USER.startsWith('/')" :src="ICON_START_USER" alt="" height="28" width="28"/>
               <Icon v-else :name="ICON_START_USER" aria-hidden="true" size="28"/>
             </div>
-            <span aria-hidden="true" class="rail-label">Utilisateur</span>
           </button>
 
           <button aria-label="Documents" class="rail-btn" @click="openAndClose('explorer')">
             <img v-if="ICON_START_DOCS.startsWith('/')" :src="ICON_START_DOCS" alt="" aria-hidden="true" height="20"
                  width="20"/>
             <Icon v-else :name="ICON_START_DOCS" aria-hidden="true" size="20"/>
-            <span aria-hidden="true" class="rail-label">Documents</span>
           </button>
 
           <button aria-label="Images" class="rail-btn" @click="openAndClose('photos')">
             <img v-if="ICON_START_IMAGES.startsWith('/')" :src="ICON_START_IMAGES" alt="" aria-hidden="true" height="20"
                  width="20"/>
             <Icon v-else :name="ICON_START_IMAGES" aria-hidden="true" size="20"/>
-            <span aria-hidden="true" class="rail-label">Images</span>
           </button>
 
           <button aria-label="Paramètres" class="rail-btn" @click="openAndClose('settings')">
@@ -39,16 +36,15 @@
                  height="20"
                  width="20"/>
             <Icon v-else :name="ICON_START_SETTINGS" aria-hidden="true" size="20"/>
-            <span aria-hidden="true" class="rail-label">Paramètres</span>
           </button>
         </div>
+
         <div class="left-rail-bottom">
           <button aria-label="Arrêter" class="rail-btn" @click="emit('shutdown')">
             <svg aria-hidden="true" fill="white" focusable="false" height="20" viewBox="0 0 24 24" width="20">
               <path
                   d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42C17.99 7.86 19 9.81 19 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.19 1.01-4.14 2.58-5.42L6.17 5.17C4.23 6.82 3 9.26 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-2.74-1.23-5.18-3.17-6.83z"/>
             </svg>
-            <span aria-hidden="true" class="rail-label">Arrêter</span>
           </button>
         </div>
       </nav>

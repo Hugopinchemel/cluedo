@@ -40,67 +40,75 @@
     <div class="settings-content">
       <!-- System -->
       <div v-if="activeCategory === 'system'" class="content-panel">
-        <h1>Système</h1>
+        <h1>Facilité d'accès</h1>
+
         <div class="settings-section">
-          <h2>Affichage</h2>
+          <h2>Vision</h2>
           <div class="setting-row">
             <div class="setting-info">
-              <div class="setting-name">Luminosité</div>
-              <div class="setting-desc">Régler la luminosité intégrée</div>
+              <div class="setting-name">Taille du texte</div>
+              <div class="setting-desc">Modifier la taille du texte sur votre écran ({{ settings.textSize }}%)</div>
             </div>
-            <input :value="settings.brightness" aria-label="Luminosité" class="setting-slider" max="100"
-                   min="0"
+            <input :value="settings.textSize" aria-label="Taille du texte" class="setting-slider" max="200" min="80"
+                   step="10"
                    type="range"
-                   @input="e => updateSettings({ brightness: parseInt((e.target as HTMLInputElement).value) })"/>
+                   @input="e => updateSettings({ textSize: parseInt((e.target as HTMLInputElement).value) })"/>
           </div>
+
           <div class="setting-row">
             <div class="setting-info">
-              <div class="setting-name">Résolution d'affichage</div>
-              <div class="setting-desc">1920 × 1080 (Recommandé)</div>
+              <div :id="'label-highContrast'" class="setting-name">Contraste élevé</div>
+              <div class="setting-desc">Utiliser des couleurs contrastées pour rendre le texte plus facile à lire</div>
             </div>
-            <select aria-label="Résolution d'affichage" class="setting-select">
-              <option>1920 × 1080 (Recommandé)</option>
-              <option>2560 × 1440</option>
-              <option>1280 × 720</option>
-            </select>
-          </div>
-          <div class="setting-row">
-            <div class="setting-info">
-              <div class="setting-name">Fréquence de rafraîchissement</div>
-              <div class="setting-desc">144 Hz</div>
+            <div :aria-checked="settings.highContrast" :class="{ on: settings.highContrast }" aria-labelledby="label-highContrast"
+                 class="toggle" role="switch" tabindex="0"
+                 @click="updateSettings({ highContrast: !settings.highContrast })"
+                 @keydown.space.prevent="updateSettings({ highContrast: !settings.highContrast })">
+              <div class="toggle-knob"/>
             </div>
-            <select aria-label="Fréquence de rafraîchissement" class="setting-select">
-              <option>144 Hz</option>
-              <option>60 Hz</option>
-            </select>
           </div>
         </div>
 
         <div class="settings-section">
-          <h2>Son</h2>
+          <h2>Effets visuels</h2>
           <div class="setting-row">
             <div class="setting-info">
-              <div class="setting-name">Volume principal</div>
+              <div :id="'label-transparency'" class="setting-name">Afficher la transparence dans Windows</div>
             </div>
-            <input :value="settings.volume" aria-label="Volume principal" class="setting-slider" max="100"
-                   min="0"
-                   type="range"
-                   @input="e => updateSettings({ volume: parseInt((e.target as HTMLInputElement).value) })"/>
+            <div :aria-checked="settings.transparency" :class="{ on: settings.transparency }" aria-labelledby="label-transparency"
+                 class="toggle" role="switch" tabindex="0"
+                 @click="updateSettings({ transparency: !settings.transparency })"
+                 @keydown.space.prevent="updateSettings({ transparency: !settings.transparency })">
+              <div class="toggle-knob"/>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-info">
+              <div :id="'label-animations'" class="setting-name">Afficher les animations dans Windows</div>
+            </div>
+            <div :aria-checked="settings.animations" :class="{ on: settings.animations }" aria-labelledby="label-animations"
+                 class="toggle" role="switch" tabindex="0"
+                 @click="updateSettings({ animations: !settings.animations })"
+                 @keydown.space.prevent="updateSettings({ animations: !settings.animations })">
+              <div class="toggle-knob"/>
+            </div>
           </div>
         </div>
 
         <div class="settings-section">
-          <h2>Alimentation et mise en veille</h2>
+          <h2>Audition</h2>
           <div class="setting-row">
             <div class="setting-info">
-              <div class="setting-name">Mettre l'écran en veille après</div>
+              <div :id="'label-monoAudio'" class="setting-name">Audio mono</div>
+              <div class="setting-desc">Combiner les canaux audio gauche et droit en un seul</div>
             </div>
-            <select aria-label="Mettre l'écran en veille après" class="setting-select">
-              <option>5 minutes</option>
-              <option>10 minutes</option>
-              <option>15 minutes</option>
-              <option>Jamais</option>
-            </select>
+            <div :aria-checked="settings.monoAudio" :class="{ on: settings.monoAudio }" aria-labelledby="label-monoAudio"
+                 class="toggle" role="switch" tabindex="0"
+                 @click="updateSettings({ monoAudio: !settings.monoAudio })"
+                 @keydown.space.prevent="updateSettings({ monoAudio: !settings.monoAudio })">
+              <div class="toggle-knob"/>
+            </div>
           </div>
         </div>
       </div>
@@ -110,16 +118,21 @@
         <h1>Personnalisation</h1>
         <div class="settings-section">
           <h2>Arrière-plan</h2>
-          <div class="bg-options">
+          <div aria-label="Choisir un arrière-plan" class="bg-options" role="radiogroup">
             <div
                 v-for="bg in backgrounds"
                 :key="bg.name"
+                :aria-checked="settings.wallpaper === bg.css"
+                :aria-label="`Arrière-plan ${bg.name}`"
                 :class="{ selected: settings.wallpaper === bg.css }"
                 :style="{ background: bg.css }"
                 class="bg-thumb"
+                role="radio"
+                tabindex="0"
                 @click="updateSettings({ wallpaper: bg.css })"
+                @keydown.space.prevent="updateSettings({ wallpaper: bg.css })"
             >
-              <svg v-if="settings.wallpaper === bg.css" fill="white" height="18" viewBox="0 0 24 24" width="18">
+              <svg v-if="settings.wallpaper === bg.css" aria-hidden="true" fill="white" height="18" viewBox="0 0 24 24" width="18">
                 <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
               </svg>
             </div>
@@ -137,23 +150,30 @@
         </div>
         <div class="settings-section">
           <h2>Couleurs</h2>
-          <div class="color-options">
+          <div aria-label="Choisir une couleur d'accentuation" class="color-options" role="radiogroup">
             <div
                 v-for="color in accentColors"
                 :key="color"
+                :aria-checked="settings.accentColor === color"
+                :aria-label="`Couleur ${color}`"
                 :class="{ selected: settings.accentColor === color }"
                 :style="{ background: color }"
                 class="color-swatch"
+                role="radio"
+                tabindex="0"
                 @click="updateSettings({ accentColor: color })"
+                @keydown.space.prevent="updateSettings({ accentColor: color })"
             />
           </div>
           <div class="setting-row" style="margin-top:12px">
             <div class="setting-info">
-              <div class="setting-name">Mode sombre</div>
+              <div id="label-darkMode" class="setting-name">Mode sombre</div>
               <div class="setting-desc">Appliquer le mode sombre aux applications Windows</div>
             </div>
-            <div :class="{ on: settings.darkMode }" class="toggle"
-                 @click="updateSettings({ darkMode: !settings.darkMode })">
+            <div :aria-checked="settings.darkMode" :class="{ on: settings.darkMode }" aria-labelledby="label-darkMode"
+                 class="toggle" role="switch" tabindex="0"
+                 @click="updateSettings({ darkMode: !settings.darkMode })"
+                 @keydown.space.prevent="updateSettings({ darkMode: !settings.darkMode })">
               <div class="toggle-knob"/>
             </div>
           </div>
@@ -175,73 +195,6 @@
                 <div class="app-row-size">{{ app.size }} · {{ app.date }}</div>
               </div>
               <button class="btn-uninstall">Désinstaller</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Accessibility -->
-      <div v-else-if="activeCategory === 'ease'" class="content-panel">
-        <h1>Facilité d'accès</h1>
-
-        <div class="settings-section">
-          <h2>Vision</h2>
-          <div class="setting-row">
-            <div class="setting-info">
-              <div class="setting-name">Taille du texte</div>
-              <div class="setting-desc">Modifier la taille du texte sur votre écran ({{ settings.textSize }}%)</div>
-            </div>
-            <input :value="settings.textSize" aria-label="Taille du texte" class="setting-slider" max="200" min="80"
-                   step="10"
-                   type="range"
-                   @input="e => updateSettings({ textSize: parseInt((e.target as HTMLInputElement).value) })"/>
-          </div>
-
-          <div class="setting-row">
-            <div class="setting-info">
-              <div class="setting-name">Contraste élevé</div>
-              <div class="setting-desc">Utiliser des couleurs contrastées pour rendre le texte plus facile à lire</div>
-            </div>
-            <div :class="{ on: settings.highContrast }" class="toggle"
-                 @click="updateSettings({ highContrast: !settings.highContrast })">
-              <div class="toggle-knob"/>
-            </div>
-          </div>
-        </div>
-
-        <div class="settings-section">
-          <h2>Effets visuels</h2>
-          <div class="setting-row">
-            <div class="setting-info">
-              <div class="setting-name">Afficher la transparence dans Windows</div>
-            </div>
-            <div :class="{ on: settings.transparency }" class="toggle"
-                 @click="updateSettings({ transparency: !settings.transparency })">
-              <div class="toggle-knob"/>
-            </div>
-          </div>
-
-          <div class="setting-row">
-            <div class="setting-info">
-              <div class="setting-name">Afficher les animations dans Windows</div>
-            </div>
-            <div :class="{ on: settings.animations }" class="toggle"
-                 @click="updateSettings({ animations: !settings.animations })">
-              <div class="toggle-knob"/>
-            </div>
-          </div>
-        </div>
-
-        <div class="settings-section">
-          <h2>Audition</h2>
-          <div class="setting-row">
-            <div class="setting-info">
-              <div class="setting-name">Audio mono</div>
-              <div class="setting-desc">Combiner les canaux audio gauche et droit en un seul</div>
-            </div>
-            <div :class="{ on: settings.monoAudio }" class="toggle"
-                 @click="updateSettings({ monoAudio: !settings.monoAudio })">
-              <div class="toggle-knob"/>
             </div>
           </div>
         </div>
@@ -287,16 +240,9 @@ const activeCategory = ref('system')
 const categories = [
   {id: 'system', icon: ICON_SETTINGS_SYSTEM, name: 'Système'},
   {id: 'devices', icon: ICON_SETTINGS_DEVICES, name: 'Périphériques'},
-  {id: 'phone', icon: ICON_SETTINGS_PHONE, name: 'Téléphone'},
   {id: 'network', icon: ICON_SETTINGS_NETWORK, name: 'Réseau et Internet'},
   {id: 'personalization', icon: ICON_SETTINGS_PERSONAL, name: 'Personnalisation'},
   {id: 'apps', icon: ICON_SETTINGS_APPS, name: 'Applications'},
-  {id: 'accounts', icon: ICON_SETTINGS_ACCOUNTS, name: 'Comptes'},
-  {id: 'time', icon: ICON_SETTINGS_TIME, name: 'Heure et langue'},
-  {id: 'gaming', icon: ICON_SETTINGS_GAMING, name: 'Jeux'},
-  {id: 'ease', icon: ICON_SETTINGS_EASE, name: 'Facilité d\'accès'},
-  {id: 'privacy', icon: ICON_SETTINGS_PRIVACY, name: 'Confidentialité'},
-  {id: 'update', icon: ICON_SETTINGS_UPDATE, name: 'Mise à jour et sécurité'},
 ]
 
 const backgrounds = [

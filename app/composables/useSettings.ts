@@ -11,6 +11,7 @@ export interface SettingsState {
     highContrast: boolean
     transparency: boolean
     animations: boolean
+    monoAudio: boolean
 }
 
 const DEFAULT_WALLPAPER = 'radial-gradient(ellipse 70% 55% at 20% 65%, rgba(74,144,217,0.25) 0%, transparent 60%), radial-gradient(ellipse 55% 70% at 80% 25%, rgba(83,52,131,0.3) 0%, transparent 60%), linear-gradient(155deg, #0d1b2e 0%, #112244 40%, #1a0d2e 70%, #0a1520 100%)'
@@ -25,6 +26,7 @@ const settings = ref<SettingsState>({
     highContrast: false,
     transparency: true,
     animations: true,
+    monoAudio: false,
 })
 
 // Initialize from localStorage if available
@@ -44,15 +46,25 @@ watchEffect(() => {
     if (typeof window !== 'undefined') {
         localStorage.setItem('win_settings', JSON.stringify(settings.value))
 
-        // Apply accent color to CSS variable
-        document.documentElement.style.setProperty('--accent', settings.value.accentColor)
+        const html = document.documentElement
 
-        // Apply dark mode class to body or root
-        if (settings.value.darkMode) {
-            document.documentElement.classList.add('dark-mode')
-        } else {
-            document.documentElement.classList.remove('dark-mode')
-        }
+        // Accent color
+        html.style.setProperty('--accent', settings.value.accentColor)
+
+        // Text size: set font-size on <html> so rem units scale everywhere
+        html.style.setProperty('font-size', `${settings.value.textSize / 100 * 14}px`)
+
+        // Dark mode
+        html.classList.toggle('dark-mode', settings.value.darkMode)
+
+        // High contrast
+        html.classList.toggle('high-contrast', settings.value.highContrast)
+
+        // Transparency
+        html.classList.toggle('no-transparency', !settings.value.transparency)
+
+        // Animations
+        html.classList.toggle('no-animations', !settings.value.animations)
     }
 })
 
@@ -72,6 +84,7 @@ export function useSettings() {
             highContrast: false,
             transparency: true,
             animations: true,
+            monoAudio: false,
         }
     }
 

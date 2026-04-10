@@ -81,15 +81,15 @@ const photoUrls = [
 
 const photoGroups = [
   {
-    date: 'Aujourd\'hui · 1 avril 2026',
+    date: 'L\'année dernière · 23 Août 2025',
     photos: Array.from({length: 4}, (_, i) => ({id: i, url: photoUrls[i]})),
   },
   {
-    date: 'Hier · 31 mars 2026',
+    date: 'L\'année dernière · 19 Août 2025',
     photos: Array.from({length: 4}, (_, i) => ({id: i + 4, url: photoUrls[i + 4]})),
   },
   {
-    date: 'Ce mois-ci · Mars 2026',
+    date: 'L\'année dernière · 16 Août 2025',
     photos: Array.from({length: 3}, (_, i) => ({id: i + 8, url: photoUrls[i + 8]})),
   },
 ]

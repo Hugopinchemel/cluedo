@@ -45,7 +45,7 @@ export const APPS: AppDef[] = [
     {id: 'settings', name: 'Paramètres', icon: ICON_APP_SETTINGS, defaultWidth: 860, defaultHeight: 580},
     {id: 'edge', name: 'Microsoft Edge', icon: ICON_APP_EDGE, defaultWidth: 960, defaultHeight: 620},
     {id: 'photos', name: 'Photos', icon: ICON_APP_PHOTOS, defaultWidth: 820, defaultHeight: 560},
-    {id: 'pdfviewer', name: 'Lecteur PDF', icon: ICON_APP_PDF, defaultWidth: 820, defaultHeight: 680},
+    {id: 'pdfviewer', name: 'Dossier_d\'Enquête.pdf', icon: ICON_APP_PDF, defaultWidth: 820, defaultHeight: 680},
     {id: 'pdfviewer2', name: "Rapport d'Autopsie", icon: ICON_APP_PDF, defaultWidth: 820, defaultHeight: 680},
     {id: 'terminal', name: 'Windows PowerShell', icon: ICON_APP_TERMINAL, defaultWidth: 780, defaultHeight: 480},
     {id: 'paint', name: 'Paint', icon: ICON_APP_PAINT, defaultWidth: 900, defaultHeight: 620},

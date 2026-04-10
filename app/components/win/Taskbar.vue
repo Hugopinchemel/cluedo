@@ -105,13 +105,13 @@
           :aria-pressed="notifOpen"
           :class="{ active: notifOpen }"
           aria-label="Centre de notifications"
-          class="icon-btn notif-btn"
+          class="tray-btn notif-btn"
           @click="$emit('toggleNotif')"
       >
-        <img v-if="ICON_TRAY_NOTIFICATIONS.startsWith('/')" :src="ICON_TRAY_NOTIFICATIONS" alt="" aria-hidden="true"
-             height="16"
-             style="opacity: 0.85" width="16"/>
-        <Icon v-else :name="ICON_TRAY_NOTIFICATIONS" aria-hidden="true" size="16" style="opacity: 0.85"/>
+        <div class="notif-wrapper">
+          <Icon :name="ICON_TRAY_NOTIFICATIONS" aria-hidden="true" size="16"/>
+          <span v-if="notifCount > 0" class="badge">{{ notifCount }}</span>
+        </div>
       </button>
     </div>
   </div>
@@ -128,6 +128,7 @@ import {
   ICON_TRAY_NOTIFICATIONS,
   ICON_TRAY_VOLUME,
 } from '~/composables/icons'
+import { useNotifications } from '~/composables/useNotifications'
 
 defineEmits<{
   toggleStart: []
@@ -171,6 +172,9 @@ function handleTaskClick(appId: string) {
     focusWindow(running.id)
   }
 }
+
+const { notifications } = useNotifications()
+const notifCount = computed(() => notifications.value.length)
 
 const now = ref(new Date())
 onMounted(() => {
@@ -367,6 +371,36 @@ const dateShort = computed(() =>
 
 .notif-btn {
   width: 36px;
-  filter: invert(1);
+}
+
+.notif-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  opacity: 0.85;
+}
+
+.badge {
+  position: absolute;
+  top: 6px;
+  right: 4px;
+  background: var(--accent);
+  color: white;
+  font-size: 9px;
+  font-weight: 700;
+  min-width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 2px;
+}
+
+.notif-btn:hover .notif-wrapper {
+  opacity: 1;
 }
 </style>

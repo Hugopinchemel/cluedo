@@ -51,16 +51,20 @@
     </main>
 
     <!-- Notification pop-up -->
-    <div v-if="notifVisible" class="gmail-notif"
-         @click="openApp('edge', 'https://www.gmail.com'); notifVisible = false">
-      <div class="notif-icon">✉</div>
-      <div class="notif-content">
-        <div class="notif-app">Courrier</div>
-        <div class="notif-title">Prof. Moriarty</div>
-        <div class="notif-body">Vous devez me remettre le rapport du labo...</div>
+    <Transition name="slide-notif">
+      <div v-if="notifVisible" class="gmail-notif"
+           @click="openApp('edge', 'https://www.gmail.com'); notifVisible = false">
+        <div class="notif-header">
+          <div class="notif-icon">✉</div>
+          <div class="notif-app">Courrier</div>
+          <button class="notif-close" @click.stop="notifVisible = false">✕</button>
+        </div>
+        <div class="notif-content">
+          <div class="notif-title">Prof. Moriarty</div>
+          <div class="notif-body">Vous devez me remettre le rapport du labo...</div>
+        </div>
       </div>
-      <button class="notif-close" @click.stop="notifVisible = false">✕</button>
-    </div>
+    </Transition>
 
     <!-- Taskbar -->
     <WinTaskbar
@@ -156,13 +160,15 @@
     <!-- Ghost notification -->
     <Transition name="slide-notif">
       <div v-if="ghostNotifVisible" class="gmail-notif ghost-notif" @click="ghostNotifVisible = false">
-        <div class="notif-icon" style="background: #e74856">💀</div>
-        <div class="notif-content">
+        <div class="notif-header">
+          <div class="notif-icon" style="background: #e74856">💀</div>
           <div class="notif-app">WhatsApp</div>
+          <button class="notif-close" @click.stop="ghostNotifVisible = false">✕</button>
+        </div>
+        <div class="notif-content">
           <div class="notif-title">Numéro inconnu</div>
           <div class="notif-body">Supprime tout. Maintenant.</div>
         </div>
-        <button class="notif-close" @click.stop="ghostNotifVisible = false">✕</button>
       </div>
     </Transition>
 
@@ -532,6 +538,8 @@ function onGlobalKeydown(e: KeyboardEvent) {
   }
 }
 
+const { addNotification } = useNotifications()
+
 onMounted(() => {
   arrangeIcons()
   window.addEventListener('resize', arrangeIcons)
@@ -543,11 +551,19 @@ onMounted(() => {
   // Clippy appears after 45 seconds
   setTimeout(() => showClippy(), 45000)
 
-  // Ghost notification after 2 minutes
+  // Initial mail notification after 5 seconds
   setTimeout(() => {
-    ghostNotifVisible.value = true
-    setTimeout(() => ghostNotifVisible.value = false, 8000)
-  }, 120000)
+    notifVisible.value = true
+    addNotification({
+      app: 'Courrier',
+      title: 'Prof. Moriarty',
+      message: 'Vous devez me remettre le rapport du labo...',
+      icon: 'fluent:mail-24-regular'
+    })
+  }, 5000)
+
+  // Ghost notification after 2 minutes
+
 })
 
 onUnmounted(() => {
@@ -563,74 +579,100 @@ onUnmounted(() => {
 <style scoped>
 .gmail-notif {
   position: absolute;
-  bottom: 8%;
-  right: 16px;
-  background: rgba(20, 20, 40, 0.92);
-  border: 0.5px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  padding: 12px 16px;
+  bottom: calc(var(--taskbar-height) + 12px);
+  right: 12px;
+  background: rgba(31, 31, 31, 0.9);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: white;
-  width: 280px;
+  width: 360px;
   cursor: pointer;
+  z-index: 9999;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  font-family: 'Segoe UI', system-ui, sans-serif;
   display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  z-index: 100;
-  animation: slideIn 0.3s ease;
+  flex-direction: column;
+  padding: 12px;
+  gap: 8px;
+  animation: slideIn 0.35s cubic-bezier(0.1, 0.9, 0.2, 1);
 
   @keyframes slideIn {
     from {
       transform: translateX(120%);
-      opacity: 0;
     }
     to {
       transform: translateX(0);
-      opacity: 1;
     }
   }
 
+  .notif-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 2px;
+  }
+
   .notif-icon {
-    width: 32px;
-    height: 32px;
-    background: #0078d4;
-    border-radius: 6px;
+    width: 16px;
+    height: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 12px;
     flex-shrink: 0;
   }
 
-  .notif-content {
-    flex: 1;
-  }
-
   .notif-app {
-    font-size: 11px;
-    color: rgba(255, 255, 255, 0.5);
-    margin-bottom: 2px;
-  }
-
-  .notif-title {
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 2px;
-  }
-
-  .notif-body {
     font-size: 12px;
     color: rgba(255, 255, 255, 0.7);
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .notif-close {
     background: none;
     border: none;
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.5);
     cursor: pointer;
-    font-size: 14px;
+    font-size: 12px;
+    padding: 4px;
+    margin-top: -4px;
+    margin-right: -4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
 
     &:hover {
+      background: rgba(255, 255, 255, 0.1);
       color: white;
     }
+  }
+
+  .notif-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .notif-title {
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .notif-body {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.85);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }
 
@@ -951,21 +993,16 @@ main#main-content {
 }
 
 /* ─── Ghost notification ──────────────────────────────────── */
-.ghost-notif {
-  animation: slideIn 0.3s ease !important;
-}
-
 .slide-notif-enter-active {
-  transition: all 0.3s ease;
+  transition: all 0.35s cubic-bezier(0.1, 0.9, 0.2, 1);
 }
 
 .slide-notif-leave-active {
-  transition: all 0.3s ease;
+  transition: all 0.25s ease-in;
 }
 
 .slide-notif-enter-from {
   transform: translateX(120%);
-  opacity: 0;
 }
 
 .slide-notif-leave-to {

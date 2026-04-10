@@ -94,24 +94,11 @@ import {
 
 defineProps<{ open: boolean }>()
 
-const notifications = ref([
-  {
-    app: 'Windows Update',
-    title: 'Mise à jour prête',
-    message: 'Une mise à jour importante est prête à être installée.',
-    icon: ICON_FLUENT_UPDATE
-  },
-  {
-    app: 'Sécurité Windows',
-    title: 'Analyse terminée',
-    message: 'Aucune menace n\'a été détectée lors de la dernière analyse.',
-    icon: ICON_FLUENT_SECURITY
-  },
-])
-
+const { notifications, removeNotification, clearAll } = useNotifications()
 
 function removeNotif(index: number) {
-  notifications.value.splice(index, 1)
+  const notif = notifications.value[index]
+  if (notif) removeNotification(notif.id)
 }
 
 const now = new Date()
@@ -198,9 +185,15 @@ const currentMonth = now.toLocaleDateString('fr-FR', {month: 'long', year: 'nume
 
 .notif-item {
   padding: 12px;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 0;
   border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 2px;
+  transition: background 0.2s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
 }
 
 .notif-app-header {
@@ -212,26 +205,39 @@ const currentMonth = now.toLocaleDateString('fr-FR', {month: 'long', year: 'nume
 
 .notif-app-icon {
   font-size: 14px;
+  color: var(--accent);
 }
 
 .notif-app-name {
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
   flex: 1;
+  font-weight: 400;
 }
 
 .notif-close {
   color: rgba(255, 255, 255, 0.4);
   font-size: 10px;
+  padding: 4px;
+  margin: -4px;
+
+  &:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.notif-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .notif-title {
   font-size: 13px;
   font-weight: 600;
   color: white;
-  margin-bottom: 2px;
-  font-family: inherit;
-  line-height: inherit;
+  margin: 0;
 }
 
 .notif-msg {

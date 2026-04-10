@@ -34,3 +34,14 @@ This project is a web-based simulation of a Windows 10/11-like operating system 
 
 - Ensure all new components are tested for basic rendering and state changes.
 - Verify that opening/closing apps doesn't leak state or cause z-index collisions.
+
+## Change Log (April 10, 2026)
+
+### Notifications System Update
+- **Visual Overhaul:** Redesigned toast notifications and the Notification Center to match Windows 10/11 "Fluent/Acrylic" aesthetic.
+- **Positioning:** Adjusted toast notifications to appear 12px above the taskbar (using `--taskbar-height` variable).
+- **State Management:** Implemented a global `useNotifications` composable for centralized notification handling.
+- **Synchronization:** Toasts are now automatically added to the Notification Center tray.
+- **Taskbar Integration:** Added a dynamic notification count badge to the Taskbar's tray.
+- **Functionality:** Added "Clear All" capability in the Notification Center.
+- **Transitions:** Smoothed animations for appearing and disappearing notifications.
