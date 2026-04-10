@@ -634,10 +634,9 @@ function shouldShowDate(messages: any[], index: number): boolean {
                   {{ sentResponse }}
                 </div>
                 <div v-if="sentCorrect" class="video-bonus">
-                  <button class="btn-video">
-                    <Icon name="fluent:video-24-regular"/>
-                    Voir l'aveu de Mathieu
-                  </button>
+                  <video controls width="100%" style="border-radius: 6px; margin-top: 8px;">
+                    <source src="/videos/video1.mp4" type="video/mp4"/>
+                  </video>
                 </div>
               </div>
             </div>
@@ -1900,6 +1899,8 @@ function shouldShowDate(messages: any[], index: number): boolean {
       line-height: 1.5;
       color: #202124;
       white-space: pre-wrap;
+      flex: 1;
+      overflow-y: auto;
 
       button.glitch-trigger, button.bsod-trigger {
         margin: 16px 0;
