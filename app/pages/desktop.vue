@@ -455,11 +455,21 @@ function confettiStyle(i: number) {
 const clippyVisible = ref(false)
 const clippyMessage = ref('')
 const clippyMessages = [
-  'Il semblerait que vous essayez de résoudre un meurtre. Besoin d\'aide ?',
-  'Avez-vous pensé à vérifier la corbeille ? Les suspects suppriment souvent des preuves...',
-  'Conseil : la calculatrice cache parfois des secrets. Essayez un code !',
-  'Psst... avez-vous regardé dans C:\\Windows\\System32 ?',
-  'N\'oubliez pas de lire les conversations Instagram dans Edge !',
+  'Il semblerait que vous essayez de faire quelque chose. Besoin d\'aide ?',
+  'Avez-vous pensé à boire de l\'eau aujourd\'hui ?',
+  'Conseil : appuyer sur les touches du clavier fait apparaître des lettres.',
+  'Psst... votre chaise est peut-être mal réglée.',
+  'N\'oubliez pas de cligner des yeux !',
+  'Saviez-vous que les ordinateurs utilisent de l\'électricité ?',
+  'Il fait peut-être chaud là où vous êtes. Ou froid. Je ne sais pas.',
+  'Vous avez l\'air de regarder un écran en ce moment.',
+  'Conseil : la souris se déplace quand vous la bougez.',
+  'Pensez à vous lever toutes les heures. Ou pas.',
+  'Il y a eu un meurtre. C\'est tout ce que je sais.',
+  'Le coupable a des mains. Probablement.',
+  'Conseil : les suspects sont souvent présents dans les enquêtes.',
+  'Saviez-vous que les victimes de meurtre sont généralement mortes ?',
+  'L\'arme du crime est quelque part. Bonne chance.',
 ]
 let clippyDismissed = false
 
