@@ -172,7 +172,7 @@
         </div>
         <div class="notif-content">
           <div class="notif-title">Dossier N°097 — URGENT</div>
-          <div class="notif-body">Vous devez me remettre le rapport avant vendredi 12 avril à 18h00.</div>
+          <div class="notif-body">Vous devez me remettre le rapport avant vendredi 22 août à 18h00.</div>
         </div>
       </div>
     </Transition>
@@ -248,7 +248,7 @@ const wallpaper = ref(
 const selectedIcon = ref('')
 const shutdownActive = ref(false)
 const bootActive = ref(false)
-const unlockedStage = ref(0) // 0 = locked, 1 = consignes opened, 2 = rapport opened (full unlock)
+const unlockedStage = ref(0)
 const gmailUnlockedInEdge = ref(false)
 
 function onShutdown() {
@@ -328,7 +328,7 @@ const visibleDesktopIcons = computed(() => {
 })
 
 function arrangeIcons() {
-  const h = window.innerHeight - 60 // Taskbar + margin
+  const h = window.innerHeight - 60
   let currentX = GRID_OFFSET_X
   let currentY = GRID_OFFSET_Y
 
@@ -344,20 +344,16 @@ function arrangeIcons() {
 }
 
 function openAppWrapper(appId: string, initialUrl?: string) {
-  // Stage 0: Only allow opening Consignes.pdf
   if (unlockedStage.value === 0 && appId !== 'pdfviewer') {
     return
   }
 
-  // Stage 1: Allow opening both PDFs
-  if (unlockedStage.value === 1 && appId !== 'pdfviewer' && appId !== 'pdfviewer2') {
+  if (unlockedStage.value === 1 && appId !== 'pdfviewer' && appId !== 'pdfviewer2' && appId !== 'edge') {
     return
   }
 
-  // Open the app
   openApp(appId, initialUrl)
 
-  // If opening Consignes PDF and not already in stage 1, move to stage 1 (show both PDFs)
   if (appId === 'pdfviewer' && unlockedStage.value === 0) {
     setTimeout(() => {
       unlockedStage.value = 1
@@ -365,7 +361,6 @@ function openAppWrapper(appId: string, initialUrl?: string) {
     }, 500)
   }
 
-  // If opening Rapport_Autopsie PDF and not already in stage 2, move to stage 2 (full unlock)
   if (appId === 'pdfviewer2' && unlockedStage.value === 1) {
     setTimeout(() => {
       unlockedStage.value = 2
@@ -375,14 +370,13 @@ function openAppWrapper(appId: string, initialUrl?: string) {
 }
 
 function onIconDragStart(e: MouseEvent, icon: any) {
-  if (e.button !== 0) return // Only left click
+  if (e.button !== 0) return
 
   selectedIcon.value = icon.id
   draggingIcon.value = icon.id
   const startX = e.clientX - icon.x
   const startY = e.clientY - icon.y
 
-  // Prevent selection/native drag which can cause icons to get stuck
   e.preventDefault()
 
   function onMove(e: MouseEvent) {
@@ -393,11 +387,9 @@ function onIconDragStart(e: MouseEvent, icon: any) {
   function onUp() {
     draggingIcon.value = ''
 
-    // Snap to grid
     icon.x = Math.round((icon.x - GRID_OFFSET_X) / GRID_W) * GRID_W + GRID_OFFSET_X
     icon.y = Math.round((icon.y - GRID_OFFSET_Y) / GRID_H) * GRID_H + GRID_OFFSET_Y
 
-    // Basic bounds check
     icon.x = Math.max(GRID_OFFSET_X, icon.x)
     icon.y = Math.max(GRID_OFFSET_Y, icon.y)
 
@@ -616,6 +608,9 @@ function onGlobalKeydown(e: KeyboardEvent) {
 const { addNotification } = useNotifications()
 
 onMounted(() => {
+  // Clear Gmail unlock state for a fresh start each session
+  localStorage.removeItem('gmailUnlocked')
+
   arrangeIcons()
   window.addEventListener('resize', arrangeIcons)
   window.addEventListener('keydown', onGlobalKeydown)

@@ -15,6 +15,7 @@ const urlInput = ref('https://www.bing.com')
 const gmailUnlocked = ref(false)
 const instagramVisited = ref(false)
 const airbnbVisited = ref(false)
+let hasEmittedGmailUnlock = false
 
 const favorites = [
   {name: 'Instagram', url: 'https://www.instagram.com', icon: 'skill-icons:instagram'},
@@ -58,6 +59,7 @@ function goToUrl(url: string) {
   // Unlock Gmail when both Instagram and Airbnb have been visited
   if (instagramVisited.value && airbnbVisited.value && !gmailUnlocked.value) {
     gmailUnlocked.value = true
+    localStorage.setItem('gmailUnlocked', 'true')
     emit('gmailUnlocked')
   }
 }
@@ -166,6 +168,14 @@ const props = defineProps<{
 }>()
 
 onMounted(() => {
+  // Load Gmail unlock state from localStorage
+  const savedGmailUnlocked = localStorage.getItem('gmailUnlocked')
+  if (savedGmailUnlocked === 'true') {
+    gmailUnlocked.value = true
+    instagramVisited.value = true
+    airbnbVisited.value = true
+  }
+
   if (props.initialUrl) {
     goToUrl(props.initialUrl)
   }
@@ -236,17 +246,17 @@ const instagramChats = [
       {
         text: 'Je n\'arrête pas de relire nos derniers messages... J\'arrive pas à croire que c\'est fini comme ça.',
         me: false,
-        date: '25 août'
+        date: '20 août'
       },
       {
         text: 'Je m\'en veux d\'avoir été lourd avec toi, de ne pas avoir juste profité du moment sans rien attendre en retour.',
         me: false,
-        date: '25 août'
+        date: '20 août'
       },
       {
         text: 'T\'étais la personne la plus vraie de ce groupe. Mimizan n\'aura plus aucun sens maintenant.',
         me: false,
-        date: '25 août'
+        date: '20 août'
       },
       {text: 'Tu vas me manquer Clara. Vraiment. ❤️', me: false, date: '25 août'},
     ]
