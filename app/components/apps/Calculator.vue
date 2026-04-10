@@ -93,7 +93,7 @@ function equals() {
     newInput = true
     return
   }
-  if (display.value === '0804') {
+  if (display.value === '804') {
     expression.value = '???'
     display.value = 'MATHIEU'
     currentOp = ''

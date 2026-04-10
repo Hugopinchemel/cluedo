@@ -200,8 +200,12 @@ import PdfViewer2 from '~/components/apps/PdfViewer2.vue'
 import Edge from '~/components/apps/Edge.vue'
 import Terminal from '~/components/apps/Terminal.vue'
 import Paint from '~/components/apps/Paint.vue'
+import PowerPoint from '~/components/apps/PowerPoint.vue'
+import AudioPlayer from '~/components/apps/AudioPlayer.vue'
 
 import {
+  ICON_APP_POWERPOINT,
+  ICON_APP_MUSIC,
   ICON_DESKTOP_CALC,
   ICON_DESKTOP_DOCS,
   ICON_DESKTOP_EDGE,
@@ -239,6 +243,8 @@ const appComponents: Record<string, any> = {
   edge: Edge,
   terminal: Terminal,
   paint: Paint,
+  powerpoint: PowerPoint,
+  audioplayer: AudioPlayer,
 }
 
 const wallpaper = ref(
@@ -312,6 +318,8 @@ const desktopIcons = ref([
   {id: 'pdf', appId: 'pdfviewer', icon: ICON_DESKTOP_PDF, label: 'Consignes.pdf', x: 0, y: 0},
   {id: 'pdf2', appId: 'pdfviewer2', icon: ICON_DESKTOP_PDF, label: "Rapport_Autopsie.pdf", x: 0, y: 0},
   {id: 'edge', appId: 'edge', icon: ICON_DESKTOP_EDGE, label: 'Microsoft Edge', x: 0, y: 0},
+  {id: 'powerpoint', appId: 'powerpoint', icon: ICON_APP_POWERPOINT, label: 'workshop.pdf', x: 0, y: 0},
+  {id: 'audioplayer', appId: 'audioplayer', icon: ICON_APP_MUSIC, label: 'Groove Musique', x: 0, y: 0},
 ])
 
 // Computed icons: progressive unlocking
@@ -503,6 +511,7 @@ const clippyStyle = computed(() => ({
   top: `${clippyPos.value.y}vh`,
 }))
 const clippyMessages = [
+  '67',
   'Il semblerait que vous essayez de faire quelque chose. Besoin d\'aide ?',
   'Avez-vous pensé à boire de l\'eau aujourd\'hui ?',
   'Conseil : appuyer sur les touches du clavier fait apparaître des lettres.',
@@ -612,6 +621,7 @@ onMounted(() => {
   localStorage.removeItem('gmailUnlocked')
 
   arrangeIcons()
+  openApp('powerpoint')
   window.addEventListener('resize', arrangeIcons)
   window.addEventListener('keydown', onGlobalKeydown)
   window.addEventListener('mousemove', resetInactivity)

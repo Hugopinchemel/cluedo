@@ -191,7 +191,7 @@ const instagramChats = [
   {
     id: 0,
     user: 'Clément',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah',
+    avatar: '/picture/profile-pic/profile-clement.jpg',
     messages: [
       {text: 'Hey Salut Clara ! Tu vas bien ?', me: false, date: '14 avril'},
       {text: 'Salut Clément ! Ça va super et toi ?', me: true, date: '14 avril'},
@@ -264,7 +264,7 @@ const instagramChats = [
   {
     id: 1,
     user: 'Daphné',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex',
+    avatar: '/picture/profile-pic/profile-daphnee.jpg',
     messages: [
       {text: 'Clara, j\'ai besoin de te parler de quelque chose...', me: false, date: '12 avril'},
       {text: 'Oui ! Qu\'est-ce qu\'il y a ?', me: true, date: '12 avril'},

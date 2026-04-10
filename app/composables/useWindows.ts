@@ -7,6 +7,8 @@ import {
     ICON_APP_PAINT,
     ICON_APP_PDF,
     ICON_APP_PHOTOS,
+    ICON_APP_POWERPOINT,
+    ICON_APP_MUSIC,
     ICON_APP_SETTINGS,
     ICON_APP_TERMINAL,
 } from '~/composables/icons'
@@ -49,6 +51,8 @@ export const APPS: AppDef[] = [
     {id: 'pdfviewer2', name: "Rapport d'Autopsie", icon: ICON_APP_PDF, defaultWidth: 820, defaultHeight: 680},
     {id: 'terminal', name: 'Windows PowerShell', icon: ICON_APP_TERMINAL, defaultWidth: 780, defaultHeight: 480},
     {id: 'paint', name: 'Paint', icon: ICON_APP_PAINT, defaultWidth: 900, defaultHeight: 620},
+    {id: 'powerpoint', name: 'workshop.pdf', icon: ICON_APP_POWERPOINT, defaultWidth: 960, defaultHeight: 640},
+    {id: 'audioplayer', name: 'Groove Musique', icon: ICON_APP_MUSIC, defaultWidth: 860, defaultHeight: 600},
 ]
 
 // Module-level singleton state

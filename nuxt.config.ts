@@ -57,5 +57,8 @@ export default defineNuxtConfig({
                 },
             },
         },
+        optimizeDeps: {
+            include: ['pdfjs-dist'],
+        },
     },
 })
