@@ -55,13 +55,15 @@
       <div v-if="notifVisible" class="gmail-notif"
            @click="openApp('edge', 'https://www.gmail.com'); notifVisible = false">
         <div class="notif-header">
-          <div class="notif-icon">✉</div>
-          <div class="notif-app">Courrier</div>
+          <div class="notif-icon" style="background: #ea4335">
+            <img alt="" height="16" src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico" width="16"/>
+          </div>
+          <div class="notif-app">Gmail</div>
           <button class="notif-close" @click.stop="notifVisible = false">✕</button>
         </div>
         <div class="notif-content">
-          <div class="notif-title">Prof. Moriarty</div>
-          <div class="notif-body">Vous devez me remettre le rapport du labo...</div>
+          <div class="notif-title">Chef de police — Dossier N°097 — URGENT</div>
+          <div class="notif-body">Vous devez me remettre le rapport de laboratoire avant vendredi 12 avril à 18h00.</div>
         </div>
       </div>
     </Transition>
@@ -146,7 +148,7 @@
 
     <!-- Clippy Easter Egg -->
     <Transition name="clippy-slide">
-      <div v-if="clippyVisible" class="clippy" @click="dismissClippy">
+      <div v-if="clippyVisible" class="clippy" :style="clippyStyle" @click="dismissClippy">
         <div class="clippy-body">
           <div class="clippy-icon">📎</div>
           <div class="clippy-bubble">
@@ -159,15 +161,17 @@
 
     <!-- Ghost notification -->
     <Transition name="slide-notif">
-      <div v-if="ghostNotifVisible" class="gmail-notif ghost-notif" @click="ghostNotifVisible = false">
+      <div v-if="ghostNotifVisible" class="gmail-notif ghost-notif" @click="onGhostNotifClick">
         <div class="notif-header">
-          <div class="notif-icon" style="background: #e74856">💀</div>
-          <div class="notif-app">WhatsApp</div>
-          <button class="notif-close" @click.stop="ghostNotifVisible = false">✕</button>
+          <div class="notif-icon" style="background: #ea4335">
+            <img alt="" height="16" src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico" width="16"/>
+          </div>
+          <div class="notif-app">Gmail</div>
+          <button aria-label="Fermer" class="notif-close" @click.stop="ghostNotifVisible = false">✕</button>
         </div>
         <div class="notif-content">
-          <div class="notif-title">Numéro inconnu</div>
-          <div class="notif-body">Supprime tout. Maintenant.</div>
+          <div class="notif-title">Dossier N°097 — URGENT</div>
+          <div class="notif-body">Vous devez me remettre le rapport avant vendredi 12 avril à 18h00.</div>
         </div>
       </div>
     </Transition>
@@ -454,6 +458,11 @@ function confettiStyle(i: number) {
 // 3. Clippy
 const clippyVisible = ref(false)
 const clippyMessage = ref('')
+const clippyPos = ref({ x: 80, y: 80 }) // vw/vh percentages
+const clippyStyle = computed(() => ({
+  left: `${clippyPos.value.x}vw`,
+  top: `${clippyPos.value.y}vh`,
+}))
 const clippyMessages = [
   'Il semblerait que vous essayez de faire quelque chose. Besoin d\'aide ?',
   'Avez-vous pensé à boire de l\'eau aujourd\'hui ?',
@@ -475,7 +484,11 @@ let clippyDismissed = false
 
 function showClippy() {
   if (clippyDismissed) return
-  clippyMessage.value = clippyMessages[Math.floor(Math.random() * clippyMessages.length)]
+  clippyMessage.value = clippyMessages[Math.floor(Math.random() * clippyMessages.length)] ?? ''
+  clippyPos.value = {
+    x: 10 + Math.random() * 80,
+    y: 10 + Math.random() * 80,
+  }
   clippyVisible.value = true
 }
 
@@ -486,6 +499,11 @@ function dismissClippy() {
 
 // 4. Ghost notification
 const ghostNotifVisible = ref(false)
+
+function onGhostNotifClick() {
+  ghostNotifVisible.value = false
+  openApp('edge', 'https://www.gmail.com')
+}
 
 // 5. Screensaver
 const screensaverActive = ref(false)
@@ -573,6 +591,10 @@ onMounted(() => {
   }, 5000)
 
   // Ghost notification after 2 minutes
+  setTimeout(() => {
+    ghostNotifVisible.value = true
+    setTimeout(() => { ghostNotifVisible.value = false }, 8000)
+  }, 120000)
 
 })
 
@@ -926,10 +948,9 @@ main#main-content {
 /* ─── Clippy ───────────────────────────────────────────────── */
 .clippy {
   position: fixed;
-  bottom: 70px;
-  right: 20px;
   z-index: 10000;
   cursor: pointer;
+  transform: translate(-50%, -50%);
 }
 
 .clippy-body {
