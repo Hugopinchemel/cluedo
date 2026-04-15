@@ -148,7 +148,7 @@
     </Transition>
 
     <!-- Clippy Easter Egg -->
-    <Transition name="clippy-slide">
+    <Transition name="clippy-slide" style="scale: 0.75;">
       <div v-if="clippyVisible" class="clippy" :style="clippyStyle" @click="dismissClippy">
         <div class="clippy-body">
           <div class="clippy-icon">📎</div>
